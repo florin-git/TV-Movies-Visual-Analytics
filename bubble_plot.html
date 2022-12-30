@@ -115,7 +115,6 @@ d3.csv("./dataset/Kaggle/data.csv", function(data) {
         .style("fill", function (d) { return myColor(d.daytime); } )
         .style("opacity", "0.7")
         .attr("stroke", "black")
-        // -3- Trigger the functions
     .on("mouseover", showTooltip )
     .on("mousemove", moveTooltip )
     .on("mouseleave", hideTooltip );
