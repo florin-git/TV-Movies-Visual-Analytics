@@ -129,5 +129,5 @@ dmypy.json
 .pyre/
 
 dataset/Kaggle
-dataset/Audit
+dataset/Audit/*.pdf
 dataset/MDS
