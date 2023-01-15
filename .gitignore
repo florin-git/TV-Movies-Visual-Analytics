@@ -130,4 +130,4 @@ dmypy.json
 
 dataset/Kaggle
 dataset/Audit/*.pdf
-dataset/MDS
+dataset/MDS/*.npy
