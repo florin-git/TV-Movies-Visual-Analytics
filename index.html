@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<meta charset="utf-8">
+
+<head>
+
+  <style>
+    .bubbles {
+      stroke-width: 2px;
+      stroke: white;
+    }
+    .bubbles:hover {
+      stroke: black;
+    }
+    /* per calendar */
+    .month {
+        fill: none;
+        stroke: #000;
+        stroke-width: 2px;
+    }
+    .day {
+        fill: #fff;
+        stroke: #ccc;
+    }
+    /* text    {
+        font-family:sans-serif;
+        font-size:1.5em;
+    } */
+    .dayLabel   {
+        fill:#aaa;
+        font-size:0.8em;
+    }
+    .monthLabel {
+        text-anchor:middle;
+        font-size:0.8em;
+        fill:#aaa;
+    }
+    .yearLabel  {
+        fill:#aaa;
+        font-size:1.2em;
+    }
+    
+    .key    {font-size:0.5em;}
+
+    /* fine calendar */
+    </style>
+
+</head>
+
+<body id="body" style="background-color: #e2f5f5;">
+
+  <div id="all" style="width: 98.5%; height: 98%; position: absolute; bottom: 0.0%; top:0.5%">
+    
+    <div class="area darkborder" id="area_1" style="width: 42%; height: 48%; border:1px solid; position: absolute; margin-top: 2%;"></div>
+    <div class="area darkborder" id="area_2" style="width: 58%; height: 48%; border:1px solid; position: absolute; margin-left: 42%; margin-top: 2%;"></div>
+    <!-- <div class="area darkborder" id="area_3" style="width: 10%; height: 48%; border:1px solid; position: absolute; margin-left: 90%; margin-top: 2%;"></div> -->
+    <div class="area darkborder" id="area_4" style="width: 36.5%; height: 48%; border:1px solid; position: absolute; top: 48%; margin-top: 2%;"></div>
+    <div class="area darkborder" id="area_5" style="width: 32.5%; height: 48%; border:1px solid; position: absolute; top: 48%; margin-left: 36.5%; margin-top: 2%;"></div>
+    <div  id="area_6" style="width: 31%; height: 48%; border:1px solid; position: absolute; top: 48%; margin-left: 69%; margin-top: 2%;"></div>
+
+  </div>
+   
+  <script src="https://d3js.org/d3.v4.js"></script>
+  <script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
+  <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.6/d3.min.js" charset="utf-8"></script> -->
+
+
+  <script type="module" src="./vis/bubbleplot.js"></script>
+  <script type="module" src="./vis/stacked_barchart.js"></script>
+  <script type="module" src="./vis/stacked_bubble.js"></script>
+  <script type="module" src="./vis/chord.js"></script>
+  <script type="module" src="./vis/mds.js"></script>
+
+
+
+
+
+</body>
+
+</html>
