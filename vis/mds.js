@@ -1,0 +1,86 @@
+var margin_top= 5, 
+margin_right= 2, 
+margin_bottom= 1, 
+margin_left= 2
+
+var width = 500 
+var height = 400
+
+
+
+
+var sky = ['Sky Cinema Drama', 'Sky Cinema Due',  'Sky Cinema Suspense', 'Sky Cinema Comedy', 'Sky Cinema Action'];
+var mediaset = ['Cielo', 'Italia 1', 'Iris', 'Rete 4', 'Cine34'];
+
+d3.csv("./dataset/mds_with_titles.csv", function (data) {
+
+  var svg = d3.select("#area_6")
+  .append("svg")
+    .attr("width", "100%")
+    .attr("height", "100%")
+    .classed("svg-content", true)
+
+    // "d[0] 57 e min -39  per d[1] min è -57 e max + 36+
+
+
+  var x = d3.scaleLinear()
+  .domain([-50, 40])  
+  .range([0, width]);
+
+  var y = d3.scaleLinear().domain([-58, 38])
+  .range([ height, 0 ]);
+
+  var xAxis = svg.append("g")
+    .attr("class", "axis-x")
+    .attr("transform", "translate(10," + height + ")")
+    .call(d3.axisBottom(x).tickValues([]))
+    .attr("font-size", "6px")
+    
+  var yAxis = svg.append("g")
+    .attr("class", "axis axis--y lightfill")
+    .attr("transform", "translate(10," + 0 + ")")
+    .call(d3.axisLeft(y).tickValues([]))
+    .attr("font-size", "6px")
+  
+  // Add circles
+  svg
+    .selectAll("circle")
+    .data(data)
+    .enter()
+    .append("circle")
+    .attr("class", "bubble")
+      .attr("cx", function (d) { 
+        return x(d.mds_x) } )
+      .attr("cy", function (d) { 
+        return y(d.mds_y) } )
+      .attr("r", 2)
+      .style("fill", function(d){
+        if(sky.includes(d.channel)){
+          return "#fc8d59"
+        }
+        else{
+          return "#91cf60"
+        }
+
+
+
+      })
+      .style("stroke", "black")
+      .style("stroke-width", "0.2") 
+      .style("opacity", 0.8)
+      .style("pointer-events", "all");
+
+
+
+
+
+      //legend
+
+
+    svg.append("circle").attr("cx",width - 0.05 * width).attr("cy",80).attr("r", 6).style("fill", "#fc8d59")
+    svg.append("circle").attr("cx",width - 0.05 * width).attr("cy",110).attr("r", 6).style("fill","#91cf60")
+    svg.append("text").attr("x", width - 0.03 * width).attr("y", 80).text("Sky ").style("font-size", "15px").attr("alignment-baseline","middle")
+    svg.append("text").attr("x", width - 0.03 * width).attr("y", 110).text("Mediaset").style("font-size", "15px").attr("alignment-baseline","middle")
+    
+
+})
