@@ -18,7 +18,7 @@
               "translate(" + margin.left + "," + margin.top + ")");
     
     // Parse the Data
-    d3.csv("../dataset/Kaggle/df_final_with_additional_info.csv", function(data) {
+    d3.csv("./dataset/df_final_with_additional_info.csv", function(data) {
     
       // Add X axis
       var x = d3.scaleBand()

@@ -13,7 +13,7 @@ var svg = d3.select("#area_1")
         "translate(" + margin.left + "," + margin.top + ")");
 
 //Read the data
-d3.csv("../dataset/Kaggle/df_final_with_additional_info.csv", function(data) {
+d3.csv("../dataset/df_final_with_additional_info.csv", function(data) {
 
   var x = d3.scaleBand()
   .domain(['Cielo', 'Italia 1',"Iris", "Rete 4", "Cine34", "Sky Cinema Drama", "Sky Cinema Due", "Sky Cinema Comedy", "Sky Cinema Action"])     

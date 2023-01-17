@@ -164,7 +164,7 @@ var svg = d3.select("#area_2")
           "translate(" + margin.left + "," + margin.top + ")");
 
 //Read the data
-d3.csv("./dataset/Kaggle/df_final_with_additional_info.csv", function(data) {
+d3.csv("./dataset/df_final_with_additional_info.csv", function(data) {
 
     var y = d3.scaleLinear()
     .domain([40, d3.max(data, function (d) {

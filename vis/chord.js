@@ -60,7 +60,7 @@ for (var i = 0; i < matrix.length; i++) {
   matrix[i] = new Array(12).fill(0);
 }
 
-const data = d3.csv("./dataset/Kaggle/df_final_with_additional_info.csv",function(data){
+const data = d3.csv("./dataset/df_final_with_additional_info.csv",function(data){
 
   // Get the list of genres
   data.forEach(function (d) {
