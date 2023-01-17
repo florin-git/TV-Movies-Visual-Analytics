@@ -237,20 +237,29 @@ const data = d3.csv("./dataset/df_final_with_additional_info.csv",function(data)
 
 
 function updateMDS(d,gen1,gen2){
-  console.log(gen1,gen2);
   var mds_circles = d3.select("#area_6").selectAll(".bubble").style("display","block");
-  mds_circles.filter(function(f) {
-    return gen1 != f.genres | gen2 != f.genres;
+  if(gen1==gen2){
+    mds_circles.filter(function(f) {
+    return f.genres != gen1
   }).style("display","none");
-
-
-  return ;
+  }
+  else{
+    mds_circles.filter(function(f) {
+      return !(f.genres.includes(gen1)) | !(f.genres.includes(gen2));
+    }).style("display","none");
+  }
 }
 function updateBubble_plot(d,gen1,gen2){
-    var circles = d3.select("#area_2").selectAll(".bubble").style("display","block");
+  var circles = d3.select("#area_2").selectAll(".bubble").style("display","block");
+  if(gen1==gen2){
     circles.filter(function(f) {
-      return f.genres != gen1 | gen2 != f.genres
+      return f.genres != gen1
     }).style("display","none");
-
+  }
+  else{
+    circles.filter(function(f) {
+      return !(f.genres.includes(gen1)) | !(f.genres.includes(gen2))
+    }).style("display","none");
+  }
 
 }

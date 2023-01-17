@@ -225,7 +225,7 @@ d3.csv("./dataset/df_final_with_additional_info.csv", function(data) {
         .data(data).enter()
         .append("circle")
         .attr("class", "bubble")
-        .filter(function(d) { return d.month == "gennaio" & d.channel == "Cine34" })
+        // .filter(function(d) { return d.month == "gennaio" & d.channel == "Cine34" })
         .attr("cx", function (d) { return x(d.day_number)+0; } )
         .attr("cy", function (d) { return y(d.duration); } )
         .attr("r",function (d) { return radiusNumberMovies(d.rating) })
@@ -233,7 +233,7 @@ d3.csv("./dataset/df_final_with_additional_info.csv", function(data) {
         .style("opacity", "0.7")
         .attr("stroke", "black")
         .on("mouseover", function(d) {
-          tooltip.html(d.title +"<br> Rating: " +  d.rating);
+          tooltip.html(d.title +"<br> Rating: " +  d.rating+ "<br>" +d.genres);
           return tooltip.style("visibility", "visible");
         })
         .on("mousemove", function() {
