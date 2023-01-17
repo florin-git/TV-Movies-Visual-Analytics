@@ -175,7 +175,7 @@ d3.csv("./dataset/df_final_with_additional_info.csv", function(data) {
     
     // Add x axis
     var x = d3.scaleLinear()
-        .domain([1,31])
+        .domain([0,31])
         .range([0,width-120]); 
 
     // Draw the axis
@@ -185,7 +185,7 @@ d3.csv("./dataset/df_final_with_additional_info.csv", function(data) {
         .style("text-anchor", "end")
         .style("font-size", 10)
         .style("fill", "#00000")
-        .call(d3.axisBottom(x).scale(x).ticks(31))
+        .call(d3.axisBottom(x).scale(x).ticks(32))
 
 
     
@@ -209,23 +209,23 @@ d3.csv("./dataset/df_final_with_additional_info.csv", function(data) {
         .domain(["mattina", "pomeriggio", "sera", "notte"])
         .range(d3.schemeSet2);
 
-        var tooltip = d3.select("body")
-          .append("div")
-          .attr("id", "tooltip2")
-          .style("background-color", "rgb(0, 0, 0)")
-          .style("position", "absolute")
-          .style("z-index", "10")
-          .style("visibility", "hidden")
-          .style("font-size", "20px")
-          .style("color", "white")
-          .text("a simple tooltip");
+    var tooltip = d3.select("body")
+      .append("div")
+      .attr("id", "tooltip2")
+      .style("background-color", "rgb(0, 0, 0)")
+      .style("position", "absolute")
+      .style("z-index", "10")
+      .style("visibility", "hidden")
+      .style("font-size", "20px")
+      .style("color", "white")
+      .text("a simple tooltip");
 
     svg.append('g')
         .selectAll("circle")
         .data(data).enter()
         .append("circle")
         .attr("class", "bubble")
-        // .filter(function(d) { return d.month == "gennaio" & d.channel == "Italia 1" })
+        .filter(function(d) { return d.month == "gennaio" & d.channel == "Cine34" })
         .attr("cx", function (d) { return x(d.day_number)+0; } )
         .attr("cy", function (d) { return y(d.duration); } )
         .attr("r",function (d) { return radiusNumberMovies(d.rating) })
@@ -233,7 +233,7 @@ d3.csv("./dataset/df_final_with_additional_info.csv", function(data) {
         .style("opacity", "0.7")
         .attr("stroke", "black")
         .on("mouseover", function(d) {
-          tooltip.html(d.title +" Rating: " +  d.rating);
+          tooltip.html(d.title +"<br> Rating: " +  d.rating);
           return tooltip.style("visibility", "visible");
         })
         .on("mousemove", function() {
@@ -255,28 +255,16 @@ d3.csv("./dataset/df_final_with_additional_info.csv", function(data) {
       .append("text").attr("class","text_legend_channel").attr("x", width - 0.18 * width).attr("y", 10).text(function(d) { 
         return "Channel: "
       }).style("font-size", "15px").attr("alignment-baseline","middle")
-
-
-
-      // svg
-      //     .append("text")
-      //     .attr("class", "legendTitle")
-      //     .attr("x", width - 0.18 * width)
-      //     .attr("y", 50)
-      //     .text("Sharing Percentage");
-  
-
-
       
     // Handmade legend
     svg.append("circle").attr("cx",width - 0.09 * width).attr("cy",130).attr("r", 6).style("fill", d3.schemeSet2[0])
     svg.append("circle").attr("cx",width - 0.09 * width).attr("cy",160).attr("r", 6).style("fill", d3.schemeSet2[1])
     svg.append("circle").attr("cx",width - 0.09 * width).attr("cy",190).attr("r", 6).style("fill", d3.schemeSet2[2])
     svg.append("circle").attr("cx",width - 0.09 * width).attr("cy",220).attr("r", 6).style("fill", d3.schemeSet2[3])
-    svg.append("text").attr("x", width - 0.08 * width).attr("y", 130).text("mattina ").style("font-size", "15px").attr("alignment-baseline","middle")
-    svg.append("text").attr("x", width - 0.08 * width).attr("y", 160).text("pomeriggio").style("font-size", "15px").attr("alignment-baseline","middle")
-    svg.append("text").attr("x", width - 0.08 * width).attr("y", 190).text("sera").style("font-size", "15px").attr("alignment-baseline","middle")
-    svg.append("text").attr("x", width - 0.08 * width).attr("y", 220).text("notte").style("font-size", "15px").attr("alignment-baseline","middle")
+    svg.append("text").attr("x", width - 0.08 * width).attr("y", 130).text("morning ").style("font-size", "15px").attr("alignment-baseline","middle")
+    svg.append("text").attr("x", width - 0.08 * width).attr("y", 160).text("afternoon").style("font-size", "15px").attr("alignment-baseline","middle")
+    svg.append("text").attr("x", width - 0.08 * width).attr("y", 190).text("evening").style("font-size", "15px").attr("alignment-baseline","middle")
+    svg.append("text").attr("x", width - 0.08 * width).attr("y", 220).text("night").style("font-size", "15px").attr("alignment-baseline","middle")
     0
 0
 

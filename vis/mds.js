@@ -10,7 +10,7 @@ var height = 400
 
 
 var sky = ['Sky Cinema Drama', 'Sky Cinema Due',  'Sky Cinema Suspense', 'Sky Cinema Comedy', 'Sky Cinema Action'];
-var mediaset = ['Cielo', 'Italia 1', 'Iris', 'Rete 4', 'Cine34'];
+var mediaset = ['Italia 1', 'Iris', 'Rete 4', 'Cine34'];
 
 d3.csv("./dataset/mds_with_titles.csv", function (data) {
 
@@ -56,10 +56,13 @@ d3.csv("./dataset/mds_with_titles.csv", function (data) {
       .attr("r", 2)
       .style("fill", function(d){
         if(sky.includes(d.channel)){
-          return "#fc8d59"
+          return "#7fc97f"
+        }
+        else if(mediaset.includes(d.channel)) {
+          return "#beaed4"
         }
         else{
-          return "#91cf60"
+          return "#fdc086"
         }
 
 
@@ -77,10 +80,12 @@ d3.csv("./dataset/mds_with_titles.csv", function (data) {
       //legend
 
 
-    svg.append("circle").attr("cx",width - 0.05 * width).attr("cy",80).attr("r", 6).style("fill", "#fc8d59")
-    svg.append("circle").attr("cx",width - 0.05 * width).attr("cy",110).attr("r", 6).style("fill","#91cf60")
+    svg.append("circle").attr("cx",width - 0.05 * width).attr("cy",80).attr("r", 6).style("fill", "#7fc97f")
+    svg.append("circle").attr("cx",width - 0.05 * width).attr("cy",110).attr("r", 6).style("fill","#beaed4")
+    svg.append("circle").attr("cx",width - 0.05 * width).attr("cy",140).attr("r", 6).style("fill","#fdc086")
     svg.append("text").attr("x", width - 0.03 * width).attr("y", 80).text("Sky ").style("font-size", "15px").attr("alignment-baseline","middle")
     svg.append("text").attr("x", width - 0.03 * width).attr("y", 110).text("Mediaset").style("font-size", "15px").attr("alignment-baseline","middle")
-    
+    svg.append("text").attr("x", width - 0.03 * width).attr("y", 140).text("Cielo").style("font-size", "15px").attr("alignment-baseline","middle")
+
 
 })
