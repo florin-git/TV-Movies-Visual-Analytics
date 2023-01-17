@@ -50,10 +50,11 @@
     ]
     const colors = ["#000000", "#333333", "#666666", "#999999", "#cccccc", "#ffffff", "#ff0000", "#00ff00", "#0000ff", "#ffff00", "#00ffff", "#ff00ff"];
 
-    var matrix = new Array(23);
+    var matrix = new Array(12);
     for (var i = 0; i < matrix.length; i++) {
-      matrix[i] = new Array(23).fill(0);
+      matrix[i] = new Array(12).fill(0);
     }
+    var missing=[];
 
     const data = d3.csv("./dataset/df_final_with_additional_info.csv").then(data => {
 
@@ -69,45 +70,57 @@
           }
         }
 
-      });
-
-      var sum = 0
-
-      for (var i = 0; i < matrix[0].length; i++) {
-        sum += matrix[i][i]
-      }
-
-      sum = sum / 23.0
-      var count = 0
-
-      for (var i = 0; i < 23; i++) {
-        if (matrix[i][i] >= sum) {
-          count += 1
+        for (var i = 0; i < d.genres.length; i++) {
+          var extracted = d.genres.split(",");
+          for (var j = 0; j < extracted.length; j++) {
+            if (!dict.hasOwnProperty(extracted[j]) && !missing.includes(extracted[j])) {
+              missing.push(extracted[j])
+            }
+          }
         }
+    
+
+    });
+    console.log(missing)
+
+
+    /*var sum = 0
+
+    for (var i = 0; i < matrix[0].length; i++) {
+      sum += matrix[i][i]
+    }
+
+    sum = sum / 23.0
+    var count = 0
+
+    for (var i = 0; i < 23; i++) {
+      if (matrix[i][i] >= sum) {
+        count += 1
       }
-      console.log(count)
+    }
+    console.log(count)*/
 
 
 
-      const svg = d3.select("#my_dataviz")
-        .append("svg")
-        .attr("width", 440)
-        .attr("height", 440)
-        .append("g")
-        .attr("transform", "translate(220,220)")
+    const svg = d3.select("#my_dataviz")
+      .append("svg")
+      .attr("width", 440)
+      .attr("height", 440)
+      .append("g")
+      .attr("transform", "translate(220,220)")
 
-      const res = d3.chord()
-        .padAngle(0.05)     // padding between entities (black arc)
-        .sortSubgroups(d3.descending)
-        (matrix)
+    const res = d3.chord()
+      .padAngle(0.05)     // padding between entities (black arc)
+      .sortSubgroups(d3.descending)
+      (matrix)
 
-      svg
-        .datum(res)
-        .append("g")
-        .selectAll("g")
-        .data(function (d) { return d.groups; })
-        .join("g")
-        .attr("class", "chord")
+    svg
+      .datum(res)
+      .append("g")
+      .selectAll("g")
+      .data(function (d) { return d.groups; })
+      .join("g")
+      .attr("class", "chord")
 
       //al momento evidenzia soltanto la parte in alto degli archi ma non tutto il collegamento. Che classe devo usare??
       .on("mouseover", function (d) {
@@ -127,107 +140,107 @@
           .style("stroke-width", .5)
 
       })
-        .append("path")
-        .style("fill", (d, i) => colors[i])
-        .style("stroke", "black")
-        .attr("d", d3.arc()
-          .innerRadius(200)
-          .outerRadius(210)
-        )
+      .append("path")
+      .style("fill", (d, i) => colors[i])
+      .style("stroke", "black")
+      .attr("d", d3.arc()
+        .innerRadius(200)
+        .outerRadius(210)
+      )
 
 
-      const group = svg
-        .datum(res)
-        .append("g")
-        .selectAll("g")
-        .data(d => d.groups)
-        .enter()
+    const group = svg
+      .datum(res)
+      .append("g")
+      .selectAll("g")
+      .data(d => d.groups)
+      .enter()
 
-      group.append("g")
-        .append("path")
-        .style("fill", "grey")
-        .style("stroke", "black")
-        .attr("d", d3.arc()
-          .innerRadius(190)
-          .outerRadius(200)
-        )
-
-
-
-      // Add one gradient for each link
-      var gradient = svg.append('defs').selectAll("radialGradient")
-        .data(res)
-        .enter()
-        .append("radialGradient")
-        .attr("id", function (d) {
-          return "gradient-" + d.source.index + '-' + d.target.index;
-        })
-        .each(function (d) {
-          var centerAngle = (d.source.endAngle - d.source.startAngle) / 2;
-          centerAngle += d.source.startAngle;
-          const radius = 0.5;
-
-          d3.select(this)
-            .attr('cx', function () {
-              return Math.sin(centerAngle) * radius + 0.5;
-            })
-            .attr('cy', function () {
-              return -Math.cos(centerAngle) * radius + 0.5;
-            })
-            .attr('r', 1);
-        });
-
-      gradient.append("stop")
-        .attr('class', 'start')
-        .attr("offset", "0%")
-        .attr("stop-color", function (d) {
-          return colors[d.source.index];
-        })
-        .attr("stop-opacity", 1);
-
-      gradient.append("stop")
-        .attr('class', 'end')
-        .attr("offset", "100%")
-        .attr("stop-color", function (d) {
-          return colors[d.target.index];
-        })
-        .attr("stop-opacity", 1);
+    group.append("g")
+      .append("path")
+      .style("fill", "grey")
+      .style("stroke", "black")
+      .attr("d", d3.arc()
+        .innerRadius(190)
+        .outerRadius(200)
+      )
 
 
 
-      svg
-        .datum(res)
-        .append("g")
-        .selectAll("path")
-        .data(d => d)
-        .join("path")
-        .attr("d", d3.ribbon()
-          .radius(200)
-        )
-        //.style("fill", d => colors[d.source.index]) // colors depend on the source group. Change to target otherwise.
-        .style("fill", function (d) {
-          return "url(#gradient-" + d.source.index + '-' + d.target.index + ")";
-        })
-        .style("stroke", "black");
+    // Add one gradient for each link
+    var gradient = svg.append('defs').selectAll("radialGradient")
+      .data(res)
+      .enter()
+      .append("radialGradient")
+      .attr("id", function (d) {
+        return "gradient-" + d.source.index + '-' + d.target.index;
+      })
+      .each(function (d) {
+        var centerAngle = (d.source.endAngle - d.source.startAngle) / 2;
+        centerAngle += d.source.startAngle;
+        const radius = 0.5;
+
+        d3.select(this)
+          .attr('cx', function () {
+            return Math.sin(centerAngle) * radius + 0.5;
+          })
+          .attr('cy', function () {
+            return -Math.cos(centerAngle) * radius + 0.5;
+          })
+          .attr('r', 1);
+      });
+
+    gradient.append("stop")
+      .attr('class', 'start')
+      .attr("offset", "0%")
+      .attr("stop-color", function (d) {
+        return colors[d.source.index];
+      })
+      .attr("stop-opacity", 1);
+
+    gradient.append("stop")
+      .attr('class', 'end')
+      .attr("offset", "100%")
+      .attr("stop-color", function (d) {
+        return colors[d.target.index];
+      })
+      .attr("stop-opacity", 1);
 
 
-      group
-        .selectAll(".group-tick-label")
-        .data(d => {
-          //console.log(d)
-          return [{ value: genres[d.index], angle: (d.endAngle + d.startAngle) / 2 }];
-        })
-        .enter()
-        .filter(d => d.value)
-        .append("g")
-        .attr("transform", d => `rotate(${d.angle * 180 / Math.PI - 90}) translate(200,0)`)
-        .append("text")
-        .attr("x", 8)
-        .attr("dy", ".35em")
-        .attr("transform", function (d) { return d.angle > Math.PI ? "rotate(180) translate(-16)" : null; })
-        .style("text-anchor", function (d) { return d.angle > Math.PI ? "end" : null; })
-        .text(d => d.value)
-        .style("font-size", 9)
+
+    svg
+      .datum(res)
+      .append("g")
+      .selectAll("path")
+      .data(d => d)
+      .join("path")
+      .attr("d", d3.ribbon()
+        .radius(200)
+      )
+      //.style("fill", d => colors[d.source.index]) // colors depend on the source group. Change to target otherwise.
+      .style("fill", function (d) {
+        return "url(#gradient-" + d.source.index + '-' + d.target.index + ")";
+      })
+      .style("stroke", "black");
+
+
+    group
+      .selectAll(".group-tick-label")
+      .data(d => {
+        //console.log(d)
+        return [{ value: genres[d.index], angle: (d.endAngle + d.startAngle) / 2 }];
+      })
+      .enter()
+      .filter(d => d.value)
+      .append("g")
+      .attr("transform", d => `rotate(${d.angle * 180 / Math.PI - 90}) translate(200,0)`)
+      .append("text")
+      .attr("x", 8)
+      .attr("dy", ".35em")
+      .attr("transform", function (d) { return d.angle > Math.PI ? "rotate(180) translate(-16)" : null; })
+      .style("text-anchor", function (d) { return d.angle > Math.PI ? "end" : null; })
+      .text(d => d.value)
+      .style("font-size", 9)
 
 
     });
