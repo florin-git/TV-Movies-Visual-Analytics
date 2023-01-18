@@ -14,66 +14,103 @@
     }
     /* per calendar */
     .month {
-        fill: none;
-        stroke: #000;
-        stroke-width: 2px;
+            fill: none;
+            stroke: #000;
+            stroke-width: 2px;
     }
+
     .day {
         fill: #fff;
         stroke: #ccc;
     }
-    /* text    {
-        font-family:sans-serif;
-        font-size:1.5em;
-    } */
-    .dayLabel   {
-        fill:#aaa;
-        font-size:0.8em;
+    /*
+    text {
+        font-family: sans-serif;
+        font-size: 1.5em;
+    }*/
+
+    .dayLabel {
+        fill: #aaa;
+        font-size: 0.8em;
     }
+
     .monthLabel {
-        text-anchor:middle;
-        font-size:0.8em;
-        fill:#aaa;
+        text-anchor: middle;
+        font-size: 0.8em;
+        fill: #aaa;
     }
-    .yearLabel  {
-        fill:#aaa;
-        font-size:1.2em;
+
+    .key {
+        font-size: 0.5em;
     }
-    
-    .key    {font-size:0.5em;}
 
     /* fine calendar */
     </style>
 
+
+<!-- <script src="https://d3js.org/d3.v4.js"></script> -->
+<script src="https://d3js.org/d3.v4.min.js"></script>
+<script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
+<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.6/d3.min.js" charset="utf-8"></script> -->
+
+
+<script type="module" src="./vis/bubbleplot.js"></script>
+<script src="./vis/calendar_heatmap_final.js"></script>
+<!-- <script type="module" src="./vis/stacked_bubble.js"></script> -->
+<script type="module" src="./vis/chord.js"></script>
+<script type="module" src="./vis/mds.js"></script>
+
 </head>
 
-<body id="body" style="background-color: #e2f5f5;">
+<body id="body" style="background-color: #e2f5f5;" onload="start_calendar()">
 
   <div id="all" style="width: 98.5%; height: 98%; position: absolute; bottom: 0.0%; top:0.5%">
     
-    <div class="area darkborder" id="area_1" style="width: 42%; height: 48%; border:1px solid; position: absolute; margin-top: 2%;"></div>
-    <div class="area darkborder" id="area_2" style="width: 58%; height: 48%; border:1px solid; position: absolute; margin-left: 42%; margin-top: 2%;"></div>
-    <!-- <div class="area darkborder" id="area_3" style="width: 10%; height: 48%; border:1px solid; position: absolute; margin-left: 90%; margin-top: 2%;"></div> -->
-    <div class="area darkborder" id="area_4" style="width: 36.5%; height: 48%; border:1px solid; position: absolute; top: 48%; margin-top: 2%;"></div>
-    <div class="area darkborder" id="area_5" style="width: 32.5%; height: 48%; border:1px solid; position: absolute; top: 48%; margin-left: 36.5%; margin-top: 2%;"></div>
+    <div id="a1" style="width: 43.5%; height: 48%; border:1px solid; position: absolute; margin-top: 2%;">
+      
+      <label for="channel_selector">Choose a channel:</label>
+      <select name="channel" id="channel_selector" style="background-color: #e2f5f5">
+        <option value="Italia_1">Italia 1</option>
+        <option value="Cielo">Cielo</option>
+        <option value="Cine34">Cine34</option>
+        <option value="Iris">Iris</option>
+        <option value="Rete_4">Rete 4</option>
+        <option value="Sky_Cinema_Action">Sky Cinema Action</option>
+        <option value="Sky_Cinema_Comedy">Sky Cinema Comedy</option>
+        <option value="Sky_Cinema_Drama">Sky Cinema Drama</option>
+        <option value="Sky_Cinema_Due">Sky Cinema Due</option>
+        <option value="Sky_Cinema_Suspense">Sky Cinema Suspense</option>  
+      </select>
+
+      <label for="channel_selector_2">Choose a channel</label>
+      <select name="channel2" id="channel_selector_2" style="background-color: #e2f5f5">
+        <option value="Cielo">Cielo</option>
+        <option value="Italia_1">Italia 1</option>
+        <option value="Cine34">Cine34</option>
+        <option value="Iris">Iris</option>
+        <option value="Rete_4">Rete 4</option>
+        <option value="Sky_Cinema_Action">Sky Cinema Action</option>
+        <option value="Sky_Cinema_Comedy">Sky Cinema Comedy</option>
+        <option value="Sky_Cinema_Drama">Sky Cinema Drama</option>
+        <option value="Sky_Cinema_Due">Sky Cinema Due</option>
+        <option value="Sky_Cinema_Suspense">Sky Cinema Suspense</option>  
+      </select>
+
+
+      <div id="area_1_top"></div>
+      <div id="area_1_bottom"></div>
+      
+    </div>
+    <div id="area_2" style="width: 56.5%; height: 48%; border:1px solid; position: absolute; margin-left: 43.5%; margin-top: 2%;"></div>
+    <div id="area4" style="width: 36.5%; height: 48%; border:1px solid; position: absolute; top: 48%; margin-top: 2%;">
+    <div id="area_4"> </div>
+  </div>
+    <div id="area_5" style="width: 32.5%; height: 48%; border:1px solid; position: absolute; top: 48%; margin-left: 36.5%; margin-top: 2%;">
+    </div>
     <div  id="area_6" style="width: 31%; height: 48%; border:1px solid; position: absolute; top: 48%; margin-left: 69%; margin-top: 2%;"></div>
 
   </div>
    
-  <script src="https://d3js.org/d3.v4.js"></script>
-  <script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
-  <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.6/d3.min.js" charset="utf-8"></script> -->
-
-
-  <script type="module" src="./vis/bubbleplot.js"></script>
-  <script type="module" src="./vis/stacked_barchart.js"></script>
-  <script type="module" src="./vis/stacked_bubble.js"></script>
-  <script type="module" src="./vis/chord.js"></script>
-  <script type="module" src="./vis/mds.js"></script>
-
-
-
-
 
 </body>
 

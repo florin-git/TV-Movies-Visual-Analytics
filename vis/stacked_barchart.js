@@ -9,7 +9,7 @@
         height = 330 - margin.top - margin.bottom;
     
     // append the svg object to the body of the page
-    var svg = d3.select("#area_4")
+    var svg = d3.select("#")
       .append("svg")
         .attr("width", "100%")
         .attr("height", height + margin.top + margin.bottom)

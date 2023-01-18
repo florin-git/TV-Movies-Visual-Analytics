@@ -54,6 +54,7 @@
 
 
     <script src="https://d3js.org/d3.v4.min.js"></script>
+    <script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>   
     <script>
 
         var breaks = [2, 5, 15, 20];
@@ -161,11 +162,14 @@
             var t1 = new Date(t0.getFullYear(), t0.getMonth() + 1, 0),
                 d0 = t0.getDay(), w0 = d3.timeWeek.count(d3.timeYear(now), t0),
                 d1 = t1.getDay(), w1 = d3.timeWeek.count(d3.timeYear(now), t1);
+                console.log(w0)
+                console.log(w1)
             return "M" + (w0 + 1) * cellSize + "," + d0 * cellSize
                 + "H" + w0 * cellSize + "V" + 7 * cellSize
                 + "H" + w1 * cellSize + "V" + (d1 + 1) * cellSize
                 + "H" + (w1 + 1) * cellSize + "V" + 0
                 + "H" + (w0 + 1) * cellSize + "Z";
+        
         }
 
 
@@ -278,6 +282,7 @@
 
             var BB = new Array();
             var mp = document.getElementById("monthOutlines").childNodes;
+            console.log(mp);
             for (var i = 0; i < mp.length; i++) {
                 BB.push(mp[i].getBBox());
             }
