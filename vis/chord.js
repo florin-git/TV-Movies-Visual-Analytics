@@ -1,4 +1,7 @@
 
+var prova,gh;
+var p,paths,stringhe = new Array();
+
 var dict = {
   "Documentary": 0,
   "Western": 1,
@@ -32,28 +35,6 @@ var genres = [
 const colors = ["#8dd3c7", "#ffffb3", "#bebada", "#fb8072", "#80b1d3", "#fdb462",
  "#b3de69", "#fccde5", "#d9d9d9", "#bc80bd", "#ccebc5", "#ffed6f"];
 
-const generi_info = [
-  {"genere":"Documentary", "colore": "#000000", "id": 0},
-  {"genere":"Western", "colore": "#333333", "id": 1},
-  {"genere":"Adventure", "colore": "#666666", "id": 2},
-  {"genere":"Fantasy", "colore": "#999999", "id": 3},
-  {"genere":"Horror", "colore": "#cccccc", "id": 4},
-  {"genere":"Sci-Fi", "colore": "#ffffff", "id": 5},
-  {"genere":"Comedy", "colore": "#ff0000", "id": 6},
-  {"genere":"Drama", "colore": "#00ff00", "id": 7},
-  {"genere":"Thriller", "colore": "#ffff00", "id": 8},
-  {"genere":"Action", "colore": "#00ffff", "id": 9},
-  {"genere":"Romance", "colore": "#0000ff", "id": 10},
-  {"genere":"Crime", "colore": "#ff00ff", "id": 11},
-
-
-]
-
-
-
-
-
-
 
 var matrix = new Array(12);
 for (var i = 0; i < matrix.length; i++) {
@@ -86,10 +67,8 @@ const data = d3.csv("./dataset/df_final_with_additional_info.csv",function(data)
     .attr("transform", "translate(220,220)")
 
     //label
-  for (var i = 0; i < 12; i++){
-    svg.append("circle").attr("cx",620 - 0.585 * 620).attr("cy",-150+20*i).attr("r", 6).style("fill", colors[i])
-    svg.append("text").attr("x", 620 - 0.565 * 620).attr("y", -150+20*i).text(genres[i]).style("font-size", "15px").attr("alignment-baseline","middle")
-  }
+  
+  
 
   const res = d3.chord()
     .padAngle(0.05)     // padding between entities (black arc)
@@ -174,6 +153,7 @@ const data = d3.csv("./dataset/df_final_with_additional_info.csv",function(data)
     })
     .attr("stop-opacity", 1);
 
+    var k=0;
 
     //PATH!!!!
   svg
@@ -185,9 +165,14 @@ const data = d3.csv("./dataset/df_final_with_additional_info.csv",function(data)
     .attr("d", d3.ribbon()
       .radius(200)
     )
+    .attr("id",function(d,k){
+      k+=1
+      return genres[d.source.index] + "_" + genres[d.target.index] + "_path_" + (k-1)   ;
+      })
     .style("cursor", "pointer")
     //.style("fill", d => colors[d.source.index]) // colors depend on the source group. Change to target otherwise.
-    .style("fill", function (d) {
+    .style("fill", function (d,k) {
+      p=[genres[d.source.index],genres[d.target.index]];
       return "url(#gradient-" + d.source.index + '-' + d.target.index + ")";
     })
     //evidenza i path
@@ -195,37 +180,154 @@ const data = d3.csv("./dataset/df_final_with_additional_info.csv",function(data)
         this["style"]["stroke"]="black";
     })
     .on("mouseout", function (d) {
-      
-      this["style"]["stroke"]=null;
-
+        this["style"]["stroke"]=null;
     })
     .on("click", function (d){
+      console.log(paths);
+      svg.selectAll("path").style("opacity",0.2)
+      d3.select(this).style("opacity",1)
+      updateMDS(d,genres[d.source.index],genres[d.target.index])
+      updateBubble_plot(d,genres[d.source.index],genres[d.target.index])
+    })
+//LEGEND/////
 
 
-        updateMDS(d,genres[d.source.index],genres[d.target.index])
-        updateBubble_plot(d,genres[d.source.index],genres[d.target.index])
+  for (var t = 0; t < 12; t++){
+    svg.append("circle").attr("cx",620 - 0.585 * 620).attr("cy",-150+20*t).attr("r", 6).style("fill", colors[t])
+    svg.append("text").attr("x", 620 - 0.565 * 620).attr("y", -150+20*t).attr("id",genres[t]).text(genres[t]).style("font-size", "15px").attr("alignment-baseline","middle")
+    // if(t==11){
+    //   interactionLegend();
+    // }
+  }  
+    
+    svg.select("#Comedy").on("click",function(t){
+      svg.selectAll("path").style("opacity",0.3).style("stroke","none")
+      svg.selectAll("path").each(function() {
+        stringhe = (this.id).split("_");
+        if (stringhe.includes("Comedy")){
+          this["style"]["stroke-width"] = "0.2";
+          this["style"]["stroke"] = "black";
+          this["style"]["opacity"] = 2;
+        }
+      });
+    })
+    svg.select("#Documentary").on("click",function(t){
+      svg.selectAll("path").style("opacity",0.3).style("stroke","none")
+      svg.selectAll("path").each(function() {
+        stringhe = (this.id).split("_");
+        if (stringhe.includes("Documentary")){
+          this["style"]["stroke-width"] = "0.2";
+          this["style"]["stroke"] = "black";
+          this["style"]["opacity"] = 2;
+        }
+      });
+    })
+    svg.select("#Sci-Fi").on("click",function(t){
+      svg.selectAll("path").style("opacity",0.3).style("stroke","none")
+      svg.selectAll("path").each(function() {
+        stringhe = (this.id).split("_");
+        if (stringhe.includes("Sci-Fi")){
+          this["style"]["stroke-width"] = "0.2";
+          this["style"]["stroke"] = "black";
+          this["style"]["opacity"] = 2;
+        }
+      });
+    })
+    svg.select("#Crime").on("click",function(t){
+      svg.selectAll("path").style("opacity",0.3).style("stroke","none")
+      svg.selectAll("path").each(function() {
+        stringhe = (this.id).split("_");
+        if (stringhe.includes("Crime")){
+          this["style"]["stroke"] = "black";
+          this["style"]["stroke-width"] = "0.2";
+          this["style"]["opacity"] = 2;
+        }
+      });
+    })
+    svg.select("#Action").on("click",function(t){
+      svg.selectAll("path").style("opacity",0.3).style("stroke","none")
+      svg.selectAll("path").each(function() {
+        stringhe = (this.id).split("_");
+        if (stringhe.includes("Action")){
+          this["style"]["stroke-width"] = "0.2";
+          this["style"]["stroke"] = "black";
+          this["style"]["opacity"] = 2;
+        }
+      });
+    })
+    svg.select("#Drama").on("click",function(t){
+      svg.selectAll("path").style("opacity",0.3).style("stroke","none")
+      svg.selectAll("path").each(function() {
+        stringhe = (this.id).split("_");
+        if (stringhe.includes("Drama")){
+          this["style"]["stroke-width"] = "0.2";
+
+          this["style"]["stroke"] = "black";
+          this["style"]["opacity"] = 2;
+        }
+      });
+    })
+    svg.select("#Western").on("click",function(t){
+      svg.selectAll("path").style("opacity",0.3).style("stroke","none")
+      svg.selectAll("path").each(function() {
+        stringhe = (this.id).split("_");
+        if (stringhe.includes("Western")){
+          this["style"]["stroke-width"] = "0.2";
+
+          this["style"]["stroke"] = "black";
+          this["style"]["opacity"] = 2;
+        }
+      });
+    })
+    svg.select("#Adventure").on("click",function(t){
+      svg.selectAll("path").style("opacity",0.3).style("stroke","none")
+      svg.selectAll("path").each(function() {
+        stringhe = (this.id).split("_");
+        if (stringhe.includes("Adventure")){
+          this["style"]["stroke-width"] = "0.2";
+
+          this["style"]["stroke"] = "black";
+          this["style"]["opacity"] = 2;
+        }
+      });
+    })
+    svg.select("#Fantasy").on("click",function(t){
+      svg.selectAll("path").style("opacity",0.3).style("stroke","none")
+      svg.selectAll("path").each(function() {
+        stringhe = (this.id).split("_");
+        if (stringhe.includes("Fantasy")){
+          this["style"]["stroke-width"] = "0.2";
+
+          this["style"]["stroke"] = "black";
+          this["style"]["opacity"] = 2;
+        }
+      });
+    })
+    svg.select("#Thriller").on("click",function(t){
+      svg.selectAll("path").style("opacity",0.3).style("stroke","none")
+      svg.selectAll("path").each(function() {
+        stringhe = (this.id).split("_");
+        if (stringhe.includes("Thriller")){
+          this["style"]["stroke-width"] = "0.2";
+
+          this["style"]["stroke"] = "black";
+          this["style"]["opacity"] = 2;
+        }
+      });
     })
 
+    svg.select("#Romance").on("click",function(t){
+      svg.selectAll("path").style("opacity",0.3).style("stroke","none")
+      svg.selectAll("path").each(function() {
+        stringhe = (this.id).split("_");
+        if (stringhe.includes("Romance")){
+          this["style"]["stroke-width"] = "0.2";
 
-  // group
-  //   .selectAll(".group-tick-label")
-  //   .data(d => {
-  //     //console.log(d)
-  //     return [{ value: genres[d.index], angle: (d.endAngle + d.startAngle) / 2 }];
-  //   })
-  //   .enter()
-  //   .filter(d => d.value)
-  //   .append("g")
-  //   .attr("transform", d => `rotate(${d.angle * 180 / Math.PI - 90}) translate(200,0)`)
-  //   .append("text")
-  //   .attr("x", 8)
-  //   .attr("dy", ".35em")
-  //   .attr("transform", function (d) { return d.angle > Math.PI ? "rotate(180) translate(-16)" : null; })
-  //   .style("text-anchor", function (d) { return d.angle > Math.PI ? "end" : null; })
-  //   .text(d => d.value)
-  //   .style("font-size", 9)
-
-
+          this["style"]["stroke"] = "black";
+          this["style"]["opacity"] = 2;
+        }
+      });
+    })
 
 
 
