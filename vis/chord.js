@@ -64,7 +64,7 @@ const data = d3.csv("./dataset/df_final_with_additional_info.csv",function(data)
     .attr("width", "100%")
     .attr("height", "100%")
     .append("g")
-    .attr("transform", "translate(220,220)")
+    .attr("transform", "translate(220,215)")
 
     //label
   

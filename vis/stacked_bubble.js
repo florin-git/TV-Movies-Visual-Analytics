@@ -1,10 +1,10 @@
-var margin={ top: 5, right: 2, bottom:23, left: 60}
-var width = 850 - margin.left - margin.right
+var margin={ top: 5, right: 2, bottom:23, left: 55}
+var width = 650 - margin.left - margin.right
 var height = 410 - margin.top - margin.bottom
 
 // append the svg object to the body of the page
 var svg = d3
-  .select("#area_1")
+  .select("#area_4")
   .append("svg")
   .attr("width", width + margin.left + margin.right)
   .attr("height", height + margin.top + margin.bottom)
@@ -14,10 +14,7 @@ var svg = d3
 //Read the data
 d3.csv("./dataset/channel_month_count_sharing.csv", function (data) {
   // console.log(
-  //   d3.extent(data, function (d) {
-  //     return Math.max(d.sharing);
-  //   })
-  // );
+  
 
   var x = d3
     .scaleBand()
@@ -33,7 +30,7 @@ d3.csv("./dataset/channel_month_count_sharing.csv", function (data) {
       "Sky Cinema Comedy",
       "Sky Cinema Action",
     ])
-    .range([0, 560]);
+    .range([0, 500]);
 
   var xAxis = d3.axisBottom(x);
 
@@ -43,7 +40,7 @@ d3.csv("./dataset/channel_month_count_sharing.csv", function (data) {
     .attr("transform", "translate(0," + height + ")")
     .call(xAxis)
     .selectAll("text")
-    .attr("transform", "rotate(-15)")
+    .attr("transform", "rotate(-10)")
     .style("text-anchor", "middle")
     .style("font-size", 10)
     .style("fill", "#00000");
@@ -138,8 +135,8 @@ d3.csv("./dataset/channel_month_count_sharing.csv", function (data) {
   svg
     .append("rect")
     // .attr("x", 580)
-    .attr("x", width - 0.22 * width)
-    .attr("y", 20)
+    .attr("x", width - 0.10 * width)
+    .attr("y", 25)
     .attr("width", 20)
     .attr("height", 145)
     .style("fill", "url(#linear-gradient)");
@@ -147,8 +144,8 @@ d3.csv("./dataset/channel_month_count_sharing.csv", function (data) {
   svg
     .append("text")
     .attr("class", "legendTitle")
-    .attr("x", width - 0.3 * width)
-    .attr("y", 10)
+    .attr("x", width - 0.215 * width)
+    .attr("y", 8)
     .text("Sharing Percentage");
 
   var legendScale = d3
@@ -160,7 +157,7 @@ d3.csv("./dataset/channel_month_count_sharing.csv", function (data) {
   var legendAxis = d3.axisLeft().scale(legendScale).ticks(5);
   svg
     .append("g")
-    .attr("transform", "translate("+ (width - 0.222 * width) + "," + 20 + ")")
+    .attr("transform", "translate("+ (width - 0.11 * width) + "," + 25 + ")")
     .call(legendAxis);
 
   // svg
