@@ -183,7 +183,6 @@ const data = d3.csv("./dataset/df_final_with_additional_info.csv",function(data)
         this["style"]["stroke"]=null;
     })
     .on("click", function (d){
-      console.log(paths);
       svg.selectAll("path").style("opacity",0.2)
       d3.select(this).style("opacity",1)
       updateMDS(d,genres[d.source.index],genres[d.target.index])
@@ -205,6 +204,7 @@ const data = d3.csv("./dataset/df_final_with_additional_info.csv",function(data)
       svg.selectAll("path").each(function() {
         stringhe = (this.id).split("_");
         if (stringhe.includes("Comedy")){
+          updateBubble_plot_from_chord(stringhe[0]);
           this["style"]["stroke-width"] = "0.2";
           this["style"]["stroke"] = "black";
           this["style"]["opacity"] = 2;
@@ -216,6 +216,7 @@ const data = d3.csv("./dataset/df_final_with_additional_info.csv",function(data)
       svg.selectAll("path").each(function() {
         stringhe = (this.id).split("_");
         if (stringhe.includes("Documentary")){
+          updateBubble_plot_from_chord(stringhe[0]);
           this["style"]["stroke-width"] = "0.2";
           this["style"]["stroke"] = "black";
           this["style"]["opacity"] = 2;
@@ -227,6 +228,7 @@ const data = d3.csv("./dataset/df_final_with_additional_info.csv",function(data)
       svg.selectAll("path").each(function() {
         stringhe = (this.id).split("_");
         if (stringhe.includes("Sci-Fi")){
+          updateBubble_plot_from_chord(stringhe[0]);
           this["style"]["stroke-width"] = "0.2";
           this["style"]["stroke"] = "black";
           this["style"]["opacity"] = 2;
@@ -238,6 +240,7 @@ const data = d3.csv("./dataset/df_final_with_additional_info.csv",function(data)
       svg.selectAll("path").each(function() {
         stringhe = (this.id).split("_");
         if (stringhe.includes("Crime")){
+          updateBubble_plot_from_chord(stringhe[0]);
           this["style"]["stroke"] = "black";
           this["style"]["stroke-width"] = "0.2";
           this["style"]["opacity"] = 2;
@@ -249,6 +252,7 @@ const data = d3.csv("./dataset/df_final_with_additional_info.csv",function(data)
       svg.selectAll("path").each(function() {
         stringhe = (this.id).split("_");
         if (stringhe.includes("Action")){
+          updateBubble_plot_from_chord(stringhe[0]);
           this["style"]["stroke-width"] = "0.2";
           this["style"]["stroke"] = "black";
           this["style"]["opacity"] = 2;
@@ -260,8 +264,8 @@ const data = d3.csv("./dataset/df_final_with_additional_info.csv",function(data)
       svg.selectAll("path").each(function() {
         stringhe = (this.id).split("_");
         if (stringhe.includes("Drama")){
+          updateBubble_plot_from_chord(stringhe[0]);
           this["style"]["stroke-width"] = "0.2";
-
           this["style"]["stroke"] = "black";
           this["style"]["opacity"] = 2;
         }
@@ -272,8 +276,8 @@ const data = d3.csv("./dataset/df_final_with_additional_info.csv",function(data)
       svg.selectAll("path").each(function() {
         stringhe = (this.id).split("_");
         if (stringhe.includes("Western")){
+          updateBubble_plot_from_chord(stringhe[0]);
           this["style"]["stroke-width"] = "0.2";
-
           this["style"]["stroke"] = "black";
           this["style"]["opacity"] = 2;
         }
@@ -284,8 +288,8 @@ const data = d3.csv("./dataset/df_final_with_additional_info.csv",function(data)
       svg.selectAll("path").each(function() {
         stringhe = (this.id).split("_");
         if (stringhe.includes("Adventure")){
+          updateBubble_plot_from_chord(stringhe[0]);
           this["style"]["stroke-width"] = "0.2";
-
           this["style"]["stroke"] = "black";
           this["style"]["opacity"] = 2;
         }
@@ -296,8 +300,8 @@ const data = d3.csv("./dataset/df_final_with_additional_info.csv",function(data)
       svg.selectAll("path").each(function() {
         stringhe = (this.id).split("_");
         if (stringhe.includes("Fantasy")){
+          updateBubble_plot_from_chord(stringhe[0]);
           this["style"]["stroke-width"] = "0.2";
-
           this["style"]["stroke"] = "black";
           this["style"]["opacity"] = 2;
         }
@@ -308,8 +312,8 @@ const data = d3.csv("./dataset/df_final_with_additional_info.csv",function(data)
       svg.selectAll("path").each(function() {
         stringhe = (this.id).split("_");
         if (stringhe.includes("Thriller")){
+          updateBubble_plot_from_chord(stringhe[0]);
           this["style"]["stroke-width"] = "0.2";
-
           this["style"]["stroke"] = "black";
           this["style"]["opacity"] = 2;
         }
@@ -321,8 +325,8 @@ const data = d3.csv("./dataset/df_final_with_additional_info.csv",function(data)
       svg.selectAll("path").each(function() {
         stringhe = (this.id).split("_");
         if (stringhe.includes("Romance")){
+          updateBubble_plot_from_chord(stringhe[0]);
           this["style"]["stroke-width"] = "0.2";
-
           this["style"]["stroke"] = "black";
           this["style"]["opacity"] = 2;
         }
@@ -365,3 +369,15 @@ function updateBubble_plot(d,gen1,gen2){
   }
 
 }
+
+function updateBubble_plot_from_chord(gen1){
+  var circles = d3.select("#area_2").selectAll(".bubble").style("display","block");
+  circles.filter(function(f) {
+      return !(f.genres.includes(gen1))
+    }).style("display","none");
+
+}
+
+
+
+
