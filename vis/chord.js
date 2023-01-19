@@ -1,6 +1,8 @@
 
 var prova,gh;
-var p,paths,stringhe = new Array();
+var p,paths,stringhe = new Array()
+var clicked = new Array(65).fill(false)
+console.log(clicked)
 
 var dict = {
   "Documentary": 0,
@@ -206,6 +208,7 @@ const data = d3.csv("./dataset/df_final_with_additional_info.csv",function(data)
     })
     //evidenza i path
     .on("mouseover", function (d) {
+      // console.log(d3.select(this))
       this["style"]["stroke"]="black";
       if ( genres[d.source.index] ==  genres[d.target.index]){
         tooltip.html(genres[d.source.index] + "<br> Number of films of" + genres[d.source.index] + " :<br>" + matrix2[d.source.index][d.source.index] + " out of " + num_titles);
@@ -220,14 +223,26 @@ const data = d3.csv("./dataset/df_final_with_additional_info.csv",function(data)
       (d3.event.pageY - 10) + "px").style("left", (d3.event.pageX + 10) + "px");
     })
     .on("mouseout", function (d) {
-      this["style"]["stroke"]=null;
+      if(!clicked[d.source.index] & !clicked[d.target.index] ){
+        this["style"]["stroke"]=null;
+      }
       return tooltip.style("visibility", "hidden");
     })
     .on("click", function (d){
-      svg.selectAll("path").style("opacity",0.2)
-      d3.select(this).style("opacity",1)
-      updateMDS(d,genres[d.source.index],genres[d.target.index])
-      updateBubble_plot(d,genres[d.source.index],genres[d.target.index])
+      if(!clicked[d.source.index] & !clicked[d.target.index] ){
+        svg.selectAll("path").style("opacity",0.2)
+        d3.select(this).style("opacity",1)
+        updateMDS(d,genres[d.source.index],genres[d.target.index])
+        updateBubble_plot(d,genres[d.source.index],genres[d.target.index])
+        clicked[d.source.index]=true;
+        clicked[d.targetindex]=true;
+      }
+      else{
+        svg.selectAll("path").style("opacity",1.2)
+        for (var k=0; k < clicked.length ; k++){
+          clicked[k]=false;
+        }
+      }
     })
 //LEGEND/////
   for (var t = 0; t < 12; t++){
