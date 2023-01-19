@@ -214,8 +214,8 @@ d3.csv("./dataset/channel_month_count_sharing.csv", function (data) {
       updateBubble_plot(d);
       //Gestione mds
       updateMDS(d);
-      //Gestione calendar 
-      updateCalendar(d);
+      //Gestione calendar
+      updateCalendar(d.channel);
     }) 
     
 
@@ -253,13 +253,14 @@ function updateMDS(d){
 
 }
 
-
-
 function updateCalendar(d){
-  console.log(d3.select("#channel_selector").property("value") ) 
-  ///
-  d3.select("#channel_selector").property("value","Iris")
-  console.log(d3.select("#channel_selector").property("value"));
 
-
+  var temp = d.replaceAll(" ", "_")
+  //calendarCreateBubble(temp, "bottom")
+  document.getElementById("area_1_bottom").removeChild(document.getElementById("2022bottom").parentNode)
+  document.getElementById("legend").parentNode.removeChild(document.getElementById("legend"))
+  document.getElementById("channel_selector_2").value = temp
+  var changeEvent = new Event("change")
+  document.getElementById("channel_selector_2").dispatchEvent(changeEvent)
+  
 }

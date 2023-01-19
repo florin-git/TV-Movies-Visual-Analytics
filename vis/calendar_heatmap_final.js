@@ -80,18 +80,12 @@ function start_calendar() {
         var selection = document.getElementById("channel_selector");
         selection.onchange = (event) => {
             var text = event.target.value;
-
-            document.getElementById("2022top").parentNode.remove();
-
             calendarCreate(final_processed[text], "top");
         };
 
         var selection2 = document.getElementById("channel_selector_2");
         selection2.onchange = (event) => {
             var text = event.target.value;
-
-            document.getElementById("2022bottom").parentNode.remove();
-
             calendarCreate(final_processed[text], "bottom");
 
         }
@@ -99,7 +93,10 @@ function start_calendar() {
         var default_set = final_processed["Italia_1"];
         var default_set_1 = final_processed["Cielo"]
         calendarCreate(default_set, "top");
-        calendarCreate(default_set_1, "bottom");
+
+        if (document.getElementById("2022bottom") == null) {
+            calendarCreate(default_set_1, "bottom");
+        }
 
         create_legend()
 
@@ -138,6 +135,10 @@ function monthPath(t0) {
 }
 
 function calendarCreate(chosen_data, level) {
+
+    if (document.getElementById("2022" + level) != null) {
+        document.getElementById("2022" + level).parentNode.remove();
+    }
     var units = " minutes";
 
     var yearlyData = d3
@@ -307,11 +308,16 @@ function calendarCreate(chosen_data, level) {
 
 }
 
-function create_legend(){
+function create_legend() {
+
+    if (document.getElementById("legend") != null) {
+        return
+    }
 
     var svg = d3
         .select("#a1")
         .append("svg")
+        .attr("id", "legend")
         .attr("width", "100%")
 
     var key = svg
@@ -327,10 +333,10 @@ function create_legend(){
         .data(colours)
         .enter()
         .append("rect")
-        .attr("width", cellSize*1.5)
-        .attr("height", cellSize*1.5)
+        .attr("width", cellSize * 1.5)
+        .attr("height", cellSize * 1.5)
         .attr("x", function (d, i) {
-            return i*105;
+            return i * 105;
         })
         .attr("fill", function (d) {
             return d;
@@ -343,7 +349,7 @@ function create_legend(){
         .append("text")
         .attr("font-size", "1.4rem")
         .attr("x", function (d, i) {
-            return cellSize+10 + (i*105);
+            return cellSize + 10 + (i * 105);
         })
         .attr("y", "1rem")
         .text(function (d, i) {
