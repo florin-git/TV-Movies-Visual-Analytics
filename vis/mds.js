@@ -94,7 +94,6 @@ d3.csv("./dataset/mds_with_titles.csv", function (data) {
     })
     .on("mouseout", function() {
       return tooltip.style("visibility", "hidden");
-    
     })
 
     

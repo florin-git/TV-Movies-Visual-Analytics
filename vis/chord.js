@@ -35,17 +35,35 @@ var genres = [
 const colors = ["#8dd3c7", "#ffffb3", "#bebada", "#fb8072", "#80b1d3", "#fdb462",
  "#b3de69", "#fccde5", "#d9d9d9", "#bc80bd", "#ccebc5", "#ffed6f"];
 
+var num_titles=0
+var titles = new Array();
 
 var matrix = new Array(12);
 for (var i = 0; i < matrix.length; i++) {
   matrix[i] = new Array(12).fill(0);
 }
 
+
+var matrix2 = new Array(12);
+for (var i = 0; i < matrix2.length; i++) {
+  matrix2[i] = new Array(12).fill(0);
+}
+
 const data = d3.csv("./dataset/df_final_with_additional_info.csv",function(data){
 
   // Get the list of genres
   data.forEach(function (d) {
+    if (!titles.includes(d.title)){
+      titles.push(d.title)
+      var extracted2 = d.genres.split(",");
+      for (var i = 0; i < extracted2.length; i++) {
+        for (var j = 0; j < extracted2.length; j++) {
+          matrix2[dict[extracted2[i]]][dict[extracted2[j]]] += 1;
 
+        }
+      }
+    }
+  
     var extracted = d.genres.split(",");
     for (var i = 0; i < extracted.length; i++) {
       for (var j = 0; j < extracted.length; j++) {
@@ -56,9 +74,8 @@ const data = d3.csv("./dataset/df_final_with_additional_info.csv",function(data)
     }
 
   });
-
-
-
+  num_titles = titles.length;
+ 
   const svg = d3.select("#area_5")
     .append("svg")
     .attr("width", "100%")
@@ -66,7 +83,19 @@ const data = d3.csv("./dataset/df_final_with_additional_info.csv",function(data)
     .append("g")
     .attr("transform", "translate(220,215)")
 
-    //label
+  //tooltip
+  var tooltip = d3.select("body")
+      .append("div")
+      .attr("id", "tooltip2")
+      .style("background-color", "#636363")
+      .style("position", "absolute")
+      .style("z-index", "10")
+      .style("visibility", "hidden")
+      .style("font-size", "20px")
+      .style("color", "white")
+      .text("");
+  //end tooltip
+    
   
   
 
@@ -177,10 +206,22 @@ const data = d3.csv("./dataset/df_final_with_additional_info.csv",function(data)
     })
     //evidenza i path
     .on("mouseover", function (d) {
-        this["style"]["stroke"]="black";
+      this["style"]["stroke"]="black";
+      if ( genres[d.source.index] ==  genres[d.target.index]){
+        tooltip.html(genres[d.source.index] + "<br> Number of films of" + genres[d.source.index] + " :<br>" + matrix2[d.source.index][d.source.index] + " out of " + num_titles);
+      }
+      else{
+        tooltip.html(genres[d.source.index] +","+ genres[d.target.index] + "<br> Number of films of" + genres[d.source.index] +", "+ genres[d.target.index] + " :<br>" + matrix2[d.source.index][d.target.index] + " out of " + num_titles);
+      }
+      return tooltip.style("visibility", "visible");
+    })
+    .on("mousemove", function() {
+      return tooltip.style("top",
+      (d3.event.pageY - 10) + "px").style("left", (d3.event.pageX + 10) + "px");
     })
     .on("mouseout", function (d) {
-        this["style"]["stroke"]=null;
+      this["style"]["stroke"]=null;
+      return tooltip.style("visibility", "hidden");
     })
     .on("click", function (d){
       svg.selectAll("path").style("opacity",0.2)
@@ -189,156 +230,14 @@ const data = d3.csv("./dataset/df_final_with_additional_info.csv",function(data)
       updateBubble_plot(d,genres[d.source.index],genres[d.target.index])
     })
 //LEGEND/////
-
-
   for (var t = 0; t < 12; t++){
     svg.append("circle").attr("cx",620 - 0.585 * 620).attr("cy",-150+20*t).attr("r", 6).style("fill", colors[t])
     svg.append("text").attr("x", 620 - 0.565 * 620).attr("y", -150+20*t).attr("id",genres[t]).text(genres[t]).style("font-size", "15px").attr("alignment-baseline","middle")
-    // if(t==11){
-    //   interactionLegend();
-    // }
+    if(t==11){
+      interactionLegend(svg);
+    }
   }  
-    
-    svg.select("#Comedy").on("click",function(t){
-      svg.selectAll("path").style("opacity",0.3).style("stroke","none")
-      svg.selectAll("path").each(function() {
-        stringhe = (this.id).split("_");
-        if (stringhe.includes("Comedy")){
-          updateBubble_plot_from_chord(stringhe[0]);
-          this["style"]["stroke-width"] = "0.2";
-          this["style"]["stroke"] = "black";
-          this["style"]["opacity"] = 2;
-        }
-      });
-    })
-    svg.select("#Documentary").on("click",function(t){
-      svg.selectAll("path").style("opacity",0.3).style("stroke","none")
-      svg.selectAll("path").each(function() {
-        stringhe = (this.id).split("_");
-        if (stringhe.includes("Documentary")){
-          updateBubble_plot_from_chord(stringhe[0]);
-          this["style"]["stroke-width"] = "0.2";
-          this["style"]["stroke"] = "black";
-          this["style"]["opacity"] = 2;
-        }
-      });
-    })
-    svg.select("#Sci-Fi").on("click",function(t){
-      svg.selectAll("path").style("opacity",0.3).style("stroke","none")
-      svg.selectAll("path").each(function() {
-        stringhe = (this.id).split("_");
-        if (stringhe.includes("Sci-Fi")){
-          updateBubble_plot_from_chord(stringhe[0]);
-          this["style"]["stroke-width"] = "0.2";
-          this["style"]["stroke"] = "black";
-          this["style"]["opacity"] = 2;
-        }
-      });
-    })
-    svg.select("#Crime").on("click",function(t){
-      svg.selectAll("path").style("opacity",0.3).style("stroke","none")
-      svg.selectAll("path").each(function() {
-        stringhe = (this.id).split("_");
-        if (stringhe.includes("Crime")){
-          updateBubble_plot_from_chord(stringhe[0]);
-          this["style"]["stroke"] = "black";
-          this["style"]["stroke-width"] = "0.2";
-          this["style"]["opacity"] = 2;
-        }
-      });
-    })
-    svg.select("#Action").on("click",function(t){
-      svg.selectAll("path").style("opacity",0.3).style("stroke","none")
-      svg.selectAll("path").each(function() {
-        stringhe = (this.id).split("_");
-        if (stringhe.includes("Action")){
-          updateBubble_plot_from_chord(stringhe[0]);
-          this["style"]["stroke-width"] = "0.2";
-          this["style"]["stroke"] = "black";
-          this["style"]["opacity"] = 2;
-        }
-      });
-    })
-    svg.select("#Drama").on("click",function(t){
-      svg.selectAll("path").style("opacity",0.3).style("stroke","none")
-      svg.selectAll("path").each(function() {
-        stringhe = (this.id).split("_");
-        if (stringhe.includes("Drama")){
-          updateBubble_plot_from_chord(stringhe[0]);
-          this["style"]["stroke-width"] = "0.2";
-          this["style"]["stroke"] = "black";
-          this["style"]["opacity"] = 2;
-        }
-      });
-    })
-    svg.select("#Western").on("click",function(t){
-      svg.selectAll("path").style("opacity",0.3).style("stroke","none")
-      svg.selectAll("path").each(function() {
-        stringhe = (this.id).split("_");
-        if (stringhe.includes("Western")){
-          updateBubble_plot_from_chord(stringhe[0]);
-          this["style"]["stroke-width"] = "0.2";
-          this["style"]["stroke"] = "black";
-          this["style"]["opacity"] = 2;
-        }
-      });
-    })
-    svg.select("#Adventure").on("click",function(t){
-      svg.selectAll("path").style("opacity",0.3).style("stroke","none")
-      svg.selectAll("path").each(function() {
-        stringhe = (this.id).split("_");
-        if (stringhe.includes("Adventure")){
-          updateBubble_plot_from_chord(stringhe[0]);
-          this["style"]["stroke-width"] = "0.2";
-          this["style"]["stroke"] = "black";
-          this["style"]["opacity"] = 2;
-        }
-      });
-    })
-    svg.select("#Fantasy").on("click",function(t){
-      svg.selectAll("path").style("opacity",0.3).style("stroke","none")
-      svg.selectAll("path").each(function() {
-        stringhe = (this.id).split("_");
-        if (stringhe.includes("Fantasy")){
-          updateBubble_plot_from_chord(stringhe[0]);
-          this["style"]["stroke-width"] = "0.2";
-          this["style"]["stroke"] = "black";
-          this["style"]["opacity"] = 2;
-        }
-      });
-    })
-    svg.select("#Thriller").on("click",function(t){
-      svg.selectAll("path").style("opacity",0.3).style("stroke","none")
-      svg.selectAll("path").each(function() {
-        stringhe = (this.id).split("_");
-        if (stringhe.includes("Thriller")){
-          updateBubble_plot_from_chord(stringhe[0]);
-          this["style"]["stroke-width"] = "0.2";
-          this["style"]["stroke"] = "black";
-          this["style"]["opacity"] = 2;
-        }
-      });
-    })
-
-    svg.select("#Romance").on("click",function(t){
-      svg.selectAll("path").style("opacity",0.3).style("stroke","none")
-      svg.selectAll("path").each(function() {
-        stringhe = (this.id).split("_");
-        if (stringhe.includes("Romance")){
-          updateBubble_plot_from_chord(stringhe[0]);
-          this["style"]["stroke-width"] = "0.2";
-          this["style"]["stroke"] = "black";
-          this["style"]["opacity"] = 2;
-        }
-      });
-    })
-
-
-
-
-   
-
-
+///END legend
 })
 
 
@@ -379,5 +278,162 @@ function updateBubble_plot_from_chord(gen1){
 }
 
 
+function interactionLegend(svg){
+
+svg.select("#Comedy").
+  on("click",function(t){
+    svg.selectAll("path").style("opacity",0.3).style("stroke","none")
+    svg.selectAll("path").each(function() {
+      stringhe = (this.id).split("_");
+      if (stringhe.includes("Comedy")){
+        updateBubble_plot_from_chord(stringhe[0]);
+        this["style"]["stroke-width"] = "0.2";
+        this["style"]["stroke"] = "black";
+        this["style"]["opacity"] = 2;
+      }
+    });
+  })
+svg.select("#Documentary")
+.style("cursor", "pointer")
+.on("click",function(t){
+  svg.selectAll("path").style("opacity",0.3).style("stroke","none")
+  svg.selectAll("path").each(function() {
+    stringhe = (this.id).split("_");
+    if (stringhe.includes("Documentary")){
+      updateBubble_plot_from_chord(stringhe[0]);
+      this["style"]["stroke-width"] = "0.2";
+      this["style"]["stroke"] = "black";
+      this["style"]["opacity"] = 2;
+    }
+  });
+})
+svg.select("#Sci-Fi").style("cursor", "pointer")
+.on("click",function(t){
+  svg.selectAll("path").style("opacity",0.3).style("stroke","none")
+  svg.selectAll("path").each(function() {
+    stringhe = (this.id).split("_");
+    if (stringhe.includes("Sci-Fi")){
+      updateBubble_plot_from_chord(stringhe[0]);
+      this["style"]["stroke-width"] = "0.2";
+      this["style"]["stroke"] = "black";
+      this["style"]["opacity"] = 2;
+    }
+  });
+})
+svg.select("#Crime")
+.style("cursor", "pointer")
+.on("click",function(t){
+  svg.selectAll("path").style("opacity",0.3).style("stroke","none")
+  svg.selectAll("path").each(function() {
+    stringhe = (this.id).split("_");
+    if (stringhe.includes("Crime")){
+      updateBubble_plot_from_chord(stringhe[0]);
+      this["style"]["stroke"] = "black";
+      this["style"]["stroke-width"] = "0.2";
+      this["style"]["opacity"] = 2;
+    }
+  });
+})
+svg.select("#Action")
+.style("cursor", "pointer")
+.on("click",function(t){
+  svg.selectAll("path").style("opacity",0.3).style("stroke","none")
+  svg.selectAll("path").each(function() {
+    stringhe = (this.id).split("_");
+    if (stringhe.includes("Action")){
+      updateBubble_plot_from_chord(stringhe[0]);
+      this["style"]["stroke-width"] = "0.2";
+      this["style"]["stroke"] = "black";
+      this["style"]["opacity"] = 2;
+    }
+  });
+})
+svg.select("#Drama")
+.style("cursor", "pointer")
+.on("click",function(t){
+  svg.selectAll("path").style("opacity",0.3).style("stroke","none")
+  svg.selectAll("path").each(function() {
+    stringhe = (this.id).split("_");
+    if (stringhe.includes("Drama")){
+      updateBubble_plot_from_chord(stringhe[0]);
+      this["style"]["stroke-width"] = "0.2";
+      this["style"]["stroke"] = "black";
+      this["style"]["opacity"] = 2;
+    }
+  });
+})
+svg.select("#Western")
+.style("cursor", "pointer")
+.on("click",function(t){
+  svg.selectAll("path").style("opacity",0.3).style("stroke","none")
+  svg.selectAll("path").each(function() {
+    stringhe = (this.id).split("_");
+    if (stringhe.includes("Western")){
+      updateBubble_plot_from_chord(stringhe[0]);
+      this["style"]["stroke-width"] = "0.2";
+      this["style"]["stroke"] = "black";
+      this["style"]["opacity"] = 2;
+    }
+  });
+})
+svg.select("#Adventure")
+.style("cursor", "pointer")
+.on("click",function(t){
+  svg.selectAll("path").style("opacity",0.3).style("stroke","none")
+  svg.selectAll("path").each(function() {
+    stringhe = (this.id).split("_");
+    if (stringhe.includes("Adventure")){
+      updateBubble_plot_from_chord(stringhe[0]);
+      this["style"]["stroke-width"] = "0.2";
+      this["style"]["stroke"] = "black";
+      this["style"]["opacity"] = 2;
+    }
+  });
+})
+svg.select("#Fantasy")
+.style("cursor", "pointer")
+.on("click",function(t){
+  svg.selectAll("path").style("opacity",0.3).style("stroke","none")
+  svg.selectAll("path").each(function() {
+    stringhe = (this.id).split("_");
+    if (stringhe.includes("Fantasy")){
+      updateBubble_plot_from_chord(stringhe[0]);
+      this["style"]["stroke-width"] = "0.2";
+      this["style"]["stroke"] = "black";
+      this["style"]["opacity"] = 2;
+    }
+  });
+})
+svg.select("#Thriller")
+.style("cursor", "pointer")
+.on("click",function(t){
+  svg.selectAll("path").style("opacity",0.3).style("stroke","none")
+  svg.selectAll("path").each(function() {
+    stringhe = (this.id).split("_");
+    if (stringhe.includes("Thriller")){
+      updateBubble_plot_from_chord(stringhe[0]);
+      this["style"]["stroke-width"] = "0.2";
+      this["style"]["stroke"] = "black";
+      this["style"]["opacity"] = 2;
+    }
+  });
+})
+
+svg.select("#Romance")
+.style("cursor", "pointer")
+.on("click",function(t){
+  svg.selectAll("path").style("opacity",0.3).style("stroke","none")
+  svg.selectAll("path").each(function() {
+    stringhe = (this.id).split("_");
+    if (stringhe.includes("Romance")){
+      updateBubble_plot_from_chord(stringhe[0]);
+      this["style"]["stroke-width"] = "0.2";
+      this["style"]["stroke"] = "black";
+      this["style"]["opacity"] = 2;
+    }
+  });
+})
 
 
+
+}

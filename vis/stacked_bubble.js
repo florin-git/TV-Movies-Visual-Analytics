@@ -214,9 +214,8 @@ d3.csv("./dataset/channel_month_count_sharing.csv", function (data) {
       updateBubble_plot(d);
       //Gestione mds
       updateMDS(d);
-
-      ///...
-
+      //Gestione calendar 
+      updateCalendar(d);
     }) 
     
 
@@ -250,6 +249,17 @@ function updateMDS(d){
 
 
 
+
+
+}
+
+
+
+function updateCalendar(d){
+  console.log(d3.select("#channel_selector").property("value") ) 
+  
+  d3.select("#channel_selector").property("value","Iris")
+  console.log(d3.select("#channel_selector").property("value"));
 
 
 }
