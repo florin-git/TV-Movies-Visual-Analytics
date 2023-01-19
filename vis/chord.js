@@ -239,6 +239,8 @@ const data = d3.csv("./dataset/df_final_with_additional_info.csv",function(data)
       }
       else{
         svg.selectAll("path").style("opacity",1.2)
+        var circles = d3.select("#area_2").selectAll(".bubble").style("display","block")
+        var mds_circles = d3.select("#area_6").selectAll(".bubble").style("display","block")
         for (var k=0; k < clicked.length ; k++){
           clicked[k]=false;
         }
