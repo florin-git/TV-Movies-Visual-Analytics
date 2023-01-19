@@ -257,7 +257,7 @@ function updateMDS(d){
 
 function updateCalendar(d){
   console.log(d3.select("#channel_selector").property("value") ) 
-  
+  ///
   d3.select("#channel_selector").property("value","Iris")
   console.log(d3.select("#channel_selector").property("value"));
 
