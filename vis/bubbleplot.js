@@ -231,6 +231,7 @@ d3.csv("./dataset/df_final_with_additional_info.csv", function(data) {
         .attr("r",function (d) { return radiusNumberMovies(d.rating) })
         .style("fill", function (d) { return myColor(d.daytime); } )
         .style("opacity", "0.7")
+        .style("cursor", "pointer")
         .attr("stroke", "black")
         .on("mouseover", function(d) {
           tooltip.html(d.title +"<br> Rating: " +  d.rating+ "<br>" +d.genres);

@@ -242,7 +242,8 @@ function calendarCreate(chosen_data, level) {
             if (d.value > breaks.length - 1) {
                 return colours[breaks.length];
             }
-        });
+        })
+        .style("cursor", "pointer");
 
     //append a title element to give basic mouseover info
     dataRects.append("title").text(function (d) {

@@ -14,6 +14,20 @@ var mediaset = ['Italia 1', 'Iris', 'Rete 4', 'Cine34'];
 
 d3.csv("./dataset/mds_with_titles.csv", function (data) {
 
+  //tooltip and zoom
+  var tooltip = d3.select("body")
+   .append("div")
+   .attr("id", "tooltip1")
+   .style("background-color", "#636363")
+   .style("color", "white")
+   .style("position", "absolute")
+   .style("z-index", "10")
+   .style("visibility", "hidden")
+   .style("font-size", "20px")
+   .text("");
+  ///
+
+
   var svg = d3.select("#area_6")
   .append("svg")
     .attr("width", "100%")
@@ -49,29 +63,41 @@ d3.csv("./dataset/mds_with_titles.csv", function (data) {
     .enter()
     .append("circle")
     .attr("class", "bubble")
-      .attr("cx", function (d) { 
-        return x(d.mds_x) } )
-      .attr("cy", function (d) { 
-        return y(d.mds_y) } )
-      .attr("r", 2)
-      .style("fill", function(d){
-        if(sky.includes(d.channel)){
-          return "#7fc97f"
-        }
-        else if(mediaset.includes(d.channel)) {
-          return "#beaed4"
-        }
-        else{
-          return "#fdc086"
-        }
+    .attr("cx", function (d) { 
+      return x(d.mds_x) } )
+    .attr("cy", function (d) { 
+      return y(d.mds_y) } )
+    .attr("r", 2)
+    .style("stroke", "black")
+    .style("stroke-width", "0.2") 
+    .style("opacity", 0.8)
+    .style("pointer-events", "all")
+    .style("cursor", "pointer")
+    .style("fill", function(d){
+      if(sky.includes(d.channel)){
+        return "#7fc97f"
+      }
+      else if(mediaset.includes(d.channel)) {
+        return "#beaed4"
+      }
+      else{
+        return "#fdc086"
+      }
+    })
+    .on("mouseover", function(d) {
+      tooltip.html(d.title);
+      return tooltip.style("visibility", "visible");
+    })
+    .on("mousemove", function() {
+      return tooltip.style("top",
+      (d3.event.pageY - 10) + "px").style("left", (d3.event.pageX + 10) + "px");
+    })
+    .on("mouseout", function() {
+      return tooltip.style("visibility", "hidden");
+    
+    })
 
-
-
-      })
-      .style("stroke", "black")
-      .style("stroke-width", "0.2") 
-      .style("opacity", 0.8)
-      .style("pointer-events", "all");
+    
 
 
 
