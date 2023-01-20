@@ -4,8 +4,6 @@ var DATASET_PATH = "./dataset/df_chord.csv";
 var prova,gh;
 var p,paths,stringhe = new Array()
 var clicked = new Array(65).fill(false)
-console.log(clicked)
-
 var dict = {
   "Documentary": 0,
   "Western": 1,

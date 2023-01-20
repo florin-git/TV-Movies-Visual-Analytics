@@ -4,6 +4,13 @@ var margin = { top: 5, right: 2, bottom: 20, left: 55 };
 var width = 650 - margin.left - margin.right;
 var height = 420 - margin.top - margin.bottom;
 
+var clicked = new Array(120).fill(false)
+var rad = new Array(120)
+
+
+
+
+
 // append the svg object to the body of the page
 var svg = d3
   .select("#area_4")
@@ -161,6 +168,7 @@ d3.csv(DATASET_PATH, function (data) {
   //   .attr("transform", "translate(560," + 20 + ")")
   //   .call(legendAxis);
 
+  var id_c = 0;
   // Add dots
   svg
     .append("g")
@@ -168,6 +176,11 @@ d3.csv(DATASET_PATH, function (data) {
     .data(data)
     .enter()
     .append("circle")
+    .attr("id",function(d,id_c){
+      id_c= id_c + 1;
+      rad[id_c] = radiusNumberMovies(d.number_movies);
+      return "bubble_" + id_c;
+    })
     .attr("cx", function (d) {
       return x(d.channel) + 28;
     })
@@ -175,7 +188,8 @@ d3.csv(DATASET_PATH, function (data) {
       return y(d.month) + 20.5;
     })
     .attr("r", function (d) {
-      return radiusNumberMovies(d.number_movies);
+      return radiusNumberMovies(d.number_movies)
+      
     })
     .style("fill", function (d) {
       return colorScale(d.sharing);
@@ -184,15 +198,19 @@ d3.csv(DATASET_PATH, function (data) {
     .style("cursor", "pointer")
     .attr("stroke", "black")
     .on("mouseover", function (d) {
-      d3.select(this)
-        .style("stroke", "black")
-        .style("stroke-width", 1.5)
-        .style("opacity", 2);
-      this["style"]["r"] = radiusNumberMovies(d.number_movies) * 2;
       tooltip.html(
         "Number of movies :" + d.number_movies + "<br>Sharing: " + d.sharing
       );
-      return tooltip.style("visibility", "visible");
+      tooltip.style("visibility", "visible")
+      for (var k = 0; k < clicked.length; k++) {
+        if(clicked[k]==true){
+          return;
+        } 
+      }
+      this["style"]["r"] = radiusNumberMovies(d.number_movies) * 2;
+      d3.select(this).style("stroke", "black").style("stroke-width", 1.5).style("opacity", 2)
+      return;
+      
     })
     .on("mousemove", function (d) {
       //this["style"]["r"] = radiusNumberMovies(d.number_movies);
@@ -200,19 +218,44 @@ d3.csv(DATASET_PATH, function (data) {
         .style("top", d3.event.pageY - 10 + "px")
         .style("left", d3.event.pageX + 10 + "px");
     })
-    .on("mouseout", function (d) {
-      d3.select(this).style("stroke-width", 0.8);
-
-      this["style"]["r"] = radiusNumberMovies(d.number_movies);
+    .on("mouseout", function (d,id_c) {
+      if(!clicked[id_c]){
+        d3.select(this).style("stroke-width", 0.8)
+        this["style"]["r"] = radiusNumberMovies(d.number_movies)
+      }
       return tooltip.style("visibility", "hidden");
     })
-    .on("click", function (d) {
-      //Gestione bubbleplot
-      updateBubble_plot(d);
-      //Gestione mds
-      updateMDS(d);
-      //Gestione calendar
-      updateCalendar(d.channel);
+    .on("click", function (d,id_c) {
+      console.log("cliccato id bubble_" + id_c + this["id"] );
+      if (!clicked[id_c]) {
+        for (var k = 1; k < clicked.length+1; k++) {
+          if(clicked[k]==true){
+            console.log("era gia cliccato bubble" + k);
+            // console.log(svg.select("#bubble_"+k));
+            svg.select("#bubble_"+(k+1)).style("r",rad[k+1])
+            clicked[k]=false;
+          } 
+        }
+        // console.log(clicked);
+        //Gestione bubbleplot
+        updateBubble_plot(d);
+        //Gestione mds
+        updateMDS(d);
+        //Gestione calendar
+        updateCalendar(d.channel)
+        //Has been clicked?
+        clicked[id_c] = true;
+        this["style"]["r"] = radiusNumberMovies(d.number_movies) * 2;
+      }
+      else {
+        for (var k = 1; k < clicked.length+1; k++) {
+          clicked[k] = false;
+        }
+        d3.select("#area_2").selectAll(".bubble").style("display", "block")
+        d3.select("#area_6").selectAll(".bubble").style("display", "block")
+        d3.select(this).style("stroke-width", 0.8)
+        this["style"]["r"] = radiusNumberMovies(d.number_movies);
+      }
     });
 });
 
