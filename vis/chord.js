@@ -1,5 +1,4 @@
-var DATASET_PATH = "./dataset/df_chord.csv";
-
+var DATASET_PATH = "./dataset/df_final_with_additional_info.csv";
 
 var prova,gh;
 var p,paths,stringhe = new Array()
@@ -267,6 +266,7 @@ function updateMDS(d,gen1,gen2){
   }
   else{
     mds_circles.filter(function(f) {
+      console.log(f);
       return !(f.genres.includes(gen1)) | !(f.genres.includes(gen2));
     }).style("display","none");
   }
@@ -274,13 +274,13 @@ function updateMDS(d,gen1,gen2){
 function updateBubble_plot(d,gen1,gen2){
   var circles = d3.select("#area_2").selectAll(".bubble").style("display","block");
   if(gen1==gen2){
-    circles.filter(function(f) {
-      return f.genres != gen1
+    circles.filter(function(d) {
+      return d.genres != gen1
     }).style("display","none");
   }
   else{
-    circles.filter(function(f) {
-      return !(f.genres.includes(gen1)) | !(f.genres.includes(gen2))
+    circles.filter(function(d) {
+      return !(d.genres.includes(gen1)) | !(d.genres.includes(gen2))
     }).style("display","none");
   }
 
