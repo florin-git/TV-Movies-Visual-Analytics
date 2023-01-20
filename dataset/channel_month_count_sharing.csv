@@ -1,111 +1,111 @@
-channel,month,number_movies,sharing
-Cielo,agosto,14,1.14875
-Cielo,aprile,17,0.92875
-Cielo,febbraio,18,0.82375
-Cielo,gennaio,16,0.8075
-Cielo,giugno,20,1.06875
-Cielo,luglio,19,1.08375
-Cielo,maggio,12,1.0262499999999999
-Cielo,marzo,15,0.86
-Cielo,novembre,9,0.96
-Cielo,ottobre,18,0.97
-Cielo,settembre,21,1.03375
-Cine34,agosto,175,1.28625
-Cine34,aprile,165,0.9199999999999999
-Cine34,febbraio,149,0.73875
-Cine34,gennaio,131,0.855
-Cine34,giugno,126,1.12
-Cine34,luglio,192,1.22
-Cine34,maggio,158,0.93875
-Cine34,marzo,138,0.7175
-Cine34,novembre,156,0.9475
-Cine34,ottobre,147,0.94
-Cine34,settembre,135,1.1187500000000001
-Iris,agosto,36,1.4975
-Iris,aprile,38,1.15375
-Iris,febbraio,53,1.1575
-Iris,gennaio,50,1.3512499999999998
-Iris,giugno,34,1.43
-Iris,luglio,68,1.4125
-Iris,maggio,46,1.3025000000000002
-Iris,marzo,60,1.15375
-Iris,novembre,58,1.42875
-Iris,ottobre,67,1.34875
-Iris,settembre,39,1.44875
-Italia 1,agosto,9,4.66
-Italia 1,aprile,4,4.4425
-Italia 1,febbraio,6,3.8225000000000002
-Italia 1,gennaio,8,4.17
-Italia 1,giugno,11,4.7875
-Italia 1,luglio,7,5.03375
-Italia 1,maggio,10,4.805
-Italia 1,marzo,10,4.22875
-Italia 1,novembre,15,4.4925
-Italia 1,ottobre,7,4.4725
-Italia 1,settembre,7,4.4275
-Rete 4,agosto,30,4.1987499999999995
-Rete 4,aprile,30,3.77625
-Rete 4,febbraio,19,3.43375
-Rete 4,gennaio,23,3.5250000000000004
-Rete 4,giugno,29,4.31125
-Rete 4,luglio,33,4.141249999999999
-Rete 4,maggio,15,3.965
-Rete 4,marzo,18,3.97625
-Rete 4,novembre,10,4.07625
-Rete 4,ottobre,20,3.90625
-Rete 4,settembre,32,4.125
-Sky Cinema Action,agosto,75,0.1325
-Sky Cinema Action,aprile,83,0.09
-Sky Cinema Action,febbraio,49,0.0875
-Sky Cinema Action,gennaio,57,0.09375
-Sky Cinema Action,giugno,76,0.11250000000000002
-Sky Cinema Action,luglio,72,0.10500000000000001
-Sky Cinema Action,maggio,69,0.08
-Sky Cinema Action,marzo,74,0.08125
-Sky Cinema Action,novembre,72,0.08750000000000001
-Sky Cinema Action,ottobre,61,0.08
-Sky Cinema Action,settembre,69,0.08875
-Sky Cinema Comedy,agosto,52,0.10125
-Sky Cinema Comedy,aprile,55,0.06125
-Sky Cinema Comedy,febbraio,40,0.04375
-Sky Cinema Comedy,gennaio,14,0.10500000000000001
-Sky Cinema Comedy,giugno,41,0.09
-Sky Cinema Comedy,luglio,63,0.0925
-Sky Cinema Comedy,maggio,54,0.06875
-Sky Cinema Comedy,marzo,51,0.057499999999999996
-Sky Cinema Comedy,novembre,57,0.065
-Sky Cinema Comedy,ottobre,38,0.0625
-Sky Cinema Comedy,settembre,41,0.07874999999999999
-Sky Cinema Drama,agosto,43,0.043750000000000004
-Sky Cinema Drama,aprile,69,0.036250000000000004
-Sky Cinema Drama,febbraio,49,0.03125
-Sky Cinema Drama,gennaio,57,0.042499999999999996
-Sky Cinema Drama,giugno,34,0.05
-Sky Cinema Drama,luglio,47,0.053750000000000006
-Sky Cinema Drama,maggio,61,0.035
-Sky Cinema Drama,marzo,67,0.037500000000000006
-Sky Cinema Drama,novembre,41,0.04
-Sky Cinema Drama,ottobre,46,0.0325
-Sky Cinema Drama,settembre,42,0.036250000000000004
-Sky Cinema Due,agosto,53,0.08875000000000001
-Sky Cinema Due,aprile,48,0.06625
-Sky Cinema Due,febbraio,43,0.06875
-Sky Cinema Due,gennaio,61,0.095
-Sky Cinema Due,giugno,47,0.1
-Sky Cinema Due,luglio,58,0.0975
-Sky Cinema Due,maggio,46,0.07875000000000001
-Sky Cinema Due,marzo,40,0.07875
-Sky Cinema Due,novembre,52,0.061250000000000006
-Sky Cinema Due,ottobre,54,0.07125000000000001
-Sky Cinema Due,settembre,42,0.0775
-Sky Cinema Suspense,agosto,56,0.0625
-Sky Cinema Suspense,aprile,48,0.052500000000000005
-Sky Cinema Suspense,febbraio,48,0.0475
-Sky Cinema Suspense,gennaio,66,0.057499999999999996
-Sky Cinema Suspense,giugno,51,0.06375
-Sky Cinema Suspense,luglio,66,0.07125000000000001
-Sky Cinema Suspense,maggio,62,0.05
-Sky Cinema Suspense,marzo,60,0.0475
-Sky Cinema Suspense,novembre,43,0.05500000000000001
-Sky Cinema Suspense,ottobre,47,0.04875
-Sky Cinema Suspense,settembre,55,0.0575
+,channel,month,number_movies,sharing
+0,Cielo,agosto,14,1.14875
+1,Cielo,aprile,17,0.92875
+2,Cielo,febbraio,18,0.82375
+3,Cielo,gennaio,16,0.8075
+4,Cielo,giugno,20,1.06875
+5,Cielo,luglio,19,1.08375
+6,Cielo,maggio,12,1.02625
+7,Cielo,marzo,15,0.86
+8,Cielo,novembre,9,0.96
+9,Cielo,ottobre,18,0.97
+10,Cielo,settembre,21,1.03375
+11,Cine34,agosto,175,1.28625
+12,Cine34,aprile,165,0.92
+13,Cine34,febbraio,149,0.73875
+14,Cine34,gennaio,131,0.855
+15,Cine34,giugno,126,1.12
+16,Cine34,luglio,192,1.22
+17,Cine34,maggio,158,0.93875
+18,Cine34,marzo,138,0.7175
+19,Cine34,novembre,156,0.9475
+20,Cine34,ottobre,147,0.94
+21,Cine34,settembre,135,1.11875
+22,Iris,agosto,36,1.4975
+23,Iris,aprile,38,1.15375
+24,Iris,febbraio,53,1.1575
+25,Iris,gennaio,50,1.3512499999999998
+26,Iris,giugno,34,1.43
+27,Iris,luglio,68,1.4125
+28,Iris,maggio,46,1.3025000000000002
+29,Iris,marzo,60,1.15375
+30,Iris,novembre,58,1.42875
+31,Iris,ottobre,67,1.34875
+32,Iris,settembre,39,1.44875
+33,Italia 1,agosto,9,4.66
+34,Italia 1,aprile,4,4.4425
+35,Italia 1,febbraio,6,3.8225
+36,Italia 1,gennaio,8,4.17
+37,Italia 1,giugno,11,4.7875
+38,Italia 1,luglio,7,5.03375
+39,Italia 1,maggio,10,4.805
+40,Italia 1,marzo,10,4.22875
+41,Italia 1,novembre,15,4.4925
+42,Italia 1,ottobre,7,4.4725
+43,Italia 1,settembre,7,4.4275
+44,Rete 4,agosto,30,4.19875
+45,Rete 4,aprile,30,3.77625
+46,Rete 4,febbraio,19,3.43375
+47,Rete 4,gennaio,23,3.5250000000000004
+48,Rete 4,giugno,29,4.31125
+49,Rete 4,luglio,33,4.141249999999999
+50,Rete 4,maggio,15,3.965
+51,Rete 4,marzo,18,3.97625
+52,Rete 4,novembre,10,4.07625
+53,Rete 4,ottobre,20,3.90625
+54,Rete 4,settembre,32,4.125
+55,Sky Action,agosto,75,0.1325
+56,Sky Action,aprile,83,0.09
+57,Sky Action,febbraio,49,0.0875
+58,Sky Action,gennaio,57,0.09375
+59,Sky Action,giugno,76,0.1125
+60,Sky Action,luglio,72,0.105
+61,Sky Action,maggio,69,0.08
+62,Sky Action,marzo,74,0.08125
+63,Sky Action,novembre,72,0.0875
+64,Sky Action,ottobre,61,0.08
+65,Sky Action,settembre,69,0.08875
+66,Sky Comedy,agosto,52,0.10125
+67,Sky Comedy,aprile,55,0.06125
+68,Sky Comedy,febbraio,40,0.04375
+69,Sky Comedy,gennaio,14,0.105
+70,Sky Comedy,giugno,41,0.09
+71,Sky Comedy,luglio,63,0.0925
+72,Sky Comedy,maggio,54,0.06875
+73,Sky Comedy,marzo,51,0.0574999999999999
+74,Sky Comedy,novembre,57,0.065
+75,Sky Comedy,ottobre,38,0.0625
+76,Sky Comedy,settembre,41,0.0787499999999999
+77,Sky Drama,agosto,43,0.04375
+78,Sky Drama,aprile,69,0.03625
+79,Sky Drama,febbraio,49,0.03125
+80,Sky Drama,gennaio,57,0.0424999999999999
+81,Sky Drama,giugno,34,0.05
+82,Sky Drama,luglio,47,0.05375
+83,Sky Drama,maggio,61,0.035
+84,Sky Drama,marzo,67,0.0375
+85,Sky Drama,novembre,41,0.04
+86,Sky Drama,ottobre,46,0.0325
+87,Sky Drama,settembre,42,0.03625
+88,Sky Due,agosto,53,0.08875
+89,Sky Due,aprile,48,0.06625
+90,Sky Due,febbraio,43,0.06875
+91,Sky Due,gennaio,61,0.095
+92,Sky Due,giugno,47,0.1
+93,Sky Due,luglio,58,0.0975
+94,Sky Due,maggio,46,0.07875
+95,Sky Due,marzo,40,0.07875
+96,Sky Due,novembre,52,0.06125
+97,Sky Due,ottobre,54,0.07125
+98,Sky Due,settembre,42,0.0775
+99,Sky Suspense,agosto,56,0.0625
+100,Sky Suspense,aprile,48,0.0525
+101,Sky Suspense,febbraio,48,0.0475
+102,Sky Suspense,gennaio,66,0.0574999999999999
+103,Sky Suspense,giugno,51,0.06375
+104,Sky Suspense,luglio,66,0.07125
+105,Sky Suspense,maggio,62,0.05
+106,Sky Suspense,marzo,60,0.0475
+107,Sky Suspense,novembre,43,0.055
+108,Sky Suspense,ottobre,47,0.04875
+109,Sky Suspense,settembre,55,0.0575

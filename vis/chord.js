@@ -1,3 +1,5 @@
+var DATASET_PATH = "./dataset/df_chord.csv";
+
 
 var prova,gh;
 var p,paths,stringhe = new Array()
@@ -51,7 +53,7 @@ for (var i = 0; i < matrix2.length; i++) {
   matrix2[i] = new Array(12).fill(0);
 }
 
-const data = d3.csv("./dataset/df_final_with_additional_info.csv",function(data){
+const data = d3.csv(DATASET_PATH, function(data){
 
   // Get the list of genres
   data.forEach(function (d) {

@@ -1,3 +1,5 @@
+var DATASET_PATH = "./dataset/df_main_info.csv";
+
 var breaks = [2, 5, 15, 20];
 var colours = ["#fef0d9", "#fdcc8a", "#fc8d59", "#e34a33", "#b30000"];
 
@@ -14,7 +16,7 @@ function start_calendar() {
     format = d3.timeFormat("%d-%m-%Y");
     toolDate = d3.timeFormat("%d %B %Y");
 
-    d3.csv("./dataset/df_final_with_additional_info.csv", function (data) {
+    d3.csv(DATASET_PATH, function (data) {
         var mid_processed = {};
         var final_processed = {};
 

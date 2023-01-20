@@ -1,6 +1,8 @@
-var margin={ top: 5, right: 2, bottom:20, left: 55}
-var width = 650 - margin.left - margin.right
-var height = 420 - margin.top - margin.bottom
+var DATASET_PATH = "./dataset/channel_month_count_sharing.csv";
+
+var margin = { top: 5, right: 2, bottom: 20, left: 55 };
+var width = 650 - margin.left - margin.right;
+var height = 420 - margin.top - margin.bottom;
 
 // append the svg object to the body of the page
 var svg = d3
@@ -12,10 +14,7 @@ var svg = d3
   .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
 //Read the data
-d3.csv("./dataset/channel_month_count_sharing.csv", function (data) {
-  // console.log(
-  
-
+d3.csv(DATASET_PATH, function (data) {
   var x = d3
     .scaleBand()
     .domain([
@@ -24,11 +23,11 @@ d3.csv("./dataset/channel_month_count_sharing.csv", function (data) {
       "Iris",
       "Rete 4",
       "Cine34",
-      "Sky Cinema Drama",
-      "Sky Cinema Due",
-      "Sky Cinema Suspense",
-      "Sky Cinema Comedy",
-      "Sky Cinema Action",
+      "Sky Drama",
+      "Sky Due",
+      "Sky Suspense",
+      "Sky Comedy",
+      "Sky Action",
     ])
     .range([0, 500]);
 
@@ -85,24 +84,21 @@ d3.csv("./dataset/channel_month_count_sharing.csv", function (data) {
     )
     .interpolator(d3.interpolatePuRd);
 
+  //tooltip
 
+  var tooltip = d3
+    .select("body")
+    .append("div")
+    .attr("id", "tooltip2")
+    .style("background-color", "rgb(0, 0, 0)")
+    .style("position", "absolute")
+    .style("z-index", "10")
+    .style("visibility", "hidden")
+    .style("font-size", "20px")
+    .style("color", "white")
+    .text("a simple tooltip");
 
-    //tooltip
-
-
-    var tooltip = d3.select("body")
-      .append("div")
-      .attr("id", "tooltip2")
-      .style("background-color", "rgb(0, 0, 0)")
-      .style("position", "absolute")
-      .style("z-index", "10")
-      .style("visibility", "hidden")
-      .style("font-size", "20px")
-      .style("color", "white")
-      .text("a simple tooltip");
-
-
-    //
+  //
 
   //Append a defs (for definition) element to your SVG
   var defs = svg.append("defs");
@@ -135,7 +131,7 @@ d3.csv("./dataset/channel_month_count_sharing.csv", function (data) {
   svg
     .append("rect")
     // .attr("x", 580)
-    .attr("x", width - 0.10 * width)
+    .attr("x", width - 0.1 * width)
     .attr("y", 25)
     .attr("width", 20)
     .attr("height", 145)
@@ -157,7 +153,7 @@ d3.csv("./dataset/channel_month_count_sharing.csv", function (data) {
   var legendAxis = d3.axisLeft().scale(legendScale).ticks(5);
   svg
     .append("g")
-    .attr("transform", "translate("+ (width - 0.11 * width) + "," + 25 + ")")
+    .attr("transform", "translate(" + (width - 0.11 * width) + "," + 25 + ")")
     .call(legendAxis);
 
   // svg
@@ -187,80 +183,91 @@ d3.csv("./dataset/channel_month_count_sharing.csv", function (data) {
     .style("opacity", "0.7")
     .style("cursor", "pointer")
     .attr("stroke", "black")
-    .on("mouseover",function(d){
+    .on("mouseover", function (d) {
       d3.select(this)
-      .style("stroke", "black")
-      .style("stroke-width",1.5)
-      .style("opacity", 2)
-      this["style"]["r"] = radiusNumberMovies(d.number_movies)*2;
-      tooltip.html("Number of movies :" + d.number_movies + "<br>Sharing: " +  d.sharing);
-          return tooltip.style("visibility", "visible");
-        })
-    .on("mousemove", function(d) {
-      //this["style"]["r"] = radiusNumberMovies(d.number_movies);
-      return tooltip.style("top",
-          (d3.event.pageY - 10) + "px").style("left", (d3.event.pageX + 10) + "px");
-
+        .style("stroke", "black")
+        .style("stroke-width", 1.5)
+        .style("opacity", 2);
+      this["style"]["r"] = radiusNumberMovies(d.number_movies) * 2;
+      tooltip.html(
+        "Number of movies :" + d.number_movies + "<br>Sharing: " + d.sharing
+      );
+      return tooltip.style("visibility", "visible");
     })
-    .on("mouseout", function(d) {
-      d3.select(this).style("stroke-width",0.8)
+    .on("mousemove", function (d) {
+      //this["style"]["r"] = radiusNumberMovies(d.number_movies);
+      return tooltip
+        .style("top", d3.event.pageY - 10 + "px")
+        .style("left", d3.event.pageX + 10 + "px");
+    })
+    .on("mouseout", function (d) {
+      d3.select(this).style("stroke-width", 0.8);
 
       this["style"]["r"] = radiusNumberMovies(d.number_movies);
-                return tooltip.style("visibility", "hidden");
-
+      return tooltip.style("visibility", "hidden");
     })
-    .on("click", function(d) {
+    .on("click", function (d) {
       //Gestione bubbleplot
       updateBubble_plot(d);
       //Gestione mds
       updateMDS(d);
       //Gestione calendar
       updateCalendar(d.channel);
-    }) 
-    
-
     });
+});
 
+function updateBubble_plot(d) {
+  var circles = d3
+    .select("#area_2")
+    .selectAll(".bubble")
+    .style("display", "block");
+  circles
+    .filter(function (f) {
+      return (f.month !== d.month) | (f.channel !== d.channel);
+    })
+    .style("display", "none");
 
+  var legend_month = d3
+    .select("#area_2")
+    .selectAll(".text_legend_month")
+    .text(function (f) {
+      return "Month : " + d.month;
+    })
+    .style("font-size", "15px")
+    .attr("alignment-baseline", "middle");
 
-function updateBubble_plot(d){
-  var circles = d3.select("#area_2").selectAll(".bubble").style("display","block");
-  circles.filter(function(f) {
-    return f.month != d.month | f.channel != d.channel
-  }).style("display","none");
-  var legend_month = d3.select("#area_2").selectAll(".text_legend_month")
-  .text(function(f) { 
-    return "Month : "+ d.month
-  }).style("font-size", "15px").attr("alignment-baseline","middle");
-
-  var legend_channel = d3.select("#area_2").selectAll(".text_legend_channel")
-  .text(function(f) { 
-    return "Channel : "+ d.channel
-  }).style("font-size", "15px").attr("alignment-baseline","middle")
-
-        }
-
-
-function updateMDS(d){
-  var mds_circles = d3.select("#area_6").selectAll(".bubble").style("display","block");
-  mds_circles.filter(function(f) {
-    return f.month != d.month | f.channel != d.channel
-  }).style("display","none");
-
-
-
-
-
+  var legend_channel = d3
+    .select("#area_2")
+    .selectAll(".text_legend_channel")
+    .text(function (f) {
+      return "Channel : " + d.channel;
+    })
+    .style("font-size", "15px")
+    .attr("alignment-baseline", "middle");
 }
 
-function updateCalendar(d){
+function updateMDS(d) {
+  var mds_circles = d3
+    .select("#area_6")
+    .selectAll(".bubble")
+    .style("display", "block");
+  mds_circles
+    .filter(function (f) {
+      return (f.month !== d.month) | (f.channel !== d.channel);
+    })
+    .style("display", "none");
+}
 
-  var temp = d.replaceAll(" ", "_")
+function updateCalendar(d) {
+  var temp = d.replaceAll(" ", "_");
   //calendarCreateBubble(temp, "bottom")
-  document.getElementById("area_1_bottom").removeChild(document.getElementById("2022bottom").parentNode)
-  document.getElementById("legend").parentNode.removeChild(document.getElementById("legend"))
-  document.getElementById("channel_selector_2").value = temp
-  var changeEvent = new Event("change")
-  document.getElementById("channel_selector_2").dispatchEvent(changeEvent)
-  
+  document
+    .getElementById("area_1_bottom")
+    .removeChild(document.getElementById("2022bottom").parentNode);
+  document
+    .getElementById("legend")
+    .parentNode.removeChild(document.getElementById("legend"));
+  document.getElementById("channel_selector_2").value = temp;
+  var changeEvent = new Event("change");
+  document.getElementById("channel_selector_2").dispatchEvent(changeEvent);
 }
