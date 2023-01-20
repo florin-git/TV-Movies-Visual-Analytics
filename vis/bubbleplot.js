@@ -90,6 +90,14 @@ d3.csv(DATASET_PATH, function(data) {
         .style("opacity", "0.7")
         .style("cursor", "pointer")
         .attr("stroke", "black")
+        .style("display",function(d){
+          if(d.channel == "Cine34" & d.month == "gennaio"){
+            return "block";
+          }
+          else{
+            return "none";
+          }
+        })
         .on("mouseover", function(d) {
           tooltip.html(d.title +"<br> Rating: " +  d.rating+ "<br>" +d.genres);
           return tooltip.style("visibility", "visible");

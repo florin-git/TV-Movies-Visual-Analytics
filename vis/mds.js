@@ -138,7 +138,7 @@ d3.csv(DATASET_PATH, function (data) {
     .append("text")
     .attr("x", width - 0.03 * width)
     .attr("y", 140)
-    .text("Cielo")
+    .text("Other")
     .style("font-size", "15px")
     .attr("alignment-baseline", "middle");
 });
