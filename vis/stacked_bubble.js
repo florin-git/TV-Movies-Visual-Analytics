@@ -168,7 +168,8 @@ d3.csv(DATASET_PATH, function (data) {
   //   .attr("transform", "translate(560," + 20 + ")")
   //   .call(legendAxis);
 
-  var id_c = 0;
+  var id_c = -1;
+  var prova;
   // Add dots
   svg
     .append("g")
@@ -177,9 +178,10 @@ d3.csv(DATASET_PATH, function (data) {
     .enter()
     .append("circle")
     .attr("id",function(d,id_c){
-      id_c= id_c + 1;
-      rad[id_c] = radiusNumberMovies(d.number_movies);
-      return "bubble_" + id_c;
+      prova = "bubble_" + id_c;
+      rad[id_c] = radiusNumberMovies(d.number_movies)
+      id_c+=1;
+      return prova;
     })
     .attr("cx", function (d) {
       return x(d.channel) + 28;
@@ -208,7 +210,7 @@ d3.csv(DATASET_PATH, function (data) {
         } 
       }
       this["style"]["r"] = radiusNumberMovies(d.number_movies) * 2;
-      d3.select(this).style("stroke", "black").style("stroke-width", 1.5).style("opacity", 2)
+      // d3.select(this).style("stroke", "black").style("stroke-width", 1.5).style("opacity", 2)
       return;
       
     })
@@ -226,17 +228,13 @@ d3.csv(DATASET_PATH, function (data) {
       return tooltip.style("visibility", "hidden");
     })
     .on("click", function (d,id_c) {
-      console.log("cliccato id bubble_" + id_c + this["id"] );
       if (!clicked[id_c]) {
-        for (var k = 1; k < clicked.length+1; k++) {
+        for (var k = 0; k < clicked.length; k++) {
           if(clicked[k]==true){
-            console.log("era gia cliccato bubble" + k);
-            // console.log(svg.select("#bubble_"+k));
-            svg.select("#bubble_"+(k+1)).style("r",rad[k+1])
+            svg.select("#bubble_"+k).style("r",rad[k])
             clicked[k]=false;
           } 
         }
-        // console.log(clicked);
         //Gestione bubbleplot
         updateBubble_plot(d);
         //Gestione mds
@@ -244,11 +242,11 @@ d3.csv(DATASET_PATH, function (data) {
         //Gestione calendar
         updateCalendar(d.channel)
         //Has been clicked?
-        clicked[id_c] = true;
+        clicked[id_c] = true
         this["style"]["r"] = radiusNumberMovies(d.number_movies) * 2;
       }
       else {
-        for (var k = 1; k < clicked.length+1; k++) {
+        for (var k = 0; k < clicked.length; k++) {
           clicked[k] = false;
         }
         d3.select("#area_2").selectAll(".bubble").style("display", "block")
