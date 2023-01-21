@@ -1,20 +1,22 @@
 var DATASET_PATH = "./dataset/df_mds.csv";
 
-var margin_top = 5,
-  margin_right = 2,
-  margin_bottom = 1,
-  margin_left = 2;
+// var margin_top = 5,
+//   margin_right = 2,
+//   margin_bottom = 1,
+//   margin_left = 2;
+// var margin_top = 0,
+//   margin_right = 0,
+//   margin_bottom = 0,
+//   margin_left = 0;
 
-var width = 500;
-var height = 400;
+// var width = 450;
+// var height = 350;
 
-var sky = [
-  "Sky Drama",
-  "Sky Due",
-  "Sky Suspense",
-  "Sky Comedy",
-  "Sky Action",
-];
+var margin = { top: 0, right: 0, bottom: 0, left: 5 };
+var width = 470 - margin.left - margin.right;
+var height = 355 - margin.top - margin.bottom;
+
+var sky = ["Sky Drama", "Sky Due", "Sky Suspense", "Sky Comedy", "Sky Action"];
 var mediaset = ["Italia 1", "Iris", "Rete 4", "Cine34"];
 
 d3.csv(DATASET_PATH, function (data) {
@@ -33,31 +35,34 @@ d3.csv(DATASET_PATH, function (data) {
   ///
 
   var svg = d3
-    .select("#area_6")
+    .select("#area_mds")
     .append("svg")
     .attr("width", "100%")
     .attr("height", "100%")
-    .classed("svg-content", true);
+    .classed("svg-content", true)
+    .attr("transform", "translate(" + margin.left + "," + 0 + ")");
 
-  // "d[0] 57 e min -39  per d[1] min è -57 e max + 36+
 
-  var x = d3.scaleLinear().domain([-50, 40]).range([0, width]);
+  // x_range: [-38.7, 56.5]
+  // y_range: [-56.2, 35.5]
 
+  var x = d3.scaleLinear().domain([-42, 58]).range([0, width]);
   var y = d3.scaleLinear().domain([-58, 38]).range([height, 0]);
 
-  var xAxis = svg
-    .append("g")
-    .attr("class", "axis-x")
-    .attr("transform", "translate(10," + height + ")")
-    .call(d3.axisBottom(x).tickValues([]))
-    .attr("font-size", "6px");
 
-  var yAxis = svg
-    .append("g")
-    .attr("class", "axis axis--y lightfill")
-    .attr("transform", "translate(10," + 0 + ")")
-    .call(d3.axisLeft(y).tickValues([]))
-    .attr("font-size", "6px");
+  // var xAxis = svg
+  //   .append("g")
+  //   .attr("class", "axis-x")
+  //   .attr("transform", "translate(1," + height + ")")
+  //   .call(d3.axisBottom(x).tickValues([]))
+  //   .attr("font-size", "6px");
+
+  // var yAxis = svg
+  //   .append("g")
+  //   .attr("class", "axis axis--y lightfill")
+  //   .attr("transform", "translate(1," + 0 + ")")
+  //   .call(d3.axisLeft(y).tickValues([]))
+  //   .attr("font-size", "6px");
 
   // Add circles
   svg
@@ -104,41 +109,44 @@ d3.csv(DATASET_PATH, function (data) {
 
   svg
     .append("circle")
-    .attr("cx", width - 0.05 * width)
+    .attr("cx", width - 0.2 * width)
     .attr("cy", 80)
     .attr("r", 6)
     .style("fill", "#7fc97f");
   svg
     .append("circle")
-    .attr("cx", width - 0.05 * width)
+    .attr("cx", width - 0.2 * width)
     .attr("cy", 110)
     .attr("r", 6)
     .style("fill", "#beaed4");
   svg
     .append("circle")
-    .attr("cx", width - 0.05 * width)
+    .attr("cx", width - 0.2 * width)
     .attr("cy", 140)
     .attr("r", 6)
     .style("fill", "#fdc086");
   svg
     .append("text")
-    .attr("x", width - 0.03 * width)
-    .attr("y", 80)
-    .text("Sky ")
+    .attr("x", width - 0.18 * width)
+    .attr("y", 81)
+    .text("Sky")
+    .style('fill', '#fff')
     .style("font-size", "15px")
     .attr("alignment-baseline", "middle");
   svg
     .append("text")
-    .attr("x", width - 0.03 * width)
-    .attr("y", 110)
+    .attr("x", width - 0.18 * width)
+    .attr("y", 111)
     .text("Mediaset")
+    .style('fill', '#fff')
     .style("font-size", "15px")
     .attr("alignment-baseline", "middle");
   svg
     .append("text")
-    .attr("x", width - 0.03 * width)
-    .attr("y", 140)
-    .text("Cielo")
+    .attr("x", width - 0.18 * width)
+    .attr("y", 141)
+    .text("Other")
+    .style('fill', '#fff')
     .style("font-size", "15px")
     .attr("alignment-baseline", "middle");
 });
