@@ -1,123 +1,196 @@
 <!DOCTYPE html>
 <html>
-<meta charset="utf-8">
+  <meta charset="utf-8" />
 
-<head>
+  <head>
+    <style>
+      /* body {
+        padding-left: 0;
+        padding-right: 0;
+      } */
+      .bubbles {
+        stroke-width: 2px;
+        stroke: white;
+      }
+      .bubbles:hover {
+        stroke: black;
+      }
+      /* per calendar */
+      .month {
+        fill: none;
+        stroke: #08589e;
+        stroke-width: 3px;
+        z-index: -1;
+      }
 
-  <style>
-    .bubbles {
-      stroke-width: 2px;
-      stroke: white;
-    }
-    .bubbles:hover {
-      stroke: black;
-    }
-    /* per calendar */
-    .month {
-            fill: none;
-            stroke: #000;
-            stroke-width: 2px;
-    }
-
-    .day {
-        /* fill: rgba(83, 255, 199, 0.1); */
-        stroke: #ccc;
-    }
-    /*
+      .day {
+        fill: #d9d9d9;
+        stroke: #bebada;
+        z-index: 10;
+      }
+      /*
     text {
         font-family: sans-serif;
         font-size: 1.5em;
     }*/
 
-    .dayLabel {
+      .dayLabel {
         fill: #aaa;
         font-size: 0.8em;
-    }
+      }
 
-    .monthLabel {
+      .monthLabel {
         text-anchor: middle;
         font-size: 0.8em;
         fill: #aaa;
-    }
+        
+      }
 
-    .key {
+      .key {
         font-size: 0.5em;
-    }
+      }
 
-    /* fine calendar */
-
-    /*bottone reset*/
-    #reset{
-      width: 50px;
-    }
+      /* fine calendar */
     </style>
 
+    <script src="https://d3js.org/d3.v4.min.js"></script>
+    <script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
+    <script type="module" src="./vis/bubbleplot.js"></script>
+    <script src="./vis/calendar_heatmap_final.js"></script>
+    <script type="module" src="./vis/stacked_bubble.js"></script>
+    <script type="module" src="./vis/chord.js"></script>
+    <script type="module" src="./vis/mds.js"></script>
+  </head>
 
-<!-- <script src="https://d3js.org/d3.v4.js"></script> -->
-<script src="https://d3js.org/d3.v4.min.js"></script>
-<script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
-<script type="module" src="./vis/bubbleplot.js"></script>
-<script src="./vis/calendar_heatmap_final.js"></script>
-<script type="module" src="./vis/stacked_bubble.js"></script>
-<script type="module" src="./vis/chord.js"></script>
-<script type="module" src="./vis/mds.js"></script>
+  <body id="body" style="background-color: #000" onload="start_calendar()">
+    <div
+      id="all"
+      style="
+        position: absolute;
+        bottom: 0.5%;
+        right: 0.1%;
+        left: 0.1%;
+        top: 0.5%;
+        overflow: hidden; /* This hides the scrollbar */
+      "
+    >
+      <div
+        id="area_calendars"
+        style="
+          width: 37%;
+          height: 48.7%;
+          border: 1px solid #fff;
+          position: absolute;
+          top: 49%;
+          margin-top: 1%;
+        "
+      >
+        <label for="channel_selector" style="color: #fff"
+          >Choose a channel:</label
+        >
+        <select
+          name="channel"
+          id="channel_selector"
+          style="background-color: #fff; color: #000"
+        >
+          <option value="Italia_1">Italia 1</option>
+          <option value="Cielo">Cielo</option>
+          <option value="Cine34">Cine34</option>
+          <option value="Iris">Iris</option>
+          <option value="Rete_4">Rete 4</option>
+          <option value="Sky_Action">Sky Action</option>
+          <option value="Sky_Comedy">Sky Comedy</option>
+          <option value="Sky_Drama">Sky Drama</option>
+          <option value="Sky_Due">Sky Due</option>
+          <option value="Sky_Suspense">Sky Suspense</option>
+        </select>
 
-</head>
+        <label for="holiday" style="color: #fff">Highlight Holidays</label>
+        <input
+          type="checkbox"
+          id="holiday_check"
+          name="Holiday"
+          onclick="updateHoliday(this)"
+        />
 
-<body id="body" style="background-color: #e2f5f5;" onload="start_calendar()">
+        <div id="area_1_top"></div>
+        <button onclick="ResetVis()" id="reset">Reset</button>
 
-  <div id="all" style="width: 98.5%; height: 99%; position: absolute; bottom: 0.0%; top:0.3%">
-    
-    <div id="a1" style="width: 43.5%; height: 49%; border:1px solid; position: absolute; margin-top: 1%;">
-      
-      <label for="channel_selector">Choose a channel:</label>
-      <select name="channel" id="channel_selector" style="background-color: #e2f5f5">
-        <option value="Italia_1">Italia 1</option>
-        <option value="Cielo">Cielo</option>
-        <option value="Cine34">Cine34</option>
-        <option value="Iris">Iris</option>
-        <option value="Rete_4">Rete 4</option>
-        <option value="Sky_Action">Sky Action</option>
-        <option value="Sky_Comedy">Sky Comedy</option>
-        <option value="Sky_Drama">Sky Drama</option>
-        <option value="Sky_Due">Sky Due</option>
-        <option value="Sky_Suspense">Sky Suspense</option>  
-      </select>
-      <label for="holiday">Highlight Holidays</label>
-      <input type="checkbox" id="holiday_check" name="Holiday" onclick="updateHoliday(this)">
+        <label for="channel_selector_2" style="color: #fff"
+          >Choose a channel</label
+        >
+        <select
+          name="channel2"
+          id="channel_selector_2"
+          style="background-color: #fff; color: #000"
+        >
+          <option value="Cielo">Cielo</option>
+          <option value="Italia_1">Italia 1</option>
+          <option value="Cine34">Cine34</option>
+          <option value="Iris">Iris</option>
+          <option value="Rete_4">Rete 4</option>
+          <option value="Sky_Action">Sky Action</option>
+          <option value="Sky_Comedy">Sky Comedy</option>
+          <option value="Sky_Drama">Sky Drama</option>
+          <option value="Sky_Due">Sky Due</option>
+          <option value="Sky_Suspense">Sky Suspense</option>
+        </select>
 
-      <div id="area_1_top"></div>
-      <button onclick="ResetVis()" id="reset">Reset</button>
-
-
-      <label for="channel_selector_2">Choose a channel</label>
-      <select name="channel2" id="channel_selector_2" style="background-color: #e2f5f5">
-        <option value="Cielo">Cielo</option>
-        <option value="Italia_1">Italia 1</option>
-        <option value="Cine34">Cine34</option>
-        <option value="Iris">Iris</option>
-        <option value="Rete_4">Rete 4</option>
-        <option value="Sky_Action">Sky Action</option>
-        <option value="Sky_Comedy">Sky Comedy</option>
-        <option value="Sky_Drama">Sky Drama</option>
-        <option value="Sky_Due">Sky Due</option>
-        <option value="Sky_Suspense">Sky Suspense</option>  
-      </select>
-
-      <div id="area_1_bottom"></div>
-      
+        <div id="area_1_bottom"></div>
+      </div>
+      <div
+        id="area_bubble"
+        style="
+          width: 54.9%;
+          height: 49%;
+          border: 1px solid #fff;
+          border-left: 0px;
+          border-bottom: 0px;
+          position: absolute;
+          margin-left: 45%;
+          margin-top: 1%;
+        "
+      ></div>
+      <div
+        id="area_stacked"
+        style="
+          width: 45%;
+          height: 49%;
+          border: 1px solid #fff;
+          border-bottom: 0px;
+          position: absolute;
+          margin-top: 1%;
+        "
+        onclick="start_calendar()"
+      >
+        <!-- <div id="area_stacked"></div> -->
+      </div>
+      <div
+        id="area_chord"
+        style="
+          width: 32.5%;
+          height: 48.7%;
+          border: 1px solid #fff;
+          border-left: 0px;
+          position: absolute;
+          top: 49%;
+          margin-left: 36.5%;
+          margin-top: 1%;
+        "
+      ></div>
+      <div
+        id="area_mds"
+        style="
+          width: 30.9%;
+          height: 48.7%;
+          border: 1px solid #fff;
+          border-left: 0px;
+          position: absolute;
+          top: 49%;
+          margin-left: 69%;
+          margin-top: 1%;
+        "
+      ></div>
     </div>
-    <div id="area_2" style="width: 56.5%; height: 49%; border:1px solid; position: absolute; margin-left: 43.5%; margin-top: 1%;"></div>
-    <div id="area4" style="width: 36.5%; height: 49%; border:1px solid; position: absolute; top: 49%; margin-top: 1%;" onclick="start_calendar()">
-    <div id="area_4"> </div>
-  </div>
-    <div id="area_5" style="width: 32.5%; height: 49%; border:1px solid; position: absolute; top: 49%; margin-left: 36.5%; margin-top: 1%;">
-    </div>
-    <div  id="area_6" style="width: 31%; height: 49%; border:1px solid; position: absolute; top: 49%; margin-left: 69%; margin-top: 1%;"></div>
-
-  </div>
-   
-
-</body>
-
+  </body>
 </html>

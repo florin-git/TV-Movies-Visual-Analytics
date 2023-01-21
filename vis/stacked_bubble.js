@@ -1,8 +1,8 @@
 var DATASET_PATH = "./dataset/channel_month_count_sharing.csv";
 
-var margin = { top: 5, right: 2, bottom: 20, left: 55 };
-var width = 650 - margin.left - margin.right;
-var height = 420 - margin.top - margin.bottom;
+var margin = { top: 5, right: 0, bottom: 25, left: 55 };
+var width = 660 - margin.left - margin.right;
+var height = 340 - margin.top - margin.bottom;
 
 var clicked = new Array(120).fill(false)
 var rad = new Array(120)
@@ -13,7 +13,7 @@ var rad = new Array(120)
 
 // append the svg object to the body of the page
 var svg = d3
-  .select("#area_4")
+  .select("#area_stacked")
   .append("svg")
   .attr("width", width + margin.left + margin.right)
   .attr("height", height + margin.top + margin.bottom)
@@ -49,7 +49,7 @@ d3.csv(DATASET_PATH, function (data) {
     .attr("transform", "rotate(-10)")
     .style("text-anchor", "middle")
     .style("font-size", 10)
-    .style("fill", "#00000");
+    .style("fill", "#fff");
 
   // Add Y axis
   var y = d3
@@ -71,7 +71,9 @@ d3.csv(DATASET_PATH, function (data) {
 
   var yAxis = d3.axisLeft().scale(y).ticks(11);
 
-  svg.append("g").call(yAxis);
+  svg.append("g").call(yAxis).selectAll("text").style("fill", "#fff");
+  svg.selectAll("line").style("stroke", "#fff");
+  svg.selectAll("path").style("stroke", "#fff");
 
   var radiusNumberMovies = d3
     .scaleLinear()
@@ -149,7 +151,8 @@ d3.csv(DATASET_PATH, function (data) {
     .attr("class", "legendTitle")
     .attr("x", width - 0.215 * width)
     .attr("y", 8)
-    .text("Sharing Percentage");
+    .text("Sharing Percentage")
+    .style("fill", "#fff");
 
   var legendScale = d3
     .scaleLinear()
@@ -200,6 +203,11 @@ d3.csv(DATASET_PATH, function (data) {
     .style("cursor", "pointer")
     .attr("stroke", "black")
     .on("mouseover", function (d) {
+      d3.select(this)
+        .style("stroke", "#fff")
+        .style("stroke-width", 1.5)
+        .style("opacity", 2);
+      this["style"]["r"] = radiusNumberMovies(d.number_movies) * 2;
       tooltip.html(
         "Number of movies :" + d.number_movies + "<br>Sharing: " + d.sharing
       );
@@ -259,7 +267,7 @@ d3.csv(DATASET_PATH, function (data) {
 
 function updateBubble_plot(d) {
   var circles = d3
-    .select("#area_2")
+    .select("#area_bubble")
     .selectAll(".bubble")
     .style("display", "block");
   circles
@@ -269,7 +277,7 @@ function updateBubble_plot(d) {
     .style("display", "none");
 
   var legend_month = d3
-    .select("#area_2")
+    .select("#area_bubble")
     .selectAll(".text_legend_month")
     .text(function (f) {
       return "Month : " + d.month;
@@ -278,7 +286,7 @@ function updateBubble_plot(d) {
     .attr("alignment-baseline", "middle");
 
   var legend_channel = d3
-    .select("#area_2")
+    .select("#area_bubble")
     .selectAll(".text_legend_channel")
     .text(function (f) {
       return "Channel : " + d.channel;
@@ -289,7 +297,7 @@ function updateBubble_plot(d) {
 
 function updateMDS(d) {
   var mds_circles = d3
-    .select("#area_6")
+    .select("#area_mds")
     .selectAll(".bubble")
     .style("display", "block");
   mds_circles
