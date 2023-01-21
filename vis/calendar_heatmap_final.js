@@ -10,7 +10,7 @@ var calX = 750;
 var width = 500; //prima con dimensioni normali era window.innerWidth
 var height = 400;
 
-var holidaysList = ["01-01-2022", "06-01-2022", "01-03-2022", "17-04-2022", "18-04-2022", "25-04-2022", "01-05-2022", "02-06-2022", "15-08-2022", "01-11-2022", "08-12-2022", "25-12-2022", "26-12-2022"]
+var holidaysList = ["1/1/2022", "6/1/2022", "1/3/2022", "17/4/2022", "18/4/2022", "25/4/2022", "1/5/2022", "2/6/2022", "15/8/2022", "1/11/2022", "8/12/2022", "25/12/2022", "26/12/2022"]
 
 function start_calendar() {
 
@@ -229,6 +229,7 @@ function calendarCreate(chosen_data, level) {
             return format(d.date) + ":" + d.value;
         })
         .attr("stroke", "#ccc")
+        .attr("class","mannaggia")
         .attr("width", cellSize)
         .attr("height", cellSize)
         .attr("x", function (d) {
@@ -372,27 +373,93 @@ function create_legend() {
 }
 
 function updateHoliday(checkbox){
-    //capire come far vedere il colore anche sopra quelli già colorati
+    var rect = d3.selectAll(".mannaggia")
+    
     if(checkbox.checked){
        
-        var rect = d3.selectAll(".day")
-        .attr("fill", d => {
-            var temp = d.split("-")
-            temp = temp[2]+"-"+temp[1]+"-"+temp[0]
-            var date = new Date(temp)
-            if(holidaysList.includes(d) || date.getDay() == 0){
+        var rect = d3.selectAll(".mannaggia")
+        
+        .attr("stroke", d => {
+            var date=d.date
+            console.log(d)
+            if(holidaysList.includes(String(date.toLocaleDateString('it-IT')))){
                 return "black"
             }
             else{
-                return "rgba(83, 255, 199, 0.1)"
+                if (d.value < breaks[0]) {
+                    return colours[0];
+                }
+                for (i = 0; i < breaks.length + 1; i++) {
+                    if (d.value >= breaks[i] && d.value < breaks[i + 1]) {
+                        return colours[i];
+                    }
+                }
+                if (d.value > breaks.length - 1) {
+                    return colours[breaks.length];
+                }
+                 
+             }
+             
+        })
+        .attr("stroke-width", d => {
+            var date=d.date
+            console.log(d)
+            if(holidaysList.includes(String(date.toLocaleDateString('it-IT')))){
+                return 3
             }
-        })        
+            else{
+                if (d.value < breaks[0]) {
+                    return colours[0];
+                }
+                for (i = 0; i < breaks.length + 1; i++) {
+                    if (d.value >= breaks[i] && d.value < breaks[i + 1]) {
+                        return colours[i];
+                    }
+                }
+                if (d.value > breaks.length - 1) {
+                    return colours[breaks.length];
+                }
+                 
+             }
+             
+        })
+
     }
     else{
-        var rect = d3.selectAll(".day")
-        .attr("fill", d => {
-            return "rgba(83, 255, 199, 0.1)"
-        })   
+        var rect = d3.selectAll(".mannaggia")
+        .attr("stroke", d => {
+            if (d.value < breaks[0]) {
+                return colours[0];
+            }
+            for (i = 0; i < breaks.length + 1; i++) {
+                if (d.value >= breaks[i] && d.value < breaks[i + 1]) {
+                    return colours[i];
+                }
+            }
+            if (d.value > breaks.length - 1) {
+                return colours[breaks.length];
+            }
+
+        })
+        .attr("stroke-width", d => {
+                if (d.value < breaks[0]) {
+                    return colours[0];
+                }
+                for (i = 0; i < breaks.length + 1; i++) {
+                    if (d.value >= breaks[i] && d.value < breaks[i + 1]) {
+                        return colours[i];
+                    }
+                }
+                if (d.value > breaks.length - 1) {
+                    return colours[breaks.length];
+                }
+                 
+             
+             
+        })
+        
+        
+        
     }
 }
 
