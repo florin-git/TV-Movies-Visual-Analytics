@@ -10,6 +10,8 @@ var calX = 750;
 var width = 500; //prima con dimensioni normali era window.innerWidth
 var height = 400;
 
+var holidaysList = ["01-01-2022", "06-01-2022", "01-03-2022", "17-04-2022", "18-04-2022", "25-04-2022", "01-05-2022", "02-06-2022", "15-08-2022", "01-11-2022", "08-12-2022", "25-12-2022", "26-12-2022"]
+
 function start_calendar() {
 
     var parseDate = d3.timeParse("%d/%m/%y");
@@ -58,10 +60,12 @@ function start_calendar() {
                 var keyD = d.day_number + original_month;
 
                 if (mid_processed[temp].hasOwnProperty(keyD)) {
+                    var sum_time = parseInt(mid_processed[temp][keyD].duration_with_advertising) + parseInt(d.duration_with_advertising);
                     var sum =
                         parseInt(mid_processed[temp][keyD].advertising) +
                         parseInt(d.advertising);
                     mid_processed[temp][keyD].advertising = sum.toString();
+                    mid_processed[temp][keyD].duration_with_advertising = sum_time.toString()
                 } else {
                     mid_processed[temp][keyD] = d;
                 }
@@ -194,6 +198,7 @@ function calendarCreate(chosen_data, level) {
         .attr("y", function (d) {
             return calY + d.getDay() * cellSize;
         })
+        .attr("fill", "rgba(83, 255, 199, 0.1)")
         .datum(format);
 
     //create day labels
@@ -250,7 +255,8 @@ function calendarCreate(chosen_data, level) {
 
     //append a title element to give basic mouseover info
     dataRects.append("title").text(function (d) {
-        return toolDate(d.date) + ":\n" + d.value + units;
+        var perc = parseFloat((parseInt(d.advertising)/parseInt(d.duration_with_advertising))*100).toFixed(2)
+        return toolDate(d.date) + ":\n" + perc.toString() + " % of advertising in " + d.duration_with_advertising + units;
     });
 
     //add montly outlines for calendar
@@ -308,6 +314,8 @@ function calendarCreate(chosen_data, level) {
             .text(d);
     });
 
+    updateHoliday(document.getElementById("holiday_check"))
+
 }
 
 function create_legend() {
@@ -361,4 +369,29 @@ function create_legend() {
                 return "over " + breaks[i - 1];
             }
         });
+}
+
+function updateHoliday(checkbox){
+    //capire come far vedere il colore anche sopra quelli già colorati
+    if(checkbox.checked){
+       
+        var rect = d3.selectAll(".day")
+        .attr("fill", d => {
+            var temp = d.split("-")
+            temp = temp[2]+"-"+temp[1]+"-"+temp[0]
+            var date = new Date(temp)
+            if(holidaysList.includes(d) || date.getDay() == 0){
+                return "black"
+            }
+            else{
+                return "rgba(83, 255, 199, 0.1)"
+            }
+        })        
+    }
+    else{
+        var rect = d3.selectAll(".day")
+        .attr("fill", d => {
+            return "rgba(83, 255, 199, 0.1)"
+        })   
+    }
 }

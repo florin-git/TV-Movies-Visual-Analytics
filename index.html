@@ -20,7 +20,7 @@
     }
 
     .day {
-        fill: rgba(83, 255, 199, 0.1);
+        /* fill: rgba(83, 255, 199, 0.1); */
         stroke: #ccc;
     }
     /*
@@ -78,6 +78,8 @@
         <option value="Sky_Due">Sky Due</option>
         <option value="Sky_Suspense">Sky Suspense</option>  
       </select>
+      <label for="holiday">Highlight Holidays</label>
+      <input type="checkbox" id="holiday_check" name="Holiday" onclick="updateHoliday(this)">
 
       <div id="area_1_top"></div>
 
