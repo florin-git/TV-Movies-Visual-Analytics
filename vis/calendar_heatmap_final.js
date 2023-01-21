@@ -170,8 +170,7 @@ function calendarCreate(chosen_data, level) {
   var svg = d3
     .select("#area_1_" + level)
     .append("svg")
-    .attr("width", "100%")
-    .attr("height","110px")
+    .attr("width", "100%");
   //.attr("viewBox", "0 0 " + width + " 540");
 
   var cals = svg
@@ -362,7 +361,7 @@ function create_legend() {
     .attr("id", "key")
     .attr("class", "key")
     .attr("transform", function (d) {
-      return "translate(70, 15)";
+      return "translate(70, -10)";
     });
 
   key
