@@ -5,7 +5,7 @@ var colours = ["#fef0d9", "#fdcc8a", "#fc8d59", "#e34a33", "#b30000"];
 
 //general layout information
 var cellSize = 10;
-var calY = 70; //offset of calendar in each group
+var calY = 40; //offset of calendar in each group
 var calX = 550;
 var width = 500; //prima con dimensioni normali era window.innerWidth
 var height = 400;
@@ -361,7 +361,7 @@ function create_legend() {
     .attr("id", "key")
     .attr("class", "key")
     .attr("transform", function (d) {
-      return "translate(70, 10)";
+      return "translate(70, -10)";
     });
 
   key
@@ -369,8 +369,8 @@ function create_legend() {
     .data(colours)
     .enter()
     .append("rect")
-    .attr("width", cellSize * 1.5)
-    .attr("height", cellSize * 1.5)
+    .attr("width", cellSize)
+    .attr("height", cellSize)
     .attr("x", function (d, i) {
       return i * 105;
     })
@@ -383,7 +383,7 @@ function create_legend() {
     .data(colours)
     .enter()
     .append("text")
-    .attr("font-size", "1.4rem")
+    .attr("font-size", "1rem")
     .attr("x", function (d, i) {
       return cellSize + 10 + i * 105;
     })
@@ -394,7 +394,8 @@ function create_legend() {
       } else {
         return "over " + breaks[i - 1];
       }
-    });
+    })
+    .style("fill", "#fff");
 }
 
 function updateHoliday(checkbox) {
