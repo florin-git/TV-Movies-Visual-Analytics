@@ -188,7 +188,7 @@ d3.csv(DATASET_PATH, function (data) {
     .attr("stroke", "black")
     .on("mouseover", function (d) {
       d3.select(this)
-        .style("stroke", "black")
+        .style("stroke", "#fff")
         .style("stroke-width", 1.5)
         .style("opacity", 2);
       this["style"]["r"] = radiusNumberMovies(d.number_movies) * 2;
