@@ -45,6 +45,11 @@
     }
 
     /* fine calendar */
+
+    /*bottone reset*/
+    #reset{
+      width: 50px;
+    }
     </style>
 
 
@@ -82,6 +87,8 @@
       <input type="checkbox" id="holiday_check" name="Holiday" onclick="updateHoliday(this)">
 
       <div id="area_1_top"></div>
+      <button onclick="ResetVis()" id="reset">Reset</button>
+
 
       <label for="channel_selector_2">Choose a channel</label>
       <select name="channel2" id="channel_selector_2" style="background-color: #e2f5f5">
