@@ -5,6 +5,8 @@ var p,
   paths,
   stringhe = new Array();
 var clicked = new Array(65).fill(false);
+var clicked_legend = new Array(12).fill(false);
+
 
 var dict = {
   Documentary: 0,
@@ -228,7 +230,6 @@ const data = d3.csv(DATASET_PATH, function (data) {
     })
     //evidenza i path
     .on("mouseover", function (d) {
-      // console.log(d3.select(this))
       this["style"]["stroke"] = "#000";
       if (genres[d.source.index] == genres[d.target.index]) {
         tooltip.html(
@@ -276,6 +277,9 @@ const data = d3.csv(DATASET_PATH, function (data) {
         updateBubble_plot(genres[d.source.index], genres[d.target.index], data);
         clicked[d.source.index] = true;
         clicked[d.targetindex] = true;
+        for (var i = 0; i < clicked_legend.length; i++) {
+          clicked_legend[i] = false;
+        }
       } else {
         svg.selectAll("path").style("opacity", 1.2);
         var circles = d3
@@ -310,11 +314,50 @@ const data = d3.csv(DATASET_PATH, function (data) {
       .style("font-size", "15px")
       .attr("alignment-baseline", "middle");
   }
-
   interactionLegend(svg, data);
   /// END legend
 });
 
+//interaction_legend
+function interactionLegend(svg, data) {
+  var gen = "Comedy";
+  for (var g = 0; g < 12; g++) {
+    var gen = genres[g];
+    svg.select("#" + gen)
+      .style("cursor", "pointer")
+      .on("click", function () {
+        if (!clicked_legend[dict[gen]]) {
+          gen = this.id;
+          svg.selectAll("path").style("opacity", 0.3).style("stroke", "none");
+          svg.selectAll("path").each(function () {
+            stringhe = this.id.split("_");
+            if (stringhe.includes(gen)) {
+              updateBubble_plot_from_legend(gen, data);
+              this["style"]["stroke-width"] = "0.2";
+              this["style"]["stroke"] = "black";
+              this["style"]["opacity"] = 2;
+            }
+          });
+          clicked_legend[dict[gen]] = true;
+        }
+        else {
+          svg.selectAll("path").style("opacity", 1.2);
+          var circles = d3
+            .select("#area_bubble")
+            .selectAll(".bubble")
+            .style("display", "block");
+          var mds_circles = d3
+            .select("#area_mds")
+            .selectAll(".bubble")
+            .style("display", "block");
+          for (var k = 0; k < clicked_legend.length; k++) {
+            clicked_legend[dict[gen]] = false;
+          }
+        }
+      });
+  }
+}
+//updateMDS
 function updateMDS(d, gen1, gen2) {
   var mds_circles = d3
     .select("#area_mds")
@@ -334,7 +377,7 @@ function updateMDS(d, gen1, gen2) {
       .style("display", "none");
   }
 }
-
+//normal update from chord
 function updateBubble_plot(gen1, gen2, data) {
   var circles = d3
     .select("#area_bubble")
@@ -356,7 +399,7 @@ function updateBubble_plot(gen1, gen2, data) {
   }
   updateYAxis(gen1, gen2, data);
 }
-
+//normal update from legend
 function updateBubble_plot_from_legend(gen1, data) {
   var circles = d3
     .select("#area_bubble")
@@ -371,32 +414,6 @@ function updateBubble_plot_from_legend(gen1, data) {
 
   updateYAxis_from_legend(gen1, data);
 }
-
-
-var gen = "Comedy";
-
-function interactionLegend(svg, data) {
-  for (var g = 0; g < 12; g++) {
-    var gen = genres[g];
-    svg.select("#" + gen)
-      .style("cursor", "pointer")
-      .on("click", function () {
-        gen = this.id;
-        svg.selectAll("path").style("opacity", 0.3).style("stroke", "none");
-        svg.selectAll("path").each(function () {
-          stringhe = this.id.split("_");
-          console.log(gen)
-          if (stringhe.includes(gen)) {
-            updateBubble_plot_from_legend(gen, data);
-            this["style"]["stroke-width"] = "0.2";
-            this["style"]["stroke"] = "black";
-            this["style"]["opacity"] = 2;
-          }
-        });
-      });
-  }
-}
-
 
 function updateYAxis(gen1, gen2, data) {
   var circleList = [];
