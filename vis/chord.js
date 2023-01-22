@@ -1,4 +1,4 @@
-var DATASET_PATH = "./dataset/df_chord.csv";
+var DATASET_PATH = "./dataset/df_main_info.csv";
 
 var prova, gh;
 var p,
@@ -233,26 +233,26 @@ const data = d3.csv(DATASET_PATH, function (data) {
       if (genres[d.source.index] == genres[d.target.index]) {
         tooltip.html(
           genres[d.source.index] +
-            "<br> Number of films of" +
-            genres[d.source.index] +
-            " :<br>" +
-            matrix2[d.source.index][d.source.index] +
-            " out of " +
-            num_titles
+          "<br> Number of films of" +
+          genres[d.source.index] +
+          " :<br>" +
+          matrix2[d.source.index][d.source.index] +
+          " out of " +
+          num_titles
         );
       } else {
         tooltip.html(
           genres[d.source.index] +
-            "," +
-            genres[d.target.index] +
-            "<br> Number of films of" +
-            genres[d.source.index] +
-            ", " +
-            genres[d.target.index] +
-            " :<br>" +
-            matrix2[d.source.index][d.target.index] +
-            " out of " +
-            num_titles
+          "," +
+          genres[d.target.index] +
+          "<br> Number of films of" +
+          genres[d.source.index] +
+          ", " +
+          genres[d.target.index] +
+          " :<br>" +
+          matrix2[d.source.index][d.target.index] +
+          " out of " +
+          num_titles
         );
       }
       return tooltip.style("visibility", "visible");
@@ -273,7 +273,7 @@ const data = d3.csv(DATASET_PATH, function (data) {
         svg.selectAll("path").style("opacity", 0.2);
         d3.select(this).style("opacity", 1);
         updateMDS(d, genres[d.source.index], genres[d.target.index]);
-        updateBubble_plot(d, genres[d.source.index], genres[d.target.index]);
+        updateBubble_plot(d, genres[d.source.index], genres[d.target.index], data);
         clicked[d.source.index] = true;
         clicked[d.targetindex] = true;
       } else {
@@ -335,14 +335,13 @@ function updateMDS(d, gen1, gen2) {
       .style("display", "none");
   }
 }
-function updateBubble_plot(d, gen1, gen2) {
+function updateBubble_plot(d, gen1, gen2, data) {
 
   var circles = d3
     .select("#area_bubble")
     .selectAll(".bubble")
     .style("display", "block");
 
-    updateYAxis(gen1)
   if (gen1 == gen2) {
     circles
       .filter(function (f) {
@@ -355,23 +354,27 @@ function updateBubble_plot(d, gen1, gen2) {
         return !f.genres.includes(gen1) | !f.genres.includes(gen2);
       })
       .style("display", "none");
-  }
 
-  
+  }
+  updateYAxis(gen1, data)
+
+
+
 }
 
-function updateBubble_plot_from_chord(gen1) {
+function updateBubble_plot_from_chord(gen1, data) {
   var circles = d3
     .select("#area_bubble")
     .selectAll(".bubble")
     .style("display", "block");
 
-  updateYAxis(gen1)
   circles
     .filter(function (f) {
       return !f.genres.includes(gen1);
     })
-    .style("display", "none");
+    .style("display", "none")
+
+
 
 }
 
@@ -381,7 +384,7 @@ function interactionLegend(svg) {
     svg.selectAll("path").each(function () {
       stringhe = this.id.split("_");
       if (stringhe.includes("Comedy")) {
-        updateBubble_plot_from_chord(stringhe[0]);
+        updateBubble_plot_from_chord(stringhe[0], data);
         this["style"]["stroke-width"] = "0.2";
         this["style"]["stroke"] = "black";
         this["style"]["opacity"] = 2;
@@ -540,7 +543,7 @@ function interactionLegend(svg) {
       });
     });
 
-    svg
+  svg
     .select("#Horror")
     .style("cursor", "pointer")
     .on("click", function (t) {
@@ -558,32 +561,49 @@ function interactionLegend(svg) {
 }
 
 
-function updateYAxis(genre){
-
+function updateYAxis(genre, data) {
   var circleList = []
-
-  var circles = d3
+  d3
     .select("#area_bubble")
     .selectAll(".bubble")
-    .filter(function(f){
-      return f.genres == genre //prende tutti i cerchi con il genere uguale a quello passato
+    .data(data)
+    .filter(function (d) {
+      return d.genres == genre //prende tutti i cerchi con il genere uguale a quello passato
     })
-    .each(function(d) {
-      circleList.push(d)
+    .each(function (d) {
+      circleList.push(parseInt(d.duration))
     })
-//ricalcolo l'asse
-  var y = d3
-  .scaleLinear()
-  .domain([
-    40,
-    d3.max(circleList, function (d) {
-      return Math.max(d.duration);
-    }),
-  ])
-  .range([height, 0]);
+  console.log(circleList);
 
-  var y_axis = d3.axisLeft(y);
+  //ricalcolo l'asse
+  var new_y = d3
+    .scaleLinear()
+    .domain([
+      d3.min(circleList) - 5, d3.max(circleList) + 5
+    ])
+    .range([280, 0]);
 
-  d3.selectAll("#y-axis").call(y_axis)
+  var y_axis = d3.axisLeft(new_y).ticks();
+
+  d3.selectAll("#y-axis").call(y_axis).selectAll("text").style("fill", "white")
+  d3.select("#area_bubble").selectAll("line").style("stroke", "#fff");
+  // d3.select("#area_bubble").selectAll("path").style("stroke", "#fff");
+
+  //update positions
+  d3
+    .select("#area_bubble")
+    .data(data)
+    .selectAll(".bubble")
+    .filter(function (d) {
+      return d.genres == genre //prende tutti i cerchi con il genere uguale a quello passato
+    })
+    .attr("cy", function (d) {
+      return new_y(parseInt(d.duration))
+    })
+
+
+
+
+
 
 }
