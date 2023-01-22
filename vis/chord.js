@@ -372,213 +372,31 @@ function updateBubble_plot_from_chord(gen1, data) {
   updateYAxis_from_legend(gen1, data);
 }
 
-// function interactionLegend(svg) {
-//   for (var g = 0; g < 12; g++) {
-//     svg.select("#" + genres[g]).on("click", function () {
-//       svg.selectAll("path").style("opacity", 0.3).style("stroke", "none");
 
-//       console.log(genres)
-
-//       svg.selectAll("path").each(function () {
-//         stringhe = this.id.split("_");
-
-//         console.log(stringhe);
-
-//         if (stringhe.includes(genres[g])) {
-//           // updateBubble_plot_from_chord(stringhe[0], data);
-//           this["style"]["stroke-width"] = "0.2";
-//           this["style"]["stroke"] = "black";
-//           this["style"]["opacity"] = 2;
-//         }
-//       });
-//     });
-//   }
-// }
+var gen = "Comedy";
 
 function interactionLegend(svg, data) {
-  svg
-    .select("#Comedy")
-    .style("cursor", "pointer")
-    .on("click", function (t) {
-      svg.selectAll("path").style("opacity", 0.3).style("stroke", "none");
-      svg.selectAll("path").each(function () {
-        stringhe = this.id.split("_");
-        if (stringhe.includes("Comedy")) {
-          updateBubble_plot_from_chord("Comedy", data);
-          this["style"]["stroke-width"] = "0.2";
-          this["style"]["stroke"] = "black";
-          this["style"]["opacity"] = 2;
-        }
+  for (var g = 0; g < 12; g++) {
+    var gen = genres[g];
+    svg.select("#" + gen)
+      .style("cursor", "pointer")
+      .on("click", function () {
+        gen = this.id;
+        svg.selectAll("path").style("opacity", 0.3).style("stroke", "none");
+        svg.selectAll("path").each(function () {
+          stringhe = this.id.split("_");
+          console.log(gen)
+          if (stringhe.includes(gen)) {
+            updateBubble_plot_from_chord(gen, data);
+            this["style"]["stroke-width"] = "0.2";
+            this["style"]["stroke"] = "black";
+            this["style"]["opacity"] = 2;
+          }
+        });
       });
-    });
-  svg
-    .select("#Documentary")
-    .style("cursor", "pointer")
-    .on("click", function (t) {
-      svg.selectAll("path").style("opacity", 0.3).style("stroke", "none");
-      svg.selectAll("path").each(function () {
-        stringhe = this.id.split("_");
-        if (stringhe.includes("Documentary")) {
-          updateBubble_plot_from_chord("Documentary", data);
-          this["style"]["stroke-width"] = "0.2";
-          this["style"]["stroke"] = "black";
-          this["style"]["opacity"] = 2;
-        }
-      });
-    });
-  svg
-    .select("#Sci-Fi")
-    .style("cursor", "pointer")
-    .on("click", function (t) {
-      svg.selectAll("path").style("opacity", 0.3).style("stroke", "none");
-      svg.selectAll("path").each(function () {
-        stringhe = this.id.split("_");
-        if (stringhe.includes("Sci-Fi")) {
-          updateBubble_plot_from_chord("Sci-Fi", data);
-          this["style"]["stroke-width"] = "0.2";
-          this["style"]["stroke"] = "black";
-          this["style"]["opacity"] = 2;
-        }
-      });
-    });
-  svg
-    .select("#Crime")
-    .style("cursor", "pointer")
-    .on("click", function (t) {
-      svg.selectAll("path").style("opacity", 0.3).style("stroke", "none");
-      svg.selectAll("path").each(function () {
-        stringhe = this.id.split("_");
-        if (stringhe.includes("Crime")) {
-          updateBubble_plot_from_chord("Crime", data);
-          this["style"]["stroke"] = "black";
-          this["style"]["stroke-width"] = "0.2";
-          this["style"]["opacity"] = 2;
-        }
-      });
-    });
-  svg
-    .select("#Action")
-    .style("cursor", "pointer")
-    .on("click", function (t) {
-      svg.selectAll("path").style("opacity", 0.3).style("stroke", "none");
-      svg.selectAll("path").each(function () {
-        stringhe = this.id.split("_");
-        if (stringhe.includes("Action")) {
-          updateBubble_plot_from_chord("Action", data);
-          this["style"]["stroke-width"] = "0.2";
-          this["style"]["stroke"] = "black";
-          this["style"]["opacity"] = 2;
-        }
-      });
-    });
-  svg
-    .select("#Drama")
-    .style("cursor", "pointer")
-    .on("click", function (t) {
-      svg.selectAll("path").style("opacity", 0.3).style("stroke", "none");
-      svg.selectAll("path").each(function () {
-        stringhe = this.id.split("_");
-        if (stringhe.includes("Drama")) {
-          updateBubble_plot_from_chord("Drama", data);
-          this["style"]["stroke-width"] = "0.2";
-          this["style"]["stroke"] = "black";
-          this["style"]["opacity"] = 2;
-        }
-      });
-    });
-  svg
-    .select("#Western")
-    .style("cursor", "pointer")
-    .on("click", function (t) {
-      svg.selectAll("path").style("opacity", 0.3).style("stroke", "none");
-      svg.selectAll("path").each(function () {
-        stringhe = this.id.split("_");
-        if (stringhe.includes("Western")) {
-          updateBubble_plot_from_chord("Western", data);
-          this["style"]["stroke-width"] = "0.2";
-          this["style"]["stroke"] = "black";
-          this["style"]["opacity"] = 2;
-        }
-      });
-    });
-  svg
-    .select("#Adventure")
-    .style("cursor", "pointer")
-    .on("click", function (t) {
-      svg.selectAll("path").style("opacity", 0.3).style("stroke", "none");
-      svg.selectAll("path").each(function () {
-        stringhe = this.id.split("_");
-        if (stringhe.includes("Adventure")) {
-          updateBubble_plot_from_chord("Adventure", data);
-          this["style"]["stroke-width"] = "0.2";
-          this["style"]["stroke"] = "black";
-          this["style"]["opacity"] = 2;
-        }
-      });
-    });
-  svg
-    .select("#Fantasy")
-    .style("cursor", "pointer")
-    .on("click", function (t) {
-      svg.selectAll("path").style("opacity", 0.3).style("stroke", "none");
-      svg.selectAll("path").each(function () {
-        stringhe = this.id.split("_");
-        if (stringhe.includes("Fantasy")) {
-          updateBubble_plot_from_chord("Fantasy", data);
-          this["style"]["stroke-width"] = "0.2";
-          this["style"]["stroke"] = "black";
-          this["style"]["opacity"] = 2;
-        }
-      });
-    });
-  svg
-    .select("#Thriller")
-    .style("cursor", "pointer")
-    .on("click", function (t) {
-      svg.selectAll("path").style("opacity", 0.3).style("stroke", "none");
-      svg.selectAll("path").each(function () {
-        stringhe = this.id.split("_");
-        if (stringhe.includes("Thriller")) {
-          updateBubble_plot_from_chord("Thriller", data);
-          this["style"]["stroke-width"] = "0.2";
-          this["style"]["stroke"] = "black";
-          this["style"]["opacity"] = 2;
-        }
-      });
-    });
-
-  svg
-    .select("#Romance")
-    .style("cursor", "pointer")
-    .on("click", function (t) {
-      svg.selectAll("path").style("opacity", 0.3).style("stroke", "none");
-      svg.selectAll("path").each(function () {
-        stringhe = this.id.split("_");
-        if (stringhe.includes("Romance")) {
-          updateBubble_plot_from_chord("Romance", data);
-          this["style"]["stroke-width"] = "0.2";
-          this["style"]["stroke"] = "black";
-          this["style"]["opacity"] = 2;
-        }
-      });
-    });
-
-  svg
-    .select("#Horror")
-    .style("cursor", "pointer")
-    .on("click", function (t) {
-      svg.selectAll("path").style("opacity", 0.3).style("stroke", "none");
-      svg.selectAll("path").each(function () {
-        stringhe = this.id.split("_");
-        if (stringhe.includes("Horror")) {
-          updateBubble_plot_from_chord("Horror", data);
-          this["style"]["stroke-width"] = "0.2";
-          this["style"]["stroke"] = "black";
-          this["style"]["opacity"] = 2;
-        }
-      });
-    });
+  }
 }
+
 
 function updateYAxis(gen1, gen2, data) {
   var circleList = [];
@@ -633,7 +451,7 @@ function updateYAxis_from_legend(gen1, data) {
     .each(function (d) {
       circleList.push(parseInt(d.duration));
     });
-  console.log(circleList);
+  // console.log(circleList);
 
   //ricalcolo l'asse
   var new_y = d3
