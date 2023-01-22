@@ -233,26 +233,26 @@ const data = d3.csv(DATASET_PATH, function (data) {
       if (genres[d.source.index] == genres[d.target.index]) {
         tooltip.html(
           genres[d.source.index] +
-            "<br> Number of films of" +
-            genres[d.source.index] +
-            " :<br>" +
-            matrix2[d.source.index][d.source.index] +
-            " out of " +
-            num_titles
+          "<br> Number of films of" +
+          genres[d.source.index] +
+          " :<br>" +
+          matrix2[d.source.index][d.source.index] +
+          " out of " +
+          num_titles
         );
       } else {
         tooltip.html(
           genres[d.source.index] +
-            "," +
-            genres[d.target.index] +
-            "<br> Number of films of" +
-            genres[d.source.index] +
-            ", " +
-            genres[d.target.index] +
-            " :<br>" +
-            matrix2[d.source.index][d.target.index] +
-            " out of " +
-            num_titles
+          "," +
+          genres[d.target.index] +
+          "<br> Number of films of" +
+          genres[d.source.index] +
+          ", " +
+          genres[d.target.index] +
+          " :<br>" +
+          matrix2[d.source.index][d.target.index] +
+          " out of " +
+          num_titles
         );
       }
       return tooltip.style("visibility", "visible");
@@ -369,7 +369,7 @@ function updateBubble_plot_from_chord(gen1, data) {
     })
     .style("display", "none");
 
-  updateYAxis(gen1, gen1, data);
+  updateYAxis_from_legend(gen1, data);
 }
 
 // function interactionLegend(svg) {
@@ -405,7 +405,6 @@ function interactionLegend(svg, data) {
         stringhe = this.id.split("_");
         if (stringhe.includes("Comedy")) {
           updateBubble_plot_from_chord("Comedy", data);
-
           this["style"]["stroke-width"] = "0.2";
           this["style"]["stroke"] = "black";
           this["style"]["opacity"] = 2;
@@ -616,6 +615,44 @@ function updateYAxis(gen1, gen2, data) {
       if (gen1 == gen2) return d.genres == gen1;
       else return d.genres.includes(gen1) & d.genres.includes(gen2);
       // return d.genres == genre; //prende tutti i cerchi con il genere uguale a quello passato
+    })
+    .attr("cy", function (d) {
+      return new_y(parseInt(d.duration));
+    });
+}
+
+
+function updateYAxis_from_legend(gen1, data) {
+  var circleList = [];
+  d3.select("#area_bubble")
+    .selectAll(".bubble")
+    .data(data)
+    .filter(function (d) {
+      return d.genres.includes(gen1);
+    })
+    .each(function (d) {
+      circleList.push(parseInt(d.duration));
+    });
+  console.log(circleList);
+
+  //ricalcolo l'asse
+  var new_y = d3
+    .scaleLinear()
+    .domain([d3.min(circleList) - 5, d3.max(circleList) + 5])
+    .range([280, 0]);
+
+  var y_axis = d3.axisLeft(new_y).ticks();
+
+  d3.selectAll("#y-axis").call(y_axis).selectAll("text").style("fill", "white");
+  d3.select("#area_bubble").selectAll("line").style("stroke", "#fff");
+  // d3.select("#area_bubble").selectAll("path").style("stroke", "#fff");
+
+  //update positions
+  d3.select("#area_bubble")
+    .data(data)
+    .selectAll(".bubble")
+    .filter(function (d) {
+      return d.genres.includes(gen1);
     })
     .attr("cy", function (d) {
       return new_y(parseInt(d.duration));
