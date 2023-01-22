@@ -3,9 +3,11 @@ var DATASET_PATH = "./dataset/df_main_info.csv";
 var margin = { top: 20, right: 0, bottom: 0, left: 30 };
 
 var width = 850 - margin.left - margin.right;
-var height = 300 - margin.bottom - margin.bottom;
+var height = 300 - margin.top - margin.bottom;
 
 var div = d3.select("#area_bubble");
+
+
 
 // append the svg object to the body of the page
 var svg = d3
@@ -47,16 +49,33 @@ d3.csv(DATASET_PATH, function (data) {
     .selectAll("text")
     .style("fill", "#fff");
 
+  svg
+    .append("text")
+    .attr("x", 705) // set x position of text
+    .attr("y", 305) // set y position of text
+    .text("Days") // set the text content
+    .attr("font-size", "15px") // set font size
+    .attr("fill", "#fff"); // set text color
+
   var y_axis = d3.axisLeft(y);
 
   svg
     .append("g")
     .attr("transform", "translate(0,0)")
+    .attr("id", "y-axis")
     .call(y_axis)
     .selectAll("text")
     .style("fill", "#fff");
   svg.selectAll("line").style("stroke", "#fff");
   svg.selectAll("path").style("stroke", "#fff");
+
+  svg
+    .append("text")
+    .attr("x", -25) // set x position of text
+    .attr("y", -6) // set y position of text
+    .text("Duration") // set the text content
+    .attr("font-size", "15px") // set font size
+    .attr("fill", "#fff"); // set text color
 
   var radiusNumberMovies = d3
     .scaleLinear()
@@ -108,7 +127,7 @@ d3.csv(DATASET_PATH, function (data) {
     .style("cursor", "pointer")
     .attr("stroke", "black")
     .on("mouseover", function (d) {
-      tooltip.html(d.title + "<br> Rating: " + d.rating + "<br>" + d.genres);
+      tooltip.html(d.title + "<br> Rating: " + d.rating + "<br>" + d.genres + "duration <br>" + d.duration) ;
       return tooltip.style("visibility", "visible");
     })
     .on("mousemove", function () {

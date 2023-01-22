@@ -51,6 +51,13 @@
       }
 
       /* fine calendar */
+
+      #reset{
+        position: absolute;
+        z-index: 2;
+        margin-left: 85%;
+        
+      }
     </style>
 
     <script src="https://d3js.org/d3.v4.min.js"></script>
@@ -64,6 +71,7 @@
   </head>
 
   <body id="body" style="background-color: #000">
+    <button onclick="location.reload()" id="reset">Reset</button>
     <div
       id="all"
       style="
@@ -115,7 +123,6 @@
         />
 
         <div id="area_1_top"></div>
-        <button onclick="ResetVis()" id="reset">Reset</button>
 
         <label for="channel_selector_2" style="color: #fff"
           >Choose a channel</label
