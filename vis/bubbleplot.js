@@ -89,7 +89,7 @@ d3.csv(DATASET_PATH, function (data) {
   var myColor = d3
     .scaleOrdinal()
     .domain(["mattina", "pomeriggio", "sera", "notte"])
-    .range(d3.schemeSet2);
+    .range(d3.schemeSet2); //funzione che mette i colori alla legenda 
 
   var tooltip = d3
     .select("body")
@@ -168,56 +168,56 @@ d3.csv(DATASET_PATH, function (data) {
   // Handmade legend
   svg
     .append("circle")
-    .attr("cx", width - 0.09 * width)
-    .attr("cy", 130)
+    .attr("cx", 10)
+    .attr("cy", 304)
     .attr("r", 6)
     .style("fill", d3.schemeSet2[0]);
   svg
     .append("circle")
-    .attr("cx", width - 0.09 * width)
-    .attr("cy", 160)
+    .attr("cx", 150)
+    .attr("cy", 304)
     .attr("r", 6)
     .style("fill", d3.schemeSet2[1]);
   svg
     .append("circle")
-    .attr("cx", width - 0.09 * width)
-    .attr("cy", 190)
+    .attr("cx", 300)
+    .attr("cy", 304)
     .attr("r", 6)
     .style("fill", d3.schemeSet2[2]);
   svg
     .append("circle")
-    .attr("cx", width - 0.09 * width)
-    .attr("cy", 220)
+    .attr("cx", 420)
+    .attr("cy", 304)
     .attr("r", 6)
     .style("fill", d3.schemeSet2[3]);
   svg
     .append("text")
-    .attr("x", width - 0.08 * width)
-    .attr("y", 130)
+    .attr("x", 16.5)
+    .attr("y", 304)
     .text("morning")
     .style("fill", "#fff")
     .style("font-size", "15px")
     .attr("alignment-baseline", "middle");
   svg
     .append("text")
-    .attr("x", width - 0.08 * width)
-    .attr("y", 160)
+    .attr("x", 160)
+    .attr("y", 304)
     .text("afternoon")
     .style("fill", "#fff")
     .style("font-size", "15px")
     .attr("alignment-baseline", "middle");
   svg
     .append("text")
-    .attr("x", width - 0.08 * width)
-    .attr("y", 190)
+    .attr("x", 310)
+    .attr("y", 304)
     .text("evening")
     .style("fill", "#fff")
     .style("font-size", "15px")
     .attr("alignment-baseline", "middle");
   svg
     .append("text")
-    .attr("x", width - 0.08 * width)
-    .attr("y", 220)
+    .attr("x", 430)
+    .attr("y", 304)
     .text("night")
     .style("fill", "#fff")
     .style("font-size", "15px")
