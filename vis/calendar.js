@@ -66,6 +66,7 @@ function startCalendar(brushed_ids) {
     manageOnSelection(data, "channel_selector", "top");
     manageOnSelection(data, "channel_selector_2", "bottom");
 
+    // If the array is not empty
     if (brushed_ids != null) {
       var dataFromMDS = data.filter(function (d) {
         return brushed_ids.includes(d.id);
@@ -85,71 +86,6 @@ function startCalendar(brushed_ids) {
 
     calendarCreate(default_set, "top");
     calendarCreate(default_set_2, "bottom");
-
-    create_legend();
-  });
-}
-
-function start_calendar_from_mds(brushed_ids) {
-  var monthMap = {
-    gennaio: 1,
-    febbraio: 2,
-    marzo: 3,
-    aprile: 4,
-    maggio: 5,
-    giugno: 6,
-    luglio: 7,
-    agosto: 8,
-    settembre: 9,
-    ottobre: 10,
-    novembre: 11,
-    dicembre: 12,
-  };
-
-  d3.csv(DATASET_PATH, function (data) {
-    data.forEach(function (d) {
-      d.date = d.day_number + "/" + monthMap[d.month] + "/" + current_year;
-      d.date = parseDate(d.date);
-      d.value = d.advertising;
-    });
-
-    // var selection = document.getElementById("channel_selector");
-    // selection.onchange = (event) => {
-    //   var selectedChannel = event.target.value;
-
-    //   calendarCreate(
-    //     data.filter(function (d) {
-    //       return d.channel === channel;
-    //     }),
-    //     "top"
-    //   );
-    // };
-
-    // var selection_2 = document.getElementById("channel_selector_2");
-    // selection_2.onchange = (event) => {
-    //   var selectedChannel = event.target.value;
-    //   calendarCreate(
-    //     data.filter(function (d) {
-    //       return d.channel === selectedChannel;
-    //     }),
-    //     "bottom"
-    //   );
-    // };
-
-    // var default_set = data.filter(function (d) {
-    //   return d.channel === "Italia 1";
-    // });
-
-    // var default_set_2 = data.filter(function (d) {
-    //   return d.channel === "Cielo";
-    // });
-
-    var daje = data.filter(function (d) {
-      console.log(d.id);
-      return brushed_ids.includes(d.id);
-    });
-
-    calendarCreate(daje, "bottom");
 
     create_legend();
   });

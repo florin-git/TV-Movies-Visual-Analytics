@@ -91,34 +91,29 @@ d3.csv(DATASET_PATH, function (data) {
         [0, 0],
         [width, height],
       ]) // initialise the brush area: start at 0,0 and finishes at width,height: it means I select the whole graph area
+      .on("start", startBrushing)
       .on("brush", updateChart)
-      .on("end", stopBrushing)
   );
+
+  function startBrushing() {
+    console.log("START");
+    d3.event.sourceEvent.stopPropagation();
+  }
 
   // Function that is triggered when brushing is performed
   function updateChart() {
-    d3.event.sourceEvent.stopPropagation();
-
     var extent = d3.event.selection;
 
-    if (!extent) return;
-
+    // Reset ids
     brushed_ids = [];
 
     movies.classed("selected", function (d) {
       return isBrushed(extent, x(d.mds_x), y(d.mds_y));
     });
-    setTimeout(update_calendar, 3000);
-
+    // setTimeout(update_calendar, 3000);
+    update_calendar()
   }
 
-  function stopBrushing() {
-    // d3.event.sourceEvent.stopPropagation();
-    // brushing = false
-
-    var selection = d3.event.selection;
-    // brush.remove();
-  }
 
   function isBrushed(brush_coords, cx, cy) {
     var x0 = brush_coords[0][0],
@@ -138,8 +133,7 @@ d3.csv(DATASET_PATH, function (data) {
       } // Logs the id attribute.
     });
 
-    console.log(brushed_ids);
-    startCalendar(brushed_ids);
+    if (brushed_ids.length != 0) startCalendar(brushed_ids);
 
     return;
   }

@@ -295,18 +295,34 @@ function updateMDS(d) {
     .select("#area_mds")
     .selectAll(".bubble")
     .style("display", "block");
+
   mds_circles
     .filter(function (f) {
       return (f.month !== d.month) | (f.channel !== d.channel);
     })
-    .style("display", "none");
+    .attr("class", "remove");
+  // .style("display", "none");
+
+  
+  // Remove the filtered data from MDS
+  removeCircles(d3.select("#area_mds"));
+
+}
+
+function removeCircles(elementsToRemove) {
+  // d3.select("#area_mds").selectAll(".remove").remove()
+  elementsToRemove.selectAll(".remove").remove();
+  // circles.selectAll(".remove").remove();
 }
 
 // The calendar is updated by changing the value (the channel) of the selector
 function updateCalendar(channel) {
   // Spaces in selectors are automatically converted to "_" in JS.
   // Thus, I will replace spaces with "_"
-  document.getElementById("channel_selector").value = channel.replaceAll(" ", "_");
+  document.getElementById("channel_selector").value = channel.replaceAll(
+    " ",
+    "_"
+  );
   var changeEvent = new Event("change");
   document.getElementById("channel_selector").dispatchEvent(changeEvent);
 }
