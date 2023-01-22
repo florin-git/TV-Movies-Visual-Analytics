@@ -357,7 +357,7 @@ function updateBubble_plot(gen1, gen2, data) {
   updateYAxis(gen1, gen2, data);
 }
 
-function updateBubble_plot_from_chord(gen1, data) {
+function updateBubble_plot_from_legend(gen1, data) {
   var circles = d3
     .select("#area_bubble")
     .selectAll(".bubble")
@@ -387,7 +387,7 @@ function interactionLegend(svg, data) {
           stringhe = this.id.split("_");
           console.log(gen)
           if (stringhe.includes(gen)) {
-            updateBubble_plot_from_chord(gen, data);
+            updateBubble_plot_from_legend(gen, data);
             this["style"]["stroke-width"] = "0.2";
             this["style"]["stroke"] = "black";
             this["style"]["opacity"] = 2;
