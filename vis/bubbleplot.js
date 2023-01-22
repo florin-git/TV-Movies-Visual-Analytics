@@ -47,16 +47,33 @@ d3.csv(DATASET_PATH, function (data) {
     .selectAll("text")
     .style("fill", "#fff");
 
+  svg
+    .append("text")
+    .attr("x", 705) // set x position of text
+    .attr("y", 305) // set y position of text
+    .text("Days") // set the text content
+    .attr("font-size", "15px") // set font size
+    .attr("fill", "#fff"); // set text color
+
   var y_axis = d3.axisLeft(y);
 
   svg
     .append("g")
     .attr("transform", "translate(0,0)")
+    .attr("id", "y-axis")
     .call(y_axis)
     .selectAll("text")
     .style("fill", "#fff");
   svg.selectAll("line").style("stroke", "#fff");
   svg.selectAll("path").style("stroke", "#fff");
+
+  svg
+    .append("text")
+    .attr("x", -25) // set x position of text
+    .attr("y", -6) // set y position of text
+    .text("Duration") // set the text content
+    .attr("font-size", "15px") // set font size
+    .attr("fill", "#fff"); // set text color
 
   var radiusNumberMovies = d3
     .scaleLinear()

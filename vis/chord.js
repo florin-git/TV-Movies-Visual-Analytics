@@ -336,10 +336,13 @@ function updateMDS(d, gen1, gen2) {
   }
 }
 function updateBubble_plot(d, gen1, gen2) {
+
   var circles = d3
     .select("#area_bubble")
     .selectAll(".bubble")
     .style("display", "block");
+
+    updateYAxis(gen1)
   if (gen1 == gen2) {
     circles
       .filter(function (f) {
@@ -353,6 +356,8 @@ function updateBubble_plot(d, gen1, gen2) {
       })
       .style("display", "none");
   }
+
+  
 }
 
 function updateBubble_plot_from_chord(gen1) {
@@ -360,11 +365,14 @@ function updateBubble_plot_from_chord(gen1) {
     .select("#area_bubble")
     .selectAll(".bubble")
     .style("display", "block");
+
+  updateYAxis(gen1)
   circles
     .filter(function (f) {
       return !f.genres.includes(gen1);
     })
     .style("display", "none");
+
 }
 
 function interactionLegend(svg) {
@@ -531,4 +539,51 @@ function interactionLegend(svg) {
         }
       });
     });
+
+    svg
+    .select("#Horror")
+    .style("cursor", "pointer")
+    .on("click", function (t) {
+      svg.selectAll("path").style("opacity", 0.3).style("stroke", "none");
+      svg.selectAll("path").each(function () {
+        stringhe = this.id.split("_");
+        if (stringhe.includes("Horror")) {
+          updateBubble_plot_from_chord(stringhe[0]);
+          this["style"]["stroke-width"] = "0.2";
+          this["style"]["stroke"] = "black";
+          this["style"]["opacity"] = 2;
+        }
+      });
+    });
+}
+
+
+function updateYAxis(genre){
+
+  var circleList = []
+
+  var circles = d3
+    .select("#area_bubble")
+    .selectAll(".bubble")
+    .filter(function(f){
+      return f.genres == genre //prende tutti i cerchi con il genere uguale a quello passato
+    })
+    .each(function(d) {
+      circleList.push(d)
+    })
+//ricalcolo l'asse
+  var y = d3
+  .scaleLinear()
+  .domain([
+    40,
+    d3.max(circleList, function (d) {
+      return Math.max(d.duration);
+    }),
+  ])
+  .range([height, 0]);
+
+  var y_axis = d3.axisLeft(y);
+
+  d3.selectAll("#y-axis").call(y_axis)
+
 }

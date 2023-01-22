@@ -439,8 +439,4 @@ function updateHoliday(checkbox) {
   }
 }
 
-function ResetVis() {
-  window.localStorage.clear();
-  location.reload();
-  console.log("here");
-}
+
