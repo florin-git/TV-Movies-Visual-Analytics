@@ -77,14 +77,14 @@ d3.csv(DATASET_PATH, function (data) {
     .attr("font-size", "15px") // set font size
     .attr("fill", "#fff"); // set text color
 
-  var radiusNumberMovies = d3
+  var radiusRating = d3
     .scaleLinear()
     .domain(
       d3.extent(data, function (d) {
         return Math.max(d.rating);
       })
     )
-    .range([1, 10]);
+    .range([3.5, 10]);
 
   var myColor = d3
     .scaleOrdinal()
@@ -118,7 +118,7 @@ d3.csv(DATASET_PATH, function (data) {
       return y(d.duration);
     })
     .attr("r", function (d) {
-      return radiusNumberMovies(d.rating);
+      return radiusRating(d.rating);
     })
     .style("fill", function (d) {
       return myColor(d.daytime);

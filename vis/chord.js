@@ -200,7 +200,7 @@ const data = d3.csv(DATASET_PATH, function (data) {
 
   var k = 0;
 
-  //PATH!!!!
+  //PATH !!!!
   svg
     .datum(res)
     .append("g")
@@ -273,12 +273,7 @@ const data = d3.csv(DATASET_PATH, function (data) {
         svg.selectAll("path").style("opacity", 0.2);
         d3.select(this).style("opacity", 1);
         updateMDS(d, genres[d.source.index], genres[d.target.index]);
-        updateBubble_plot(
-          d,
-          genres[d.source.index],
-          genres[d.target.index],
-          data
-        );
+        updateBubble_plot(genres[d.source.index], genres[d.target.index], data);
         clicked[d.source.index] = true;
         clicked[d.targetindex] = true;
       } else {
@@ -296,7 +291,8 @@ const data = d3.csv(DATASET_PATH, function (data) {
         }
       }
     });
-  ///LEGEND
+
+  /// LEGEND
   for (var t = 0; t < 12; t++) {
     svg
       .append("circle")
@@ -313,12 +309,10 @@ const data = d3.csv(DATASET_PATH, function (data) {
       .style("fill", "#fff")
       .style("font-size", "15px")
       .attr("alignment-baseline", "middle");
-
-    if (t == 11) {
-      interactionLegend(svg);
-    }
   }
-  ///END legend
+
+  interactionLegend(svg, data);
+  /// END legend
 });
 
 function updateMDS(d, gen1, gen2) {
@@ -340,7 +334,8 @@ function updateMDS(d, gen1, gen2) {
       .style("display", "none");
   }
 }
-function updateBubble_plot(d, gen1, gen2, data) {
+
+function updateBubble_plot(gen1, gen2, data) {
   var circles = d3
     .select("#area_bubble")
     .selectAll(".bubble")
@@ -359,7 +354,7 @@ function updateBubble_plot(d, gen1, gen2, data) {
       })
       .style("display", "none");
   }
-  updateYAxis(gen1, data);
+  updateYAxis(gen1, gen2, data);
 }
 
 function updateBubble_plot_from_chord(gen1, data) {
@@ -373,21 +368,50 @@ function updateBubble_plot_from_chord(gen1, data) {
       return !f.genres.includes(gen1);
     })
     .style("display", "none");
+
+  updateYAxis(gen1, gen1, data);
 }
 
-function interactionLegend(svg) {
-  svg.select("#Comedy").on("click", function (t) {
-    svg.selectAll("path").style("opacity", 0.3).style("stroke", "none");
-    svg.selectAll("path").each(function () {
-      stringhe = this.id.split("_");
-      if (stringhe.includes("Comedy")) {
-        updateBubble_plot_from_chord(stringhe[0], data);
-        this["style"]["stroke-width"] = "0.2";
-        this["style"]["stroke"] = "black";
-        this["style"]["opacity"] = 2;
-      }
+// function interactionLegend(svg) {
+//   for (var g = 0; g < 12; g++) {
+//     svg.select("#" + genres[g]).on("click", function () {
+//       svg.selectAll("path").style("opacity", 0.3).style("stroke", "none");
+
+//       console.log(genres)
+
+//       svg.selectAll("path").each(function () {
+//         stringhe = this.id.split("_");
+
+//         console.log(stringhe);
+
+//         if (stringhe.includes(genres[g])) {
+//           // updateBubble_plot_from_chord(stringhe[0], data);
+//           this["style"]["stroke-width"] = "0.2";
+//           this["style"]["stroke"] = "black";
+//           this["style"]["opacity"] = 2;
+//         }
+//       });
+//     });
+//   }
+// }
+
+function interactionLegend(svg, data) {
+  svg
+    .select("#Comedy")
+    .style("cursor", "pointer")
+    .on("click", function (t) {
+      svg.selectAll("path").style("opacity", 0.3).style("stroke", "none");
+      svg.selectAll("path").each(function () {
+        stringhe = this.id.split("_");
+        if (stringhe.includes("Comedy")) {
+          updateBubble_plot_from_chord("Comedy", data);
+
+          this["style"]["stroke-width"] = "0.2";
+          this["style"]["stroke"] = "black";
+          this["style"]["opacity"] = 2;
+        }
+      });
     });
-  });
   svg
     .select("#Documentary")
     .style("cursor", "pointer")
@@ -396,7 +420,7 @@ function interactionLegend(svg) {
       svg.selectAll("path").each(function () {
         stringhe = this.id.split("_");
         if (stringhe.includes("Documentary")) {
-          updateBubble_plot_from_chord(stringhe[0]);
+          updateBubble_plot_from_chord("Documentary", data);
           this["style"]["stroke-width"] = "0.2";
           this["style"]["stroke"] = "black";
           this["style"]["opacity"] = 2;
@@ -411,7 +435,7 @@ function interactionLegend(svg) {
       svg.selectAll("path").each(function () {
         stringhe = this.id.split("_");
         if (stringhe.includes("Sci-Fi")) {
-          updateBubble_plot_from_chord(stringhe[0]);
+          updateBubble_plot_from_chord("Sci-Fi", data);
           this["style"]["stroke-width"] = "0.2";
           this["style"]["stroke"] = "black";
           this["style"]["opacity"] = 2;
@@ -426,7 +450,7 @@ function interactionLegend(svg) {
       svg.selectAll("path").each(function () {
         stringhe = this.id.split("_");
         if (stringhe.includes("Crime")) {
-          updateBubble_plot_from_chord(stringhe[0]);
+          updateBubble_plot_from_chord("Crime", data);
           this["style"]["stroke"] = "black";
           this["style"]["stroke-width"] = "0.2";
           this["style"]["opacity"] = 2;
@@ -441,7 +465,7 @@ function interactionLegend(svg) {
       svg.selectAll("path").each(function () {
         stringhe = this.id.split("_");
         if (stringhe.includes("Action")) {
-          updateBubble_plot_from_chord(stringhe[0]);
+          updateBubble_plot_from_chord("Action", data);
           this["style"]["stroke-width"] = "0.2";
           this["style"]["stroke"] = "black";
           this["style"]["opacity"] = 2;
@@ -456,7 +480,7 @@ function interactionLegend(svg) {
       svg.selectAll("path").each(function () {
         stringhe = this.id.split("_");
         if (stringhe.includes("Drama")) {
-          updateBubble_plot_from_chord(stringhe[0]);
+          updateBubble_plot_from_chord("Drama", data);
           this["style"]["stroke-width"] = "0.2";
           this["style"]["stroke"] = "black";
           this["style"]["opacity"] = 2;
@@ -471,7 +495,7 @@ function interactionLegend(svg) {
       svg.selectAll("path").each(function () {
         stringhe = this.id.split("_");
         if (stringhe.includes("Western")) {
-          updateBubble_plot_from_chord(stringhe[0]);
+          updateBubble_plot_from_chord("Western", data);
           this["style"]["stroke-width"] = "0.2";
           this["style"]["stroke"] = "black";
           this["style"]["opacity"] = 2;
@@ -486,7 +510,7 @@ function interactionLegend(svg) {
       svg.selectAll("path").each(function () {
         stringhe = this.id.split("_");
         if (stringhe.includes("Adventure")) {
-          updateBubble_plot_from_chord(stringhe[0]);
+          updateBubble_plot_from_chord("Adventure", data);
           this["style"]["stroke-width"] = "0.2";
           this["style"]["stroke"] = "black";
           this["style"]["opacity"] = 2;
@@ -501,7 +525,7 @@ function interactionLegend(svg) {
       svg.selectAll("path").each(function () {
         stringhe = this.id.split("_");
         if (stringhe.includes("Fantasy")) {
-          updateBubble_plot_from_chord(stringhe[0]);
+          updateBubble_plot_from_chord("Fantasy", data);
           this["style"]["stroke-width"] = "0.2";
           this["style"]["stroke"] = "black";
           this["style"]["opacity"] = 2;
@@ -516,7 +540,7 @@ function interactionLegend(svg) {
       svg.selectAll("path").each(function () {
         stringhe = this.id.split("_");
         if (stringhe.includes("Thriller")) {
-          updateBubble_plot_from_chord(stringhe[0]);
+          updateBubble_plot_from_chord("Thriller", data);
           this["style"]["stroke-width"] = "0.2";
           this["style"]["stroke"] = "black";
           this["style"]["opacity"] = 2;
@@ -532,7 +556,7 @@ function interactionLegend(svg) {
       svg.selectAll("path").each(function () {
         stringhe = this.id.split("_");
         if (stringhe.includes("Romance")) {
-          updateBubble_plot_from_chord(stringhe[0]);
+          updateBubble_plot_from_chord("Romance", data);
           this["style"]["stroke-width"] = "0.2";
           this["style"]["stroke"] = "black";
           this["style"]["opacity"] = 2;
@@ -548,7 +572,7 @@ function interactionLegend(svg) {
       svg.selectAll("path").each(function () {
         stringhe = this.id.split("_");
         if (stringhe.includes("Horror")) {
-          updateBubble_plot_from_chord(stringhe[0]);
+          updateBubble_plot_from_chord("Horror", data);
           this["style"]["stroke-width"] = "0.2";
           this["style"]["stroke"] = "black";
           this["style"]["opacity"] = 2;
@@ -557,13 +581,15 @@ function interactionLegend(svg) {
     });
 }
 
-function updateYAxis(genre, data) {
+function updateYAxis(gen1, gen2, data) {
   var circleList = [];
   d3.select("#area_bubble")
     .selectAll(".bubble")
     .data(data)
     .filter(function (d) {
-      return d.genres == genre; //prende tutti i cerchi con il genere uguale a quello passato
+      if (gen1 == gen2) return d.genres == gen1;
+      else return d.genres.includes(gen1) & d.genres.includes(gen2);
+      // return d.genres.includes(genre_1) ; //prende tutti i cerchi con il genere uguale a quello passato
     })
     .each(function (d) {
       circleList.push(parseInt(d.duration));
@@ -587,7 +613,9 @@ function updateYAxis(genre, data) {
     .data(data)
     .selectAll(".bubble")
     .filter(function (d) {
-      return d.genres == genre; //prende tutti i cerchi con il genere uguale a quello passato
+      if (gen1 == gen2) return d.genres == gen1;
+      else return d.genres.includes(gen1) & d.genres.includes(gen2);
+      // return d.genres == genre; //prende tutti i cerchi con il genere uguale a quello passato
     })
     .attr("cy", function (d) {
       return new_y(parseInt(d.duration));
