@@ -4,12 +4,8 @@ var margin = { top: 5, right: 0, bottom: 25, left: 55 };
 var width = 660 - margin.left - margin.right;
 var height = 340 - margin.top - margin.bottom;
 
-var clicked = new Array(120).fill(false)
-var rad = new Array(120)
-
-
-
-
+var clicked = new Array(120).fill(false);
+var rad = new Array(120);
 
 // append the svg object to the body of the page
 var svg = d3
@@ -180,10 +176,10 @@ d3.csv(DATASET_PATH, function (data) {
     .data(data)
     .enter()
     .append("circle")
-    .attr("id",function(d,id_c){
+    .attr("id", function (d, id_c) {
       prova = "bubble_" + id_c;
-      rad[id_c] = radiusNumberMovies(d.number_movies)
-      id_c+=1;
+      rad[id_c] = radiusNumberMovies(d.number_movies);
+      id_c += 1;
       return prova;
     })
     .attr("cx", function (d) {
@@ -193,8 +189,7 @@ d3.csv(DATASET_PATH, function (data) {
       return y(d.month) + 20.5;
     })
     .attr("r", function (d) {
-      return radiusNumberMovies(d.number_movies)
-      
+      return radiusNumberMovies(d.number_movies);
     })
     .style("fill", function (d) {
       return colorScale(d.sharing);
@@ -211,16 +206,15 @@ d3.csv(DATASET_PATH, function (data) {
       tooltip.html(
         "Number of movies :" + d.number_movies + "<br>Sharing: " + d.sharing
       );
-      tooltip.style("visibility", "visible")
+      tooltip.style("visibility", "visible");
       for (var k = 0; k < clicked.length; k++) {
-        if(clicked[k]==true){
+        if (clicked[k] == true) {
           return;
-        } 
+        }
       }
       this["style"]["r"] = radiusNumberMovies(d.number_movies) * 2;
       // d3.select(this).style("stroke", "black").style("stroke-width", 1.5).style("opacity", 2)
       return;
-      
     })
     .on("mousemove", function (d) {
       //this["style"]["r"] = radiusNumberMovies(d.number_movies);
@@ -228,38 +222,39 @@ d3.csv(DATASET_PATH, function (data) {
         .style("top", d3.event.pageY - 10 + "px")
         .style("left", d3.event.pageX + 10 + "px");
     })
-    .on("mouseout", function (d,id_c) {
-      if(!clicked[id_c]){
-        d3.select(this).style("stroke-width", 0.8)
-        this["style"]["r"] = radiusNumberMovies(d.number_movies)
+    .on("mouseout", function (d, id_c) {
+      if (!clicked[id_c]) {
+        d3.select(this).style("stroke-width", 0.8);
+        this["style"]["r"] = radiusNumberMovies(d.number_movies);
       }
       return tooltip.style("visibility", "hidden");
     })
-    .on("click", function (d,id_c) {
+    .on("click", function (d, id_c) {
       if (!clicked[id_c]) {
         for (var k = 0; k < clicked.length; k++) {
-          if(clicked[k]==true){
-            svg.select("#bubble_"+k).style("r",rad[k])
-            clicked[k]=false;
-          } 
+          if (clicked[k] == true) {
+            svg.select("#bubble_" + k).style("r", rad[k]);
+            clicked[k] = false;
+          }
         }
         //Gestione bubbleplot
         updateBubble_plot(d);
         //Gestione mds
         updateMDS(d);
         //Gestione calendar
-        updateCalendar(d.channel)
+        updateCalendar(d.channel);
         //Has been clicked?
-        clicked[id_c] = true
+        clicked[id_c] = true;
         this["style"]["r"] = radiusNumberMovies(d.number_movies) * 2;
-      }
-      else {
+      } else {
         for (var k = 0; k < clicked.length; k++) {
           clicked[k] = false;
         }
-        d3.select("#area_2").selectAll(".bubble").style("display", "block")
-        d3.select("#area_6").selectAll(".bubble").style("display", "block")
-        d3.select(this).style("stroke-width", 0.8)
+        d3.select("#area_bubble")
+          .selectAll(".bubble")
+          .style("display", "block");
+        d3.select("#area_mds").selectAll(".bubble").style("display", "block");
+        d3.select(this).style("stroke-width", 0.8);
         this["style"]["r"] = radiusNumberMovies(d.number_movies);
       }
     });
@@ -307,16 +302,11 @@ function updateMDS(d) {
     .style("display", "none");
 }
 
-function updateCalendar(d) {
-  var temp = d.replaceAll(" ", "_");
-  //calendarCreateBubble(temp, "bottom")
-  document
-    .getElementById("area_1_bottom")
-    .removeChild(document.getElementById("2022bottom").parentNode);
-  document
-    .getElementById("legend")
-    .parentNode.removeChild(document.getElementById("legend"));
-  document.getElementById("channel_selector_2").value = temp;
+// The calendar is updated by changing the value (the channel) of the selector
+function updateCalendar(channel) {
+  // Spaces in selectors are automatically converted to "_" in JS.
+  // Thus, I will replace spaces with "_"
+  document.getElementById("channel_selector").value = channel.replaceAll(" ", "_");
   var changeEvent = new Event("change");
-  document.getElementById("channel_selector_2").dispatchEvent(changeEvent);
+  document.getElementById("channel_selector").dispatchEvent(changeEvent);
 }

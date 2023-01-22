@@ -1,4 +1,4 @@
-,day,day_number,month,daytime,title,duration,duration_with_advertising,channel,year,genres,rating,advertising,sharing
+id,day,day_number,month,daytime,title,duration,duration_with_advertising,channel,year,genres,rating,advertising,sharing
 0,Martedì,25,gennaio,notte,match point,124,125,Sky Due,2005,"Romance,Thriller,Drama",7.6,1,0.14
 1,Lunedì,24,gennaio,notte,the blind side,129,130,Sky Due,2009,Drama,7.6,1,0.14
 2,Sabato,29,gennaio,notte,il profeta,100,155,Sky Due,1968,Comedy,6.1,55,0.14

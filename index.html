@@ -56,13 +56,14 @@
     <script src="https://d3js.org/d3.v4.min.js"></script>
     <script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
     <script type="module" src="./vis/bubbleplot.js"></script>
-    <script src="./vis/calendar_heatmap_final.js"></script>
+    <!-- <script src="./vis/calendar_heatmap_final.js"></script> -->
+    <script type="module" src="./vis/calendar.js"></script>
     <script type="module" src="./vis/stacked_bubble.js"></script>
     <script type="module" src="./vis/chord.js"></script>
     <script type="module" src="./vis/mds.js"></script>
   </head>
 
-  <body id="body" style="background-color: #000" onload="start_calendar()">
+  <body id="body" style="background-color: #000">
     <div
       id="all"
       style="
@@ -161,7 +162,7 @@
           position: absolute;
           margin-top: 1%;
         "
-        onclick="start_calendar()"
+        
       >
         <!-- <div id="area_stacked"></div> -->
       </div>

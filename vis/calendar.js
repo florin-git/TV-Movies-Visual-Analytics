@@ -1,6 +1,6 @@
 var DATASET_PATH = "./dataset/df_main_info.csv";
 
-var breaks = [2, 5, 15, 20];
+var breaks = [5, 10, 20, 40];
 var colours = ["#fef0d9", "#fdcc8a", "#fc8d59", "#e34a33", "#b30000"];
 
 //general layout information
@@ -26,110 +26,136 @@ var holidaysList = [
   "26/12/2022",
 ];
 
-function start_calendar() {
-  var parseDate = d3.timeParse("%d/%m/%y");
-  format = d3.timeFormat("%d-%m-%Y");
-  toolDate = d3.timeFormat("%d %B %Y");
+var monthMap = {
+  gennaio: 1,
+  febbraio: 2,
+  marzo: 3,
+  aprile: 4,
+  maggio: 5,
+  giugno: 6,
+  luglio: 7,
+  agosto: 8,
+  settembre: 9,
+  ottobre: 10,
+  novembre: 11,
+  dicembre: 12,
+};
 
+var current_year = "2022";
+var parseDate = d3.timeParse("%d/%m/%Y");
+var format = d3.timeFormat("%d-%m-%Y");
+var toolDate = d3.timeFormat("%d %B %Y");
+
+// When the user selects a channel, this function is triggered
+function manageOnSelection(data, selectorName, level) {
+  var selection = document.getElementById(selectorName);
+  selection.onchange = (event) => {
+    var selectedChannel = event.target.value;
+
+    calendarCreate(
+      data.filter(function (d) {
+        return d.channel == selectedChannel.replace("_", " ");
+      }),
+      level
+    );
+  };
+}
+
+function startCalendar(brushed_ids) {
   d3.csv(DATASET_PATH, function (data) {
-    var mid_processed = {};
-    var final_processed = {};
+    manageOnSelection(data, "channel_selector", "top");
+    manageOnSelection(data, "channel_selector_2", "bottom");
 
-    //set up an array of all the dates in the data which we need to work out the range of the data
-    // var dates = new Array();
-    var values = new Array();
-
-    var monthMap = {
-      gennaio: 1,
-      febbraio: 2,
-      marzo: 3,
-      aprile: 4,
-      maggio: 5,
-      giugno: 6,
-      luglio: 7,
-      agosto: 8,
-      settembre: 9,
-      ottobre: 10,
-      novembre: 11,
-      dicembre: 12,
-    };
-
-    var year = "22";
-    var units = " minutes";
-
-    //parse the data
-    data.forEach(function (d) {
-      var original_month = d.month;
-      d.month = monthMap[d.month];
-
-      d.date = d.day_number + "/" + d.month + "/" + year;
-      // dates.push(parseDate(d.date));
-      values.push(d.advertising);
-      d.date = parseDate(d.date);
-      d.value = d.advertising;
-      d.year = d.date.getFullYear();
-
-      // console.log(d)
-
-      var channel = d.channel.replaceAll(" ", "_");
-
-      if (mid_processed.hasOwnProperty(channel)) {
-        // var movieId = d.day_number + original_month;
-        var movieId = d.id;
-
-        if (mid_processed[channel].hasOwnProperty(movieId)) {
-          var sum_time =
-            parseInt(
-              mid_processed[channel][movieId].duration_with_advertising
-            ) + parseInt(d.duration_with_advertising);
-          var sum =
-            parseInt(mid_processed[channel][movieId].advertising) +
-            parseInt(d.advertising);
-          mid_processed[channel][movieId].advertising = sum.toString();
-          mid_processed[channel][movieId].duration_with_advertising =
-            sum_time.toString();
-        } else {
-          mid_processed[channel][movieId] = d;
-        }
-      } else {
-        mid_processed[channel] = {};
-      }
-    });
-
-    Object.keys(mid_processed).forEach((channel) => {
-      if (!final_processed.hasOwnProperty(channel)) {
-        final_processed[channel] = [];
-      }
-      Object.keys(mid_processed[channel]).forEach((date) => {
-        final_processed[channel].push(mid_processed[channel][date]);
+    if (brushed_ids != null) {
+      var dataFromMDS = data.filter(function (d) {
+        return brushed_ids.includes(d.id);
       });
+
+      calendarCreate(dataFromMDS, "bottom");
+      return;
+    }
+
+    var default_set = data.filter(function (d) {
+      return d.channel === "Italia 1";
     });
 
-    console.log(final_processed);
+    var default_set_2 = data.filter(function (d) {
+      return d.channel === "Cielo";
+    });
 
-    var selection = document.getElementById("channel_selector");
-    selection.onchange = (event) => {
-      var text = event.target.value;
-      calendarCreate(final_processed[text], "top");
-    };
-
-    var selection2 = document.getElementById("channel_selector_2");
-    selection2.onchange = (event) => {
-      var text = event.target.value;
-      calendarCreate(final_processed[text], "bottom");
-    };
-
-    var default_set = final_processed["Italia_1"];
-    var default_set_1 = final_processed["Cielo"];
     calendarCreate(default_set, "top");
-
-    if (document.getElementById("2022bottom") == null) {
-      calendarCreate(default_set_1, "bottom");
-    }
+    calendarCreate(default_set_2, "bottom");
 
     create_legend();
   });
 }
+
+function start_calendar_from_mds(brushed_ids) {
+  var monthMap = {
+    gennaio: 1,
+    febbraio: 2,
+    marzo: 3,
+    aprile: 4,
+    maggio: 5,
+    giugno: 6,
+    luglio: 7,
+    agosto: 8,
+    settembre: 9,
+    ottobre: 10,
+    novembre: 11,
+    dicembre: 12,
+  };
+
+  d3.csv(DATASET_PATH, function (data) {
+    data.forEach(function (d) {
+      d.date = d.day_number + "/" + monthMap[d.month] + "/" + current_year;
+      d.date = parseDate(d.date);
+      d.value = d.advertising;
+    });
+
+    // var selection = document.getElementById("channel_selector");
+    // selection.onchange = (event) => {
+    //   var selectedChannel = event.target.value;
+
+    //   calendarCreate(
+    //     data.filter(function (d) {
+    //       return d.channel === channel;
+    //     }),
+    //     "top"
+    //   );
+    // };
+
+    // var selection_2 = document.getElementById("channel_selector_2");
+    // selection_2.onchange = (event) => {
+    //   var selectedChannel = event.target.value;
+    //   calendarCreate(
+    //     data.filter(function (d) {
+    //       return d.channel === selectedChannel;
+    //     }),
+    //     "bottom"
+    //   );
+    // };
+
+    // var default_set = data.filter(function (d) {
+    //   return d.channel === "Italia 1";
+    // });
+
+    // var default_set_2 = data.filter(function (d) {
+    //   return d.channel === "Cielo";
+    // });
+
+    var daje = data.filter(function (d) {
+      console.log(d.id);
+      return brushed_ids.includes(d.id);
+    });
+
+    calendarCreate(daje, "bottom");
+
+    create_legend();
+  });
+}
+
+startCalendar();
 
 function monthPath(t0) {
   var now = new Date();
@@ -162,27 +188,44 @@ function monthPath(t0) {
   );
 }
 
-function calendarCreate(chosen_data, level) {
-  if (document.getElementById("2022" + level) != null) {
-    document.getElementById("2022" + level).parentNode.remove();
+function calendarCreate(chosenData, level) {
+  if (document.getElementById(current_year + level) != null) {
+    document.getElementById(current_year + level).parentNode.remove();
   }
   var units = " minutes";
+
+  var dataGroupByDate = d3
+    .nest()
+    .key(function (d) {
+      // Compose the date
+      d.date = d.day_number + "/" + monthMap[d.month] + "/" + current_year;
+      d.date = parseDate(d.date);
+      return d.date;
+    })
+    .rollup(function (d) {
+      return {
+        advertising_all: d3.sum(d, function (e) {
+          return e.advertising;
+        }),
+        duration_with_advertising_all: d3.sum(d, function (e) {
+          return e.duration_with_advertising;
+        }),
+      };
+    })
+    .entries(chosenData);
 
   var yearlyData = d3
     .nest()
     .key(function (d) {
-      return d.year;
+      return current_year;
     })
-    .entries(chosen_data);
-
-  // console.log(chosen_data)
+    .entries(chosenData);
 
   var svg = d3
     .select("#area_1_" + level)
     .append("svg")
     .attr("width", "100%")
     .attr("height", "110px");
-  //.attr("viewBox", "0 0 " + width + " 540");
 
   var cals = svg
     .selectAll("g")
@@ -201,6 +244,7 @@ function calendarCreate(chosen_data, level) {
     .attr("id", "alldays")
     .selectAll(".day")
     .data(function (d) {
+      // This will outputs every day from 01-01-2022 to 01-01-2023 (excluded)
       return d3.timeDays(
         new Date(parseInt(d.key), 0, 1),
         new Date(parseInt(d.key) + 1, 0, 1)
@@ -209,8 +253,8 @@ function calendarCreate(chosen_data, level) {
     .enter()
     .append("rect")
     .attr("id", function (d) {
+      // Change the day format to the Italian one
       return "_" + format(d);
-      //return toolDate(d.date)+":\n"+d.value+" dead or missing";
     })
     .attr("class", "day")
     .attr("width", cellSize)
@@ -222,10 +266,9 @@ function calendarCreate(chosen_data, level) {
     .attr("y", function (d) {
       return calY + d.getDay() * cellSize;
     })
-    // .attr("fill", "rgba(83, 255, 199, 0.1)")
     .datum(format);
 
-  //create day labels
+  // Create day labels
   var days = ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"];
   var dayLabels = cals.append("g").attr("id", "dayLabels");
   days.forEach(function (d, i) {
@@ -243,41 +286,51 @@ function calendarCreate(chosen_data, level) {
       .style("fill", "#fff");
   });
 
-  //let's draw the data on
+  // Let's draw the data on
   var dataRects = cals
     .append("g")
     .attr("id", "dataDays")
     .selectAll(".dataday")
-    .data(function (d) {
-      console.log(d.values)
-      return d.values;
-    })
+    // .data(function (d) {
+    //   return d.values;
+    // })
+    .data(dataGroupByDate)
     .enter()
     .append("rect")
-    .attr("id", function (d) {
-      return format(d.date) + ":" + d.value;
-    })
+    // .attr("id", function (d) {
+    //   return format(d.date) + ":" + d.value;
+    // })
     .attr("stroke", "#ccc")
     .attr("class", "mannaggia")
     .attr("width", cellSize)
     .attr("height", cellSize)
     .attr("x", function (d) {
       var now = new Date();
-      return calX + d3.timeWeek.count(d3.timeYear(now), d.date) * cellSize;
+      // console.log(now.getDate())
+      // console.log()
+      // return calX + d3.timeWeek.count(d3.timeYear(now), d.date) * cellSize;
+      return (
+        calX + d3.timeWeek.count(d3.timeYear(now), new Date(d.key)) * cellSize
+      );
     })
     .attr("y", function (d) {
-      return calY + d.date.getDay() * cellSize;
+      // return calY + d.date.getDay() * cellSize;
+      // console.log(parseDate(d.key).getDay())
+      return calY + new Date(d.key).getDay() * cellSize;
     })
     .attr("fill", function (d) {
-      if (d.value < breaks[0]) {
+      var value =
+        (d.value.advertising_all / d.value.duration_with_advertising_all) * 100;
+
+      if (value < breaks[0]) {
         return colours[0];
       }
       for (i = 0; i < breaks.length + 1; i++) {
-        if (d.value >= breaks[i] && d.value < breaks[i + 1]) {
+        if (value >= breaks[i] && value < breaks[i + 1]) {
           return colours[i];
         }
       }
-      if (d.value > breaks.length - 1) {
+      if (value > breaks.length - 1) {
         return colours[breaks.length];
       }
     })
@@ -285,15 +338,21 @@ function calendarCreate(chosen_data, level) {
 
   //append a title element to give basic mouseover info
   dataRects.append("title").text(function (d) {
-    var perc = parseFloat(
-      (parseInt(d.advertising) / parseInt(d.duration_with_advertising)) * 100
+    // var perc = parseFloat(
+    //   (parseInt(d.advertising) / parseInt(d.duration_with_advertising)) * 100
+    // ).toFixed(2);
+
+    var value = (
+      (d.value.advertising_all / d.value.duration_with_advertising_all) *
+      100
     ).toFixed(2);
+
     return (
-      toolDate(d.date) +
+      toolDate(new Date(d.key)) +
       ":\n" +
-      perc.toString() +
-      " % of advertising in " +
-      d.duration_with_advertising +
+      value.toString() +
+      "% of advertising in " +
+      d.value.duration_with_advertising_all +
       units
     );
   });
@@ -323,7 +382,7 @@ function calendarCreate(chosen_data, level) {
 
   var monthX = new Array();
   BB.forEach(function (d, i) {
-    boxCentre = d.width / 2;
+    var boxCentre = d.width / 2;
     monthX.push(calX + d.x + boxCentre);
   });
 
@@ -456,5 +515,4 @@ function ResetVis() {
   console.log("here");
 }
 
-
-// export { start_calendar };
+export { startCalendar };
