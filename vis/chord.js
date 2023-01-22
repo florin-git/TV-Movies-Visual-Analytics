@@ -101,7 +101,7 @@ const data = d3.csv(DATASET_PATH, function (data) {
     .select("body")
     .append("div")
     .attr("id", "tooltip2")
-    .style("background-color", "#636363")
+    .style("background-color", "#000")
     .style("position", "absolute")
     .style("z-index", "10")
     .style("visibility", "hidden")
