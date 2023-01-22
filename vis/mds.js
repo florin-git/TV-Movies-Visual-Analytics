@@ -84,27 +84,16 @@ d3.csv(DATASET_PATH, function (data) {
     });
 
   // Add brushing
-  // var brush = svg.call(
-  //   d3
-  //     .brush() // Add the brush feature using the d3.brush function
-  //     .extent([
-  //       [0, 0],
-  //       [width, height],
-  //     ]) // initialise the brush area: start at 0,0 and finishes at width,height: it means I select the whole graph area
-  //     .on("brush", updateChart)
-  //     .on("end", stopBrushing)
-  // );
-  var brush = d3
-    .brush()
-    .extent([
-      [0, 0],
-      [width, height],
-    ])
-    .on("brush", updateChart)
-    .on("end", stopBrushing);
-
-  // Append the brush element to the SVG
-  var gBrush = svg.append("g").attr("class", "brush").call(brush);
+  var brush = svg.call(
+    d3
+      .brush() // Add the brush feature using the d3.brush function
+      .extent([
+        [0, 0],
+        [width, height],
+      ]) // initialise the brush area: start at 0,0 and finishes at width,height: it means I select the whole graph area
+      .on("brush", updateChart)
+      .on("end", stopBrushing)
+  );
 
   // Function that is triggered when brushing is performed
   function updateChart() {
@@ -112,24 +101,15 @@ d3.csv(DATASET_PATH, function (data) {
 
     var extent = d3.event.selection;
 
-    if(!extent) return;
+    if (!extent) return;
 
     brushed_ids = [];
 
     movies.classed("selected", function (d) {
       return isBrushed(extent, x(d.mds_x), y(d.mds_y));
     });
-    // setTimeout(update_calendar, 3000);
+    setTimeout(update_calendar, 3000);
 
-    d3.selectAll(".selected").each(function () {
-      var brush_id = d3.select(this).attr("id");
-      if (!brushed_ids.includes(brush_id)) {
-        brushed_ids.push(brush_id);
-      } // Logs the id attribute.
-    });
-
-    console.log(brushed_ids);
-    startCalendar(brushed_ids);
   }
 
   function stopBrushing() {
@@ -157,21 +137,9 @@ d3.csv(DATASET_PATH, function (data) {
         brushed_ids.push(brush_id);
       } // Logs the id attribute.
     });
-    //
-    // var temp = channel
-    // document
-    //   .getElementById("area_1_bottom")
-    //   .removeChild(document.getElementById("2022bottom").parentNode);
-    // document
-    //   .getElementById("legend")
-    //   .parentNode.removeChild(document.getElementById("legend"));
-    // document.getElementById("channel_selector_2").value = temp;
-    // var changeEvent = new Event("change");
-    // document.getElementById("channel_selector_2").dispatchEvent(changeEvent);
+
     console.log(brushed_ids);
     startCalendar(brushed_ids);
-
-    // start_calendar(brushed_ids)
 
     return;
   }

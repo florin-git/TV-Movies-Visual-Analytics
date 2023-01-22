@@ -7,18 +7,18 @@ var p,
 var clicked = new Array(65).fill(false);
 
 var dict = {
-  "Documentary": 0,
-  "Western": 1,
-  "Adventure": 2,
-  "Fantasy": 3,
-  "Horror": 4,
+  Documentary: 0,
+  Western: 1,
+  Adventure: 2,
+  Fantasy: 3,
+  Horror: 4,
   "Sci-Fi": 5,
-  "Comedy": 6,
-  "Drama": 7,
-  "Thriller": 8,
-  "Action": 9,
-  "Romance": 10,
-  "Crime": 11,
+  Comedy: 6,
+  Drama: 7,
+  Thriller: 8,
+  Action: 9,
+  Romance: 10,
+  Crime: 11,
 };
 var genres = [
   "Documentary",
@@ -233,26 +233,26 @@ const data = d3.csv(DATASET_PATH, function (data) {
       if (genres[d.source.index] == genres[d.target.index]) {
         tooltip.html(
           genres[d.source.index] +
-          "<br> Number of films of" +
-          genres[d.source.index] +
-          " :<br>" +
-          matrix2[d.source.index][d.source.index] +
-          " out of " +
-          num_titles
+            "<br> Number of films of" +
+            genres[d.source.index] +
+            " :<br>" +
+            matrix2[d.source.index][d.source.index] +
+            " out of " +
+            num_titles
         );
       } else {
         tooltip.html(
           genres[d.source.index] +
-          "," +
-          genres[d.target.index] +
-          "<br> Number of films of" +
-          genres[d.source.index] +
-          ", " +
-          genres[d.target.index] +
-          " :<br>" +
-          matrix2[d.source.index][d.target.index] +
-          " out of " +
-          num_titles
+            "," +
+            genres[d.target.index] +
+            "<br> Number of films of" +
+            genres[d.source.index] +
+            ", " +
+            genres[d.target.index] +
+            " :<br>" +
+            matrix2[d.source.index][d.target.index] +
+            " out of " +
+            num_titles
         );
       }
       return tooltip.style("visibility", "visible");
@@ -273,7 +273,12 @@ const data = d3.csv(DATASET_PATH, function (data) {
         svg.selectAll("path").style("opacity", 0.2);
         d3.select(this).style("opacity", 1);
         updateMDS(d, genres[d.source.index], genres[d.target.index]);
-        updateBubble_plot(d, genres[d.source.index], genres[d.target.index], data);
+        updateBubble_plot(
+          d,
+          genres[d.source.index],
+          genres[d.target.index],
+          data
+        );
         clicked[d.source.index] = true;
         clicked[d.targetindex] = true;
       } else {
@@ -336,7 +341,6 @@ function updateMDS(d, gen1, gen2) {
   }
 }
 function updateBubble_plot(d, gen1, gen2, data) {
-
   var circles = d3
     .select("#area_bubble")
     .selectAll(".bubble")
@@ -354,12 +358,8 @@ function updateBubble_plot(d, gen1, gen2, data) {
         return !f.genres.includes(gen1) | !f.genres.includes(gen2);
       })
       .style("display", "none");
-
   }
-  updateYAxis(gen1, data)
-
-
-
+  updateYAxis(gen1, data);
 }
 
 function updateBubble_plot_from_chord(gen1, data) {
@@ -372,10 +372,7 @@ function updateBubble_plot_from_chord(gen1, data) {
     .filter(function (f) {
       return !f.genres.includes(gen1);
     })
-    .style("display", "none")
-
-
-
+    .style("display", "none");
 }
 
 function interactionLegend(svg) {
@@ -560,50 +557,39 @@ function interactionLegend(svg) {
     });
 }
 
-
 function updateYAxis(genre, data) {
-  var circleList = []
-  d3
-    .select("#area_bubble")
+  var circleList = [];
+  d3.select("#area_bubble")
     .selectAll(".bubble")
     .data(data)
     .filter(function (d) {
-      return d.genres == genre //prende tutti i cerchi con il genere uguale a quello passato
+      return d.genres == genre; //prende tutti i cerchi con il genere uguale a quello passato
     })
     .each(function (d) {
-      circleList.push(parseInt(d.duration))
-    })
+      circleList.push(parseInt(d.duration));
+    });
   console.log(circleList);
 
   //ricalcolo l'asse
   var new_y = d3
     .scaleLinear()
-    .domain([
-      d3.min(circleList) - 5, d3.max(circleList) + 5
-    ])
+    .domain([d3.min(circleList) - 5, d3.max(circleList) + 5])
     .range([280, 0]);
 
   var y_axis = d3.axisLeft(new_y).ticks();
 
-  d3.selectAll("#y-axis").call(y_axis).selectAll("text").style("fill", "white")
+  d3.selectAll("#y-axis").call(y_axis).selectAll("text").style("fill", "white");
   d3.select("#area_bubble").selectAll("line").style("stroke", "#fff");
   // d3.select("#area_bubble").selectAll("path").style("stroke", "#fff");
 
   //update positions
-  d3
-    .select("#area_bubble")
+  d3.select("#area_bubble")
     .data(data)
     .selectAll(".bubble")
     .filter(function (d) {
-      return d.genres == genre //prende tutti i cerchi con il genere uguale a quello passato
+      return d.genres == genre; //prende tutti i cerchi con il genere uguale a quello passato
     })
     .attr("cy", function (d) {
-      return new_y(parseInt(d.duration))
-    })
-
-
-
-
-
-
+      return new_y(parseInt(d.duration));
+    });
 }

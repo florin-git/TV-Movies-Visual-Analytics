@@ -509,5 +509,4 @@ function updateHoliday(checkbox) {
   }
 }
 
-
 export { startCalendar };
