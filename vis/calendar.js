@@ -152,7 +152,6 @@ function monthPath(t0) {
 }
 
 function createCalendar(chosenData, level) {
-  console.log(chosenData);
   if (document.getElementById(current_year + level) != null) {
     document.getElementById(current_year + level).parentNode.remove();
   }

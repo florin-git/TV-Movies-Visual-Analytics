@@ -202,7 +202,6 @@ function createMDS(chosenData) {
 }
 
 function startBrushing() {
-  console.log("START");
   d3.event.sourceEvent.stopPropagation();
 }
 

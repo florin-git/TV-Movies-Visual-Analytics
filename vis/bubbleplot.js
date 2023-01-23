@@ -1,36 +1,49 @@
 var DATASET_PATH = "./dataset/df_main_info.csv";
+var brushed_ids = new Array();
 
 var margin = { top: 20, right: 0, bottom: 0, left: 30 };
-
 var width = 850 - margin.left - margin.right;
 var height = 300 - margin.top - margin.bottom;
 
-var div = d3.select("#area_bubble");
+var x, y;
 
-// append the svg object to the body of the page
-var svg = d3
-  .select("#area_bubble")
-  .append("svg")
-  .attr("preserveAspectRatio", "xMinYMin meet")
-  .attr("width", width + margin.left + margin.right)
-  .attr("height", height + margin.top + margin.bottom + 50)
-  .append("g")
-  .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+function startBubble() {
+  d3.csv(DATASET_PATH, function (data) {
+    createBubble(data);
+    createLegend();
+  });
+}
 
-//Read the data
-d3.csv(DATASET_PATH, function (data) {
-  var y = d3
+startBubble();
+
+function createBubble(chosenData) {
+  var data = chosenData;
+
+  // append the svg object to the body of the page
+  var svg = d3
+    .select("#area_bubble")
+    .append("svg")
+    .attr("id", "svg_bubble")
+    .attr("preserveAspectRatio", "xMinYMin meet")
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom + 50)
+    .append("g")
+    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+  // Add x axis
+  y = d3
     .scaleLinear()
     .domain([
-      40,
+      d3.min(data, function (d) {
+        return Math.max(d.duration);
+      }) - 10,
       d3.max(data, function (d) {
         return Math.max(d.duration);
-      }),
+      }) + 10,
     ])
     .range([height, 0]);
 
-  // Add x axis
-  var x = d3
+  x = d3
     .scaleLinear()
     .domain([0, 31])
     .range([0, width - 120]);
@@ -101,23 +114,7 @@ d3.csv(DATASET_PATH, function (data) {
     .style("color", "white")
     .text("a simple tooltip");
 
-  // The scale you use for bubble size. Il raggio del pallino della legenda
-  var size = d3
-    .scaleSqrt()
-    .domain([1, 100]) // What's in the data
-    .range([2, 100]); // Size in pixel
-
-  //variabili che servono per la legenda bubble size
-  var valuesToShow = [4.5];
-  var valuesToShow2 = [5.5];
-  var valuesToShow3 = [3.5];
-  var valuesToShow4 = [2.5];
-  var valuesToShow5 = [1.5];
-
-  var xCircle = 230;
-  var xLabel = 380;
-  var yCircle = 330;
-
+  // Add circles
   svg
     .append("g")
     .selectAll("circle")
@@ -125,7 +122,9 @@ d3.csv(DATASET_PATH, function (data) {
     .enter()
     .append("circle")
     .attr("class", "bubble")
-    // .filter(function(d) { return d.month == "gennaio" & d.channel == "Cine34" })
+    .attr("id", function (d) {
+      return d.id;
+    })
     .attr("cx", function (d) {
       return x(d.day_number) + 0;
     })
@@ -190,8 +189,71 @@ d3.csv(DATASET_PATH, function (data) {
     .style("font-size", "15px")
     .attr("alignment-baseline", "middle");
 
-  // Handmade legend
-  const yBottomLegend = 315
+  // Add brushing
+  var brush = svg.call(
+    d3
+      .brush() // Add the brush feature using the d3.brush function
+      .extent([
+        [0, 0],
+        [width, height],
+      ]) // initialise the brush area: start at 0,0 and finishes at width,height: it means I select the whole graph area
+      .on("start", startBrushing)
+      .on("brush", updateChart)
+  );
+}
+
+function startBrushing() {
+  console.log("START");
+  d3.event.sourceEvent.stopPropagation();
+}
+
+// Function that is triggered when brushing is performed
+function updateChart() {
+  var extent = d3.event.selection;
+
+  // Reset ids
+  brushed_ids = [];
+
+  var movies = d3.select("#area_bubble").selectAll(".bubble");
+
+  console.log(movies);
+  movies.classed("selected", function (d) {
+    return isBrushed(extent, x(d.day_number), y(d.duration));
+  });
+
+  console.log(brushed_ids);
+
+  updateBubble();
+}
+
+function isBrushed(brush_coords, cx, cy) {
+  var x0 = brush_coords[0][0],
+    x1 = brush_coords[1][0],
+    y0 = brush_coords[0][1],
+    y1 = brush_coords[1][1];
+  return x0 <= cx && cx <= x1 && y0 <= cy && cy <= y1;
+  // This return TRUE or FALSE depending on if the points is in the selected area
+}
+
+function updateBubble() {
+  d3.selectAll(".selected").each(function () {
+    var brush_id = d3.select(this).attr("id");
+    if (!brushed_ids.includes(brush_id)) {
+      brushed_ids.push(brush_id);
+    } // Logs the id attribute.
+  });
+
+  console.log(brushed_ids)
+  // if (brushed_ids.length != 0) startCalendar(brushed_ids);
+
+  return;
+}
+
+function createLegend() {
+  var svg = d3.select("#svg_bubble");
+
+  /// Handmade legend
+  const yBottomLegend = 335;
   svg
     .append("circle")
     .attr("cx", 60)
@@ -248,6 +310,23 @@ d3.csv(DATASET_PATH, function (data) {
     .style("fill", "#fff")
     .style("font-size", "15px")
     .attr("alignment-baseline", "middle");
+
+  // The scale you use for bubble size. Il raggio del pallino della legenda
+  var size = d3
+    .scaleSqrt()
+    .domain([1, 100]) // What's in the data
+    .range([2, 100]); // Size in pixel
+
+  //variabili che servono per la legenda bubble size
+  var valuesToShow = [4.5];
+  var valuesToShow2 = [5.5];
+  var valuesToShow3 = [3.5];
+  var valuesToShow4 = [2.5];
+  var valuesToShow5 = [1.5];
+
+  var xCircle = 230;
+  var xLabel = 380;
+  var yCircle = 330;
 
   //per la legenda del raggio del cerchio
   //secondo cerchio
@@ -414,4 +493,4 @@ d3.csv(DATASET_PATH, function (data) {
     })
     .style("font-size", 10)
     .attr("fill", "#fff");
-});
+}
