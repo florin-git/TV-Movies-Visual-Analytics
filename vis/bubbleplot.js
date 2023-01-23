@@ -9,6 +9,8 @@ var other = ["Cielo"];
 var margin = { top: 20, right: 0, bottom: 0, left: 30 };
 var width = 850 - margin.left - margin.right;
 var height = 300 - margin.top - margin.bottom;
+var breaks = [1, 3, 6, 8];
+var ray_circles_legend=[5.5,4.5,3.5,2.5,1.5]
 
 var x, y;
 
@@ -459,12 +461,12 @@ function createLegend() {
     .data(valuesToShow)
     .enter()
     .append("text")
-    .attr("x", xCircle + 532)
+    .attr("x", xCircle + 524)
     .attr("y", function (d) {
       return yCircle - 190;
     })
     .text(function (d) {
-      return d;
+      return "up to" +""+d;
     })
     .style("font-size", 10)
     .attr("fill", "#fff");
@@ -500,12 +502,12 @@ function createLegend() {
     .data(valuesToShow2)
     .enter()
     .append("text")
-    .attr("x", xCircle + 532)
+    .attr("x", xCircle + 524)
     .attr("y", function (d) {
       return yCircle - 230;
     })
     .text(function (d) {
-      return d;
+      return "over "+d;
     })
     .style("font-size", 10)
     .attr("fill", "#fff");
@@ -531,12 +533,12 @@ function createLegend() {
     .data(valuesToShow3)
     .enter()
     .append("text")
-    .attr("x", xCircle + 532)
+    .attr("x", xCircle + 524)
     .attr("y", function (d) {
       return yCircle - 150;
     })
     .text(function (d) {
-      return d;
+      return "up to"+""+d;
     })
     .style("font-size", 10)
     .attr("fill", "#fff");
@@ -562,12 +564,12 @@ function createLegend() {
     .data(valuesToShow4)
     .enter()
     .append("text")
-    .attr("x", xCircle + 532)
+    .attr("x", xCircle + 524)
     .attr("y", function (d) {
       return yCircle - 121;
     })
     .text(function (d) {
-      return d;
+      return "up to"+""+d;
     })
     .style("font-size", 10)
     .attr("fill", "#fff");
@@ -593,12 +595,12 @@ function createLegend() {
     .data(valuesToShow5)
     .enter()
     .append("text")
-    .attr("x", xCircle + 532)
+    .attr("x", xCircle + 524)
     .attr("y", function (d) {
       return yCircle - 100;
     })
     .text(function (d) {
-      return d;
+      return "up to"+""+d;
     })
     .style("font-size", 10)
     .attr("fill", "#fff");
