@@ -1,3 +1,5 @@
+import { startMDS } from "./mds.js";
+
 var DATASET_PATH = "./dataset/channel_month_count_sharing.csv";
 
 var margin = { top: 5, right: 0, bottom: 25, left: 55 };
@@ -183,7 +185,7 @@ d3.csv(DATASET_PATH, function (data) {
       return prova;
     })
     .attr("cx", function (d) {
-      return x(d.channel) + 28;
+      return x(d.channel) + 25.4;
     })
     .attr("cy", function (d) {
       return y(d.month) + 20.5;
@@ -291,29 +293,18 @@ function updateBubble_plot(d) {
 }
 
 function updateMDS(d) {
-  var mds_circles = d3
-    .select("#area_mds")
-    .selectAll(".bubble")
-    .style("display", "block");
-
-  mds_circles
-    .filter(function (f) {
-      return (f.month !== d.month) | (f.channel !== d.channel);
-    })
-    .attr("class", "remove");
-  // .style("display", "none");
-
   
-  // Remove the filtered data from MDS
-  removeCircles(d3.select("#area_mds"));
+  var selected_info = {
+    channel: d.channel,
+    month: d.month,
+  };
 
+  startMDS(selected_info)
 }
 
-function removeCircles(elementsToRemove) {
-  // d3.select("#area_mds").selectAll(".remove").remove()
-  elementsToRemove.selectAll(".remove").remove();
-  // circles.selectAll(".remove").remove();
-}
+// function removeCircles(elementsToRemove) {
+//   elementsToRemove.selectAll(".remove").remove();
+// }
 
 // The calendar is updated by changing the value (the channel) of the selector
 function updateCalendar(channel) {

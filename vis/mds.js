@@ -7,10 +7,41 @@ var margin = { top: 0, right: 0, bottom: 0, left: 5 };
 var width = 470 - margin.left - margin.right;
 var height = 340 - margin.top - margin.bottom;
 
+/* Axis
+ x_range: [-38.7, 56.5]
+ y_range: [-56.2, 35.5]
+*/
+var x = d3.scaleLinear().domain([-42, 58]).range([0, width]);
+var y = d3.scaleLinear().domain([-58, 38]).range([height, 0]);
+
 var sky = ["Sky Drama", "Sky Due", "Sky Suspense", "Sky Comedy", "Sky Action"];
 var mediaset = ["Italia 1", "Iris", "Rete 4", "Cine34"];
 
-d3.csv(DATASET_PATH, function (data) {
+function startMDS(selected_info) {
+  d3.csv(DATASET_PATH, function (data) {
+    chosenData = data;
+
+    // If the array is not empty
+    if (selected_info != null) {
+      var chosenData = data.filter(function (d) {
+        return (
+          (selected_info.month == d.month) &
+          (selected_info.channel == d.channel)
+        );
+      });
+    }
+
+    createMDS(chosenData);
+    createLegend();
+  });
+}
+
+startMDS();
+
+function createMDS(chosenData) {
+  // Reset MDS
+  d3.select("#svg_mds").remove();
+
   //tooltip and zoom
   var tooltip = d3
     .select("body")
@@ -28,21 +59,16 @@ d3.csv(DATASET_PATH, function (data) {
   var svg = d3
     .select("#area_mds")
     .append("svg")
+    .attr("id", "svg_mds")
     .attr("width", "100%")
     .attr("height", "100%")
     .classed("svg-content", true)
     .attr("transform", "translate(" + margin.left + "," + 0 + ")");
 
-  // x_range: [-38.7, 56.5]
-  // y_range: [-56.2, 35.5]
-
-  var x = d3.scaleLinear().domain([-42, 58]).range([0, width]);
-  var y = d3.scaleLinear().domain([-58, 38]).range([height, 0]);
-
   // Add circles
   var movies = svg
     .selectAll("circle")
-    .data(data)
+    .data(chosenData)
     .enter()
     .append("circle")
     .attr("class", "bubble")
@@ -94,51 +120,56 @@ d3.csv(DATASET_PATH, function (data) {
       .on("start", startBrushing)
       .on("brush", updateChart)
   );
+}
 
-  function startBrushing() {
-    console.log("START");
-    d3.event.sourceEvent.stopPropagation();
-  }
+function startBrushing() {
+  console.log("START");
+  d3.event.sourceEvent.stopPropagation();
+}
 
-  // Function that is triggered when brushing is performed
-  function updateChart() {
-    var extent = d3.event.selection;
+// Function that is triggered when brushing is performed
+function updateChart() {
+  var extent = d3.event.selection;
 
-    // Reset ids
-    brushed_ids = [];
+  // Reset ids
+  brushed_ids = [];
 
-    movies.classed("selected", function (d) {
-      return isBrushed(extent, x(d.mds_x), y(d.mds_y));
-    });
-    // setTimeout(update_calendar, 3000);
-    update_calendar()
-  }
+  var movies = d3.select("#area_mds").selectAll(".bubble");
 
+  movies.classed("selected", function (d) {
+    return isBrushed(extent, x(d.mds_x), y(d.mds_y));
+  });
 
-  function isBrushed(brush_coords, cx, cy) {
-    var x0 = brush_coords[0][0],
-      x1 = brush_coords[1][0],
-      y0 = brush_coords[0][1],
-      y1 = brush_coords[1][1];
-    return x0 <= cx && cx <= x1 && y0 <= cy && cy <= y1;
-    // This return TRUE or FALSE depending on if the points is in the selected area
-  }
+  updateCalendar();
+}
 
-  function update_calendar() {
-    //MEtto in brushed_ids gli elementi selezionati dal brush
-    d3.selectAll(".selected").each(function () {
-      var brush_id = d3.select(this).attr("id");
-      if (!brushed_ids.includes(brush_id)) {
-        brushed_ids.push(brush_id);
-      } // Logs the id attribute.
-    });
+function isBrushed(brush_coords, cx, cy) {
+  var x0 = brush_coords[0][0],
+    x1 = brush_coords[1][0],
+    y0 = brush_coords[0][1],
+    y1 = brush_coords[1][1];
+  return x0 <= cx && cx <= x1 && y0 <= cy && cy <= y1;
+  // This return TRUE or FALSE depending on if the points is in the selected area
+}
 
-    if (brushed_ids.length != 0) startCalendar(brushed_ids);
+function updateCalendar() {
+  //MEtto in brushed_ids gli elementi selezionati dal brush
+  d3.selectAll(".selected").each(function () {
+    var brush_id = d3.select(this).attr("id");
+    if (!brushed_ids.includes(brush_id)) {
+      brushed_ids.push(brush_id);
+    } // Logs the id attribute.
+  });
 
-    return;
-  }
+  if (brushed_ids.length != 0) startCalendar(brushed_ids);
 
-  // Legend
+  return;
+}
+
+// Legend
+function createLegend() {
+  var svg = d3.select("#area_mds").select("svg");
+
   svg
     .append("circle")
     .attr("cx", width - 0.2 * width)
@@ -181,4 +212,6 @@ d3.csv(DATASET_PATH, function (data) {
     .style("fill", "#fff")
     .style("font-size", "15px")
     .attr("alignment-baseline", "middle");
-});
+}
+
+export { startMDS };

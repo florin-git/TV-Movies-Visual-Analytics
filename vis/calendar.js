@@ -52,7 +52,7 @@ function manageOnSelection(data, selectorName, level) {
   selection.onchange = (event) => {
     var selectedChannel = event.target.value;
 
-    calendarCreate(
+    createCalendar(
       data.filter(function (d) {
         return d.channel == selectedChannel.replace("_", " ");
       }),
@@ -72,7 +72,7 @@ function startCalendar(brushed_ids) {
         return brushed_ids.includes(d.id);
       });
 
-      calendarCreate(dataFromMDS, "bottom");
+      createCalendar(dataFromMDS, "bottom");
       return;
     }
 
@@ -84,10 +84,10 @@ function startCalendar(brushed_ids) {
       return d.channel === "Cielo";
     });
 
-    calendarCreate(default_set, "top");
-    calendarCreate(default_set_2, "bottom");
+    createCalendar(default_set, "top");
+    createCalendar(default_set_2, "bottom");
 
-    create_legend();
+    createLegend();
   });
 }
 
@@ -124,7 +124,7 @@ function monthPath(t0) {
   );
 }
 
-function calendarCreate(chosenData, level) {
+function createCalendar(chosenData, level) {
   if (document.getElementById(current_year + level) != null) {
     document.getElementById(current_year + level).parentNode.remove();
   }
@@ -338,7 +338,7 @@ function calendarCreate(chosenData, level) {
   updateHoliday(document.getElementById("holiday_check"));
 }
 
-function create_legend() {
+function createLegend() {
   if (document.getElementById("legend") != null) {
     return;
   }
