@@ -1,13 +1,11 @@
 import { startMDS } from "./mds.js";
 
 var DATASET_PATH = "./dataset/df_main_info.csv";
+var genres = new Array();
 
-var prova, gh;
-var p,
-  paths,
-  stringhe = new Array();
-var clicked = new Array(65).fill(false);
-var clicked_legend = new Array(12).fill(false);
+var p, stringhe = new Array();
+var clicked = new Array().fill(false);
+var clicked_legend = new Array(genres.length).fill(false);
 
 var dict = {
   Documentary: 0,
@@ -37,64 +35,134 @@ var genres = [
   "Romance",
   "Crime",
 ];
-
-const colors = [
-  "#8dd3c7",
-  "#ffffb3",
-  "#bebada",
-  "#fb8072",
-  "#80b1d3",
-  "#fdb462",
-  "#b3de69",
-  "#fccde5",
-  "#d9d9d9",
-  "#bc80bd",
-  "#ccebc5",
-  "#ffed6f",
-];
-
-var num_titles = 0;
-var titles = new Array();
-
-var matrix = new Array(12);
-for (var i = 0; i < matrix.length; i++) {
-  matrix[i] = new Array(12).fill(0);
+var reverse_dict = {};
+for (var i= 0; i< genres.length; i++){
+  reverse_dict[i] = genres[i];
 }
 
-var matrix2 = new Array(12);
-for (var i = 0; i < matrix2.length; i++) {
-  matrix2[i] = new Array(12).fill(0);
+
+// const color = [
+//   "#8dd3c7",
+//   "#ffffb3",
+//   "#bebada",
+//   "#fb8072",
+//   "#80b1d3",
+//   "#fdb462",
+//   "#b3de69",
+//   "#fccde5",
+//   "#d9d9d9",
+//   "#bc80bd",
+//   "#ccebc5",
+//   "#ffed6f",
+// ];
+
+
+var colors = {
+  Documentary: "#8dd3c7",
+  Western: "#ffffb3",
+  Adventure: "#bebada",
+  Fantasy: "#fb8072",
+  Horror: "#80b1d3",
+  "Sci-Fi": "#fdb462",
+  Comedy: "#b3de69",
+  Drama: "#fccde5",
+  Thriller: "#d9d9d9",
+  Action: "#bc80bd",
+  Romance: "#ccebc5",
+  Crime: "#ffed6f",
 }
 
-const data = d3.csv(DATASET_PATH, function (data) {
-  // Get the list of genres
-  data.forEach(function (d) {
-    if (!titles.includes(d.title)) {
-      titles.push(d.title);
-      var extracted2 = d.genres.split(",");
-      for (var i = 0; i < extracted2.length; i++) {
-        for (var j = 0; j < extracted2.length; j++) {
-          matrix2[dict[extracted2[i]]][dict[extracted2[j]]] += 1;
+
+//start chord
+function startChord(brushed_ids) {
+  d3.csv(DATASET_PATH, function (data) {
+
+
+    if (brushed_ids != null) {
+      var chosenData = data.filter(function (d) {
+        return brushed_ids.includes(d.id);
+      });
+      genres = [];
+      //Creo la lista dei generi dell'elemento selezionato
+      chosenData.forEach(function (d) {
+        var genres_extracted = d.genres.split(",");
+        for (var i = 0; i < genres_extracted.length; i++) {
+          if (!genres.includes(genres_extracted[i])) {
+            genres.push(genres_extracted[i]);
+          }
+        }
+      })
+      console.log("Questi sono i generi del nuovo chord " + genres);
+      //Creo dizionario per i generi
+      dict = {};
+      reverse_dict = {}
+      for (var i = 0; i < genres.length; i++) {
+        dict[genres[i]] = i;
+        reverse_dict[i] = genres[i];
+      }
+      
+    }
+    else {
+      var chosenData = data;
+      // var dict = {
+      //   Documentary: 0,
+      //   Western: 1,
+      //   Adventure: 2,
+      //   Fantasy: 3,
+      //   Horror: 4,
+      //   "Sci-Fi": 5,
+      //   Comedy: 6,
+      //   Drama: 7,
+      //   Thriller: 8,
+      //   Action: 9,
+      //   Romance: 10,
+      //   Crime: 11,
+      // };
+      // var genres = [
+      //   "Documentary",
+      //   "Western",
+      //   "Adventure",
+      //   "Fantasy",
+      //   "Horror",
+      //   "Sci-Fi",
+      //   "Comedy",
+      //   "Drama",
+      //   "Thriller",
+      //   "Action",
+      //   "Romance",
+      //   "Crime",
+      // ];
+    }
+
+    //Creo matrice per i paths
+    var matrix = new Array(genres.length);
+    for (var i = 0; i < matrix.length; i++) {
+      matrix[i] = new Array(genres.length).fill(0);
+    }
+
+    // Get the list of genres
+    chosenData.forEach(function (d) {
+      var extracted = d.genres.split(",");
+      for (var i = 0; i < extracted.length; i++) {
+        for (var j = 0; j < extracted.length; j++) {
+          matrix[dict[extracted[i]]][dict[extracted[j]]] += 1;
         }
       }
-    }
+    });
+    createChord(chosenData, matrix, reverse_dict, genres)
 
-    var extracted = d.genres.split(",");
-    for (var i = 0; i < extracted.length; i++) {
-      for (var j = 0; j < extracted.length; j++) {
-        matrix[dict[extracted[i]]][dict[extracted[j]]] += 1;
-      }
-    }
-  });
-  num_titles = titles.length;
+  })
+}
 
+
+function createChord(data, matrix, reverse_dict, genres) {
+  d3.select("#area_chord").select("svg").remove();
   const svg = d3
     .select("#area_chord")
     .append("svg")
     .attr("width", "100%")
     .attr("height", "100%")
     .append("g")
-    // .attr("transform", "translate(220,215)");
     .attr("transform", "translate(180,173)");
 
   //tooltip
@@ -129,7 +197,10 @@ const data = d3.csv(DATASET_PATH, function (data) {
 
     //al momento evidenzia soltanto la parte in alto degli archi ma non tutto il collegamento. Che classe devo usare??
     .append("path")
-    .style("fill", (d, i) => colors[i])
+    // .style("fill", (d, i) => colors[i])
+    .style("fill", function(d, i){
+      return colors[reverse_dict[i]];
+    })
     .style("stroke", "white")
     .attr(
       "d",
@@ -188,7 +259,9 @@ const data = d3.csv(DATASET_PATH, function (data) {
     .attr("class", "start")
     .attr("offset", "0%")
     .attr("stop-color", function (d) {
-      return colors[d.source.index];
+      // return colors[d.source.index];
+      return colors[genres[d.source.index]];
+
     })
     .attr("stop-opacity", 1);
 
@@ -197,7 +270,7 @@ const data = d3.csv(DATASET_PATH, function (data) {
     .attr("class", "end")
     .attr("offset", "100%")
     .attr("stop-color", function (d) {
-      return colors[d.target.index];
+      return colors[genres[d.target.index]];
     })
     .attr("stop-opacity", 1);
 
@@ -226,7 +299,7 @@ const data = d3.csv(DATASET_PATH, function (data) {
     .style("cursor", "pointer")
     //.style("fill", d => colors[d.source.index]) // colors depend on the source group. Change to target otherwise.
     .style("fill", function (d, k) {
-      p = [genres[d.source.index], genres[d.target.index]];
+      // p = [genres[d.source.index], genres[d.target.index]];
       return "url(#gradient-" + d.source.index + "-" + d.target.index + ")";
     })
     //evidenza i path
@@ -235,26 +308,26 @@ const data = d3.csv(DATASET_PATH, function (data) {
       if (genres[d.source.index] == genres[d.target.index]) {
         tooltip.html(
           genres[d.source.index] +
-            "<br> Number of films of" +
-            genres[d.source.index] +
-            " :<br>" +
-            matrix2[d.source.index][d.source.index] +
-            " out of " +
-            num_titles
+          "<br> Number of films of" +
+          genres[d.source.index] +
+          " :<br>" +
+          matrix[d.source.index][d.source.index] +
+          " out of " +
+          data.length
         );
       } else {
         tooltip.html(
           genres[d.source.index] +
-            "," +
-            genres[d.target.index] +
-            "<br> Number of films of" +
-            genres[d.source.index] +
-            ", " +
-            genres[d.target.index] +
-            " :<br>" +
-            matrix2[d.source.index][d.target.index] +
-            " out of " +
-            num_titles
+          "," +
+          genres[d.target.index] +
+          "<br> Number of films of" +
+          genres[d.source.index] +
+          ", " +
+          genres[d.target.index] +
+          " :<br>" +
+          matrix[d.source.index][d.target.index] +
+          " out of " +
+          data.length
         );
       }
       return tooltip.style("visibility", "visible");
@@ -277,14 +350,14 @@ const data = d3.csv(DATASET_PATH, function (data) {
 
         // false: I've clicked on the path
         updateMDS(false, genres[d.source.index], genres[d.target.index]);
-        
+
         updateBubble_plot(genres[d.source.index], genres[d.target.index], data);
         clicked[d.source.index] = true;
         clicked[d.targetindex] = true;
         for (var i = 0; i < clicked_legend.length; i++) {
           clicked_legend[i] = false;
         }
-      } 
+      }
       // Was already selected
       else {
 
@@ -307,13 +380,15 @@ const data = d3.csv(DATASET_PATH, function (data) {
     });
 
   /// LEGEND
-  for (var t = 0; t < 12; t++) {
+  for (var t = 0; t < genres.length; t++) {
     svg
       .append("circle")
       .attr("cx", 560 - 0.585 * 620)
       .attr("cy", -120 + 20 * t)
       .attr("r", 6)
-      .style("fill", colors[t]);
+      // .style("fill", colors[t]);
+      .style("fill", colors[genres[t]]);
+
     svg
       .append("text")
       .attr("x", 560 - 0.565 * 620)
@@ -324,12 +399,13 @@ const data = d3.csv(DATASET_PATH, function (data) {
       .style("font-size", "15px")
       .attr("alignment-baseline", "middle");
   }
-  interactionLegend(svg, data);
+  interactionLegend(svg, data, genres);
   /// END legend
-});
+}
 
+startChord();
 //interaction_legend
-function interactionLegend(svg, data) {
+function interactionLegend(svg, data, genres) {
   var gen = "Comedy";
   for (var g = 0; g < 12; g++) {
     var gen = genres[g];
@@ -510,3 +586,7 @@ function updateYAxis_from_legend(gen1, data) {
       return new_y(parseInt(d.duration));
     });
 }
+
+
+
+export { startChord }

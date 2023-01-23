@@ -1,3 +1,4 @@
+import { startChord } from "./chord.js"
 var DATASET_PATH = "./dataset/df_main_info.csv";
 var brushed_ids = new Array();
 
@@ -244,8 +245,8 @@ function updateBubble() {
   });
 
   console.log(brushed_ids)
-  // if (brushed_ids.length != 0) startCalendar(brushed_ids);
-
+  if (brushed_ids.length != 0) startChord(brushed_ids);
+  
   return;
 }
 
