@@ -1,5 +1,9 @@
 var DATASET_PATH = "./dataset/df_main_info.csv";
 
+var sky = ["Sky Drama", "Sky Due", "Sky Suspense", "Sky Comedy", "Sky Action"];
+var mediaset = ["Italia 1", "Iris", "Rete 4", "Cine34"];
+var other = ["Cielo"];
+
 var breaks = [5, 10, 20, 40];
 var colours = ["#fef0d9", "#fdcc8a", "#fc8d59", "#e34a33", "#b30000"];
 
@@ -47,7 +51,7 @@ var format = d3.timeFormat("%d-%m-%Y");
 var toolDate = d3.timeFormat("%d %B %Y");
 
 // When the user selects a channel, this function is triggered
-function manageOnSelection(data, selectorName, level) {
+function manageChannelOnSelection(data, selectorName, level) {
   var selection = document.getElementById(selectorName);
   selection.onchange = (event) => {
     var selectedChannel = event.target.value;
@@ -61,10 +65,35 @@ function manageOnSelection(data, selectorName, level) {
   };
 }
 
+// When the user selects a channel, this function is triggered
+function manageNetworkOnSelection(data, selectorName, level) {
+  var selection = document.getElementById(selectorName);
+  selection.onchange = (event) => {
+    var selectedNetwork = event.target.value;
+
+    createCalendar(
+      data.filter(function (d) {
+        // If in Mediaset
+        if ((selectedNetwork == "Mediaset") & mediaset.includes(d.channel))
+          return d;
+
+        // If in Sky
+        if ((selectedNetwork == "Sky") & sky.includes(d.channel)) return d;
+
+        // If in Other
+        if ((selectedNetwork == "Other") & other.includes(d.channel)) return d;
+
+        if (selectedNetwork == "All_Channels") return d;
+      }),
+      level
+    );
+  };
+}
+
 function startCalendar(brushed_ids) {
   d3.csv(DATASET_PATH, function (data) {
-    manageOnSelection(data, "channel_selector", "top");
-    manageOnSelection(data, "channel_selector_2", "bottom");
+    manageChannelOnSelection(data, "channel_selector", "top");
+    manageNetworkOnSelection(data, "network_selector", "bottom");
 
     // If the array is not empty
     if (brushed_ids != null) {
@@ -80,12 +109,10 @@ function startCalendar(brushed_ids) {
       return d.channel === "Italia 1";
     });
 
-    var default_set_2 = data.filter(function (d) {
-      return d.channel === "Cielo";
-    });
-
     createCalendar(default_set, "top");
-    createCalendar(default_set_2, "bottom");
+
+    // By default all channels are displayed
+    createCalendar(data, "bottom");
 
     createLegend();
   });
@@ -125,6 +152,7 @@ function monthPath(t0) {
 }
 
 function createCalendar(chosenData, level) {
+  console.log(chosenData);
   if (document.getElementById(current_year + level) != null) {
     document.getElementById(current_year + level).parentNode.remove();
   }
@@ -401,8 +429,25 @@ function updateHoliday() {
 
     if (checkbox.checked) {
       rect
+        .attr("shape-rendering", function (d) {
+          var date = new Date(d.key);
+          if (holidaysList.includes(String(date.toLocaleDateString("it-IT")))) {
+            return "crispEdges";
+          } else return null;
+        })
+        .attr("rx", function (d) {
+          var date = new Date(d.key);
+          if (holidaysList.includes(String(date.toLocaleDateString("it-IT")))) {
+            return 10;
+          } else return null;
+        })
+        .attr("ry", function (d) {
+          var date = new Date(d.key);
+          if (holidaysList.includes(String(date.toLocaleDateString("it-IT")))) {
+            return 10;
+          } else return null;
+        })
         .attr("stroke", (d) => {
-
           var date = new Date(d.key);
           if (holidaysList.includes(String(date.toLocaleDateString("it-IT")))) {
             return "black";
@@ -414,21 +459,35 @@ function updateHoliday() {
           var date = new Date(d.key);
 
           if (holidaysList.includes(String(date.toLocaleDateString("it-IT")))) {
-            return 3;
-          } else {
-            return 1;
-          }
-        })
-        .attr("z-index", (d) => {
-          var date = new Date(d.key);
-
-          if (holidaysList.includes(String(date.toLocaleDateString("it-IT")))) {
-            return 100;
+            return 2;
           } else {
             return 1;
           }
         });
+
+      // rect
+      //   .attr("stroke", (d) => {
+      //     var date = new Date(d.key);
+      //     if (holidaysList.includes(String(date.toLocaleDateString("it-IT")))) {
+      //       return "black";
+      //     } else {
+      //       return "#ccc";
+      //     }
+      //   })
+      //   .attr("stroke-width", (d) => {
+      //     var date = new Date(d.key);
+
+      //     if (holidaysList.includes(String(date.toLocaleDateString("it-IT")))) {
+      //       return 3;
+      //     } else {
+      //       return 1;
+      //     }
+      //   });
     } else {
+      rect
+        .attr("shape-rendering", null)
+        .attr("stroke", "#ccc")
+        .attr("stroke-width", 1); //.style("opacity", 0.5);
       rect.attr("stroke", "#ccc").attr("stroke-width", 1); //.style("opacity", 0.5);
     }
   };

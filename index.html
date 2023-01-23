@@ -20,7 +20,8 @@
         fill: none;
         stroke: #08589e;
         stroke-width: 3px;
-        z-index: -1;
+        z-index: 0;
+        position: relative;
       }
 
       .day {
@@ -195,24 +196,18 @@
         <input type="checkbox" id="holiday_check" name="Holiday" />
         <div id="area_calendar_top"></div>
 
-        <label for="channel_selector_2" style="color: #fff"
-          >Choose a channel</label
+        <label for="network_selector" style="color: #fff"
+          >Choose a network</label
         >
         <select
           name="channel2"
-          id="channel_selector_2"
+          id="network_selector"
           style="background-color: #fff; color: #000"
         >
-          <option value="Cielo">Cielo</option>
-          <option value="Italia_1">Italia 1</option>
-          <option value="Cine34">Cine34</option>
-          <option value="Iris">Iris</option>
-          <option value="Rete_4">Rete 4</option>
-          <option value="Sky_Action">Sky Action</option>
-          <option value="Sky_Comedy">Sky Comedy</option>
-          <option value="Sky_Drama">Sky Drama</option>
-          <option value="Sky_Due">Sky Due</option>
-          <option value="Sky_Suspense">Sky Suspense</option>
+          <option value="All_Channels">All Channels</option>
+          <option value="Mediaset">Mediaset</option>
+          <option value="Sky">Sky</option>
+          <option value="Other">Other</option>
         </select>
 
         <div id="area_calendar_bottom"></div>

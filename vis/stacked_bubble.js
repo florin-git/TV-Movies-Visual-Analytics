@@ -2,6 +2,10 @@ import { startMDS } from "./mds.js";
 
 var DATASET_PATH = "./dataset/channel_month_count_sharing.csv";
 
+var sky = ["Sky Drama", "Sky Due", "Sky Suspense", "Sky Comedy", "Sky Action"];
+var mediaset = ["Italia 1", "Iris", "Rete 4", "Cine34"];
+var other = ["Cielo"];
+
 var margin = { top: 5, right: 0, bottom: 25, left: 55 };
 var width = 660 - margin.left - margin.right;
 var height = 340 - margin.top - margin.bottom;
@@ -293,14 +297,13 @@ function updateBubble_plot(d) {
 }
 
 function updateMDS(d) {
-  
   var selected_info = {
     name: "stacked",
     channel: d.channel,
     month: d.month,
   };
 
-  startMDS(selected_info)
+  startMDS(selected_info);
 }
 
 // function removeCircles(elementsToRemove) {
@@ -311,10 +314,22 @@ function updateMDS(d) {
 function updateCalendar(channel) {
   // Spaces in selectors are automatically converted to "_" in JS.
   // Thus, I will replace spaces with "_"
+
   document.getElementById("channel_selector").value = channel.replaceAll(
     " ",
     "_"
   );
   var changeEvent = new Event("change");
   document.getElementById("channel_selector").dispatchEvent(changeEvent);
+
+  var network;
+  if (mediaset.includes(channel)) network = "Mediaset";
+  else if (sky.includes(channel)) network = "Sky";
+  else network = "Other";
+
+  network.replaceAll(" ", "_");
+
+  document.getElementById("network_selector").value = network
+  var changeEvent = new Event("change");
+  document.getElementById("network_selector").dispatchEvent(changeEvent);
 }
