@@ -295,6 +295,7 @@ function updateBubble_plot(d) {
 function updateMDS(d) {
   
   var selected_info = {
+    name: "stacked",
     channel: d.channel,
     month: d.month,
   };

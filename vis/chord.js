@@ -1,3 +1,5 @@
+import { startMDS } from "./mds.js";
+
 var DATASET_PATH = "./dataset/df_main_info.csv";
 
 var prova, gh;
@@ -272,14 +274,23 @@ const data = d3.csv(DATASET_PATH, function (data) {
       if (!clicked[d.source.index] & !clicked[d.target.index]) {
         svg.selectAll("path").style("opacity", 0.2);
         d3.select(this).style("opacity", 1);
-        updateMDS(d, genres[d.source.index], genres[d.target.index]);
+
+        // false: I've clicked on the path
+        updateMDS(false, genres[d.source.index], genres[d.target.index]);
+        
         updateBubble_plot(genres[d.source.index], genres[d.target.index], data);
         clicked[d.source.index] = true;
         clicked[d.targetindex] = true;
         for (var i = 0; i < clicked_legend.length; i++) {
           clicked_legend[i] = false;
         }
-      } else {
+      } 
+      // Was already selected
+      else {
+
+        // true: deselected the path
+        updateMDS(true, genres[d.source.index], genres[d.target.index]);
+
         svg.selectAll("path").style("opacity", 1.2);
         var circles = d3
           .select("#area_bubble")
@@ -357,24 +368,32 @@ function interactionLegend(svg, data) {
   }
 }
 //updateMDS
-function updateMDS(d, gen1, gen2) {
-  var mds_circles = d3
-    .select("#area_mds")
-    .selectAll(".bubble")
-    .style("display", "block");
-  if (gen1 == gen2) {
-    mds_circles
-      .filter(function (f) {
-        return f.genres != gen1;
-      })
-      .style("display", "none");
-  } else {
-    mds_circles
-      .filter(function (f) {
-        return !f.genres.includes(gen1) | !f.genres.includes(gen2);
-      })
-      .style("display", "none");
+function updateMDS(deselected, gen1, gen2) {
+  var selected_info = {
+    name: "chord",
+    deselected: deselected,
+    gen1: gen1,
+    gen2: gen2
   }
+
+  startMDS(selected_info)
+  // var mds_circles = d3
+  //   .select("#area_mds")
+  //   .selectAll(".bubble")
+  //   .style("display", "block");
+  // if (gen1 == gen2) {
+  //   mds_circles
+  //     .filter(function (f) {
+  //       return f.genres != gen1;
+  //     })
+  //     .style("display", "none");
+  // } else {
+  //   mds_circles
+  //     .filter(function (f) {
+  //       return !f.genres.includes(gen1) | !f.genres.includes(gen2);
+  //     })
+  //     .style("display", "none");
+  // }
 }
 //normal update from chord
 function updateBubble_plot(gen1, gen2, data) {

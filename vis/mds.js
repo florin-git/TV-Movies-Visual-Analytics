@@ -16,19 +16,98 @@ var y = d3.scaleLinear().domain([-58, 38]).range([height, 0]);
 
 var sky = ["Sky Drama", "Sky Due", "Sky Suspense", "Sky Comedy", "Sky Action"];
 var mediaset = ["Italia 1", "Iris", "Rete 4", "Cine34"];
+var other = ["Cielo"];
+
+var filterdData;
 
 function startMDS(selected_info) {
   d3.csv(DATASET_PATH, function (data) {
-    chosenData = data;
+    // If the array is empty, we are not filtering data
+    if (selected_info == null) {
+      createMDS(data);
+      createLegend();
+      return;
+    }
 
-    // If the array is not empty
-    if (selected_info != null) {
+    /// Filtering data (selected_info NOT empty)
+
+    // Filtering from Stacked
+    if (selected_info.name == "stacked") {
+      /**
+       * When the user clicks on a buble on the Stacked,
+       * in MDS we will have all the points belonging to
+       * the network channel of the clicked channel.
+       */
       var chosenData = data.filter(function (d) {
-        return (
-          (selected_info.month == d.month) &
-          (selected_info.channel == d.channel)
-        );
+        // If in Mediaset
+        if (
+          mediaset.includes(selected_info.channel) &
+          mediaset.includes(d.channel)
+        )
+          return d;
+
+        // If in Sky
+        if (sky.includes(selected_info.channel) & sky.includes(d.channel))
+          return d;
+
+        // If in Other
+        if (other.includes(selected_info.channel) & other.includes(d.channel))
+          return d;
       });
+
+      filterdData = chosenData;
+    }
+
+    // Manage filtering from Chord
+    if (selected_info.name == "chord") {
+      /**
+       * If you are deselecting from Chord,
+       * you need to restore the data before
+       * the filtering on the genres.
+       */
+      if (selected_info.deselected) {
+        // If already filterd from the Stacked
+        if (filterdData != null) chosenData = filterdData;
+        // If you start filtering from Chord
+        else chosenData = data;
+
+        createMDS(chosenData);
+        createLegend();
+        return;
+      }
+
+      // If already filterd from the Stacked
+      if (filterdData != null) {
+        var chosenData = filterdData.filter(function (d) {
+          // Only one genre
+          if (selected_info.gen1 == selected_info.gen2) {
+            return d.genres == selected_info.gen1;
+          }
+          // Multiple genres
+          else {
+            return (
+              d.genres.includes(selected_info.gen1) &
+              d.genres.includes(selected_info.gen2)
+            );
+          }
+        });
+      }
+      // Filtering only from Chord
+      else {
+        var chosenData = data.filter(function (d) {
+          // Only one genre
+          if (selected_info.gen1 == selected_info.gen2) {
+            return d.genres == selected_info.gen1;
+          }
+          // Multiple genres
+          else {
+            return (
+              d.genres.includes(selected_info.gen1) &
+              d.genres.includes(selected_info.gen2)
+            );
+          }
+        });
+      }
     }
 
     createMDS(chosenData);

@@ -149,7 +149,9 @@ d3.csv(DATASET_PATH, function (data) {
           "<br>" +
           d.genres +
           "duration <br>" +
-          d.duration
+          d.duration +
+          "channel <br>" +
+          d.channel
       );
       return tooltip.style("visibility", "visible");
     })
