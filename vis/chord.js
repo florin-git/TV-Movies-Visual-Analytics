@@ -1,3 +1,4 @@
+import { startBubble } from "./bubbleplot.js";
 import { startMDS } from "./mds.js";
 
 var DATASET_PATH = "./dataset/df_main_info.csv";
@@ -350,8 +351,8 @@ function createChord(data, matrix, reverse_dict, genres) {
 
         // false: I've clicked on the path
         updateMDS(false, genres[d.source.index], genres[d.target.index]);
-
-        updateBubble_plot(genres[d.source.index], genres[d.target.index], data);
+        //false: i've clicked now 
+        updateBubble_plot(false,genres[d.source.index], genres[d.target.index]);
         clicked[d.source.index] = true;
         clicked[d.targetindex] = true;
         for (var i = 0; i < clicked_legend.length; i++) {
@@ -363,16 +364,9 @@ function createChord(data, matrix, reverse_dict, genres) {
 
         // true: deselected the path
         updateMDS(true, genres[d.source.index], genres[d.target.index]);
+        updateBubble_plot(true,genres[d.source.index], genres[d.target.index]);
 
         svg.selectAll("path").style("opacity", 1.2);
-        var circles = d3
-          .select("#area_bubble")
-          .selectAll(".bubble")
-          .style("display", "block");
-        var mds_circles = d3
-          .select("#area_mds")
-          .selectAll(".bubble")
-          .style("display", "block");
         for (var k = 0; k < clicked.length; k++) {
           clicked[k] = false;
         }
@@ -419,7 +413,7 @@ function interactionLegend(svg, data, genres) {
           svg.selectAll("path").each(function () {
             stringhe = this.id.split("_");
             if (stringhe.includes(gen)) {
-              updateBubble_plot_from_legend(gen, data);
+              updateBubble_plot_from_legend(false,gen);
               this["style"]["stroke-width"] = "0.2";
               this["style"]["stroke"] = "black";
               this["style"]["opacity"] = 2;
@@ -428,14 +422,7 @@ function interactionLegend(svg, data, genres) {
           clicked_legend[dict[gen]] = true;
         } else {
           svg.selectAll("path").style("opacity", 1.2);
-          var circles = d3
-            .select("#area_bubble")
-            .selectAll(".bubble")
-            .style("display", "block");
-          var mds_circles = d3
-            .select("#area_mds")
-            .selectAll(".bubble")
-            .style("display", "block");
+          updateBubble_plot_from_legend(true,gen);
           for (var k = 0; k < clicked_legend.length; k++) {
             clicked_legend[dict[gen]] = false;
           }
@@ -472,41 +459,27 @@ function updateMDS(deselected, gen1, gen2) {
   // }
 }
 //normal update from chord
-function updateBubble_plot(gen1, gen2, data) {
-  var circles = d3
-    .select("#area_bubble")
-    .selectAll(".bubble")
-    .style("display", "block");
-
-  if (gen1 == gen2) {
-    circles
-      .filter(function (f) {
-        return f.genres != gen1;
-      })
-      .style("display", "none");
-  } else {
-    circles
-      .filter(function (f) {
-        return !f.genres.includes(gen1) | !f.genres.includes(gen2);
-      })
-      .style("display", "none");
+function updateBubble_plot(deselected, gen1, gen2) {
+  var selected_info = {
+    name: "chord",
+    deselected: deselected,
+    gen1: gen1,
+    gen2: gen2
   }
-  updateYAxis(gen1, gen2, data);
+  startBubble(selected_info);
+  // updateYAxis(gen1, gen2, data);
 }
 //normal update from legend
-function updateBubble_plot_from_legend(gen1, data) {
-  var circles = d3
-    .select("#area_bubble")
-    .selectAll(".bubble")
-    .style("display", "block");
-
-  circles
-    .filter(function (f) {
-      return !f.genres.includes(gen1);
-    })
-    .style("display", "none");
-
-  updateYAxis_from_legend(gen1, data);
+function updateBubble_plot_from_legend(deselected,gen1) {
+  var selected_info = {
+    name: "chord",
+    deselected: deselected,
+    gen1: gen1,
+    gen2: null,
+    legend :true
+  }
+  startBubble(selected_info);
+  // updateYAxis_from_legend(gen1, data);
 }
 
 function updateYAxis(gen1, gen2, data) {
@@ -589,4 +562,4 @@ function updateYAxis_from_legend(gen1, data) {
 
 
 
-export { startChord }
+export { startChord, startBubble }

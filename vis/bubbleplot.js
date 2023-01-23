@@ -12,6 +12,9 @@ var height = 300 - margin.top - margin.bottom;
 
 var x, y;
 
+var filteredData;
+
+
 function startBubble(selected_info) {
   d3.csv(DATASET_PATH, function (data) {
     // At the beginning you do not display anything
@@ -26,6 +29,7 @@ function startBubble(selected_info) {
        * in the Bubble plot we will have all the points belonging to
        * the network channel of the clicked channel.
        */
+      console.log(selected_info);
       var chosenData = data.filter(function (d) {
         // If in Mediaset
         if (
@@ -41,11 +45,70 @@ function startBubble(selected_info) {
         // If in Other
         if (other.includes(selected_info.channel) & other.includes(d.channel))
           return d;
+
+
       });
+      filteredData = chosenData;
+    }
+    if (selected_info.name == "chord") {
+      if (selected_info.deselected) {
+        // If already filterd from the Stacked
+        if (filteredData != null) chosenData = filteredData;
+        // If you start filtering from Chord
+        else chosenData = data;
+        createBubble(chosenData);
+        return;
+      }
+      //GIa filtrato dallo stacked
+      if (filteredData != null) {
+        var chosenData = filteredData.filter(function (d) {
+          if (selected_info.legend) {
+            return d.genres.includes(selected_info.gen1);
+          }
+          // Only one genre
+          if (selected_info.gen1 == selected_info.gen2) {
+            return d.genres == selected_info.gen1;
+          }
+          // Multiple genres
+          else {
+            return (
+              d.genres.includes(selected_info.gen1) &
+              d.genres.includes(selected_info.gen2)
+            );
+          }
+        });
+      }
+      //Non filtrato
+      else {
+        var chosenData = data.filter(function (d) {
+          //From legend
+          if (selected_info.legend) {
+            return d.genres.includes(selected_info.gen1);
+          }
+          // Only one genre
+          if (selected_info.gen1 == selected_info.gen2) {
+            return d.genres == selected_info.gen1;
+          }
+          // Multiple genres
+          else {
+            return (
+              d.genres.includes(selected_info.gen1) &
+              d.genres.includes(selected_info.gen2)
+            );
+          }
+        });
+      }
+    }
+    if (selected_info.name == "chord_legend") {
+      var chosenData = data.filter(function (d) {
+        return d.genres.includes(gen1);
+      })
     }
 
     createBubble(chosenData);
     createLegend();
+
+
   });
 }
 
@@ -54,6 +117,7 @@ startBubble();
 function createBubble(chosenData) {
   // Reset Bubble plot
   d3.select("#svg_bubble").remove();
+  console.log(chosenData);
 
   var data = chosenData;
 
@@ -184,14 +248,14 @@ function createBubble(chosenData) {
     .on("mouseover", function (d) {
       tooltip.html(
         d.title +
-          "<br> Rating: " +
-          d.rating +
-          "<br>" +
-          d.genres +
-          "duration <br>" +
-          d.duration +
-          "channel <br>" +
-          d.channel
+        "<br> Rating: " +
+        d.rating +
+        "<br>" +
+        d.genres +
+        "duration <br>" +
+        d.duration +
+        "channel <br>" +
+        d.channel
       );
       return tooltip.style("visibility", "visible");
     })

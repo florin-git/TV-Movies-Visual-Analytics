@@ -260,20 +260,7 @@ function updateBubble(d) {
     name: "stacked",
     channel: d.channel,
   };
-
   startBubble(selected_info);
-
-
-
-  var circles = d3
-    .select("#area_bubble")
-    .selectAll(".bubble")
-    .style("display", "block");
-  circles
-    .filter(function (f) {
-      return (f.month !== d.month) | (f.channel !== d.channel);
-    })
-    .style("display", "none");
 }
 
 function updateMDS(d) {
