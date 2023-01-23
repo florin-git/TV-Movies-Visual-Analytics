@@ -108,11 +108,11 @@ d3.csv(DATASET_PATH, function (data) {
     .range([2, 100]); // Size in pixel
 
   //variabili che servono per la legenda bubble size
-  var valuesToShow = [4];
-  var valuesToShow2 = [5];
-  var valuesToShow3 = [3];
-  var valuesToShow4 = [2];
-  var valuesToShow5 = [1];
+  var valuesToShow = [4.5];
+  var valuesToShow2 = [5.5];
+  var valuesToShow3 = [3.5];
+  var valuesToShow4 = [2.5];
+  var valuesToShow5 = [1.5];
 
   var xCircle = 230;
   var xLabel = 380;
@@ -269,7 +269,7 @@ d3.csv(DATASET_PATH, function (data) {
     .data(valuesToShow)
     .enter()
     .append("text")
-    .attr("x", xCircle + 534)
+    .attr("x", xCircle + 532)
     .attr("y", function (d) {
       return yCircle - 190;
     })
@@ -282,9 +282,9 @@ d3.csv(DATASET_PATH, function (data) {
   //titolo legenda bubble size
   svg
     .append("text")
-    .attr("x", xCircle + 520)
+    .attr("x", xCircle + 525)
     .attr("y", yCircle - 290)
-    .text("Duration:")
+    .text("Rating:")
     .style("font-size", 10)
     .attr("fill", "#fff");
 
@@ -310,7 +310,7 @@ d3.csv(DATASET_PATH, function (data) {
     .data(valuesToShow2)
     .enter()
     .append("text")
-    .attr("x", xCircle + 534)
+    .attr("x", xCircle + 532)
     .attr("y", function (d) {
       return yCircle - 230;
     })
@@ -328,7 +328,7 @@ d3.csv(DATASET_PATH, function (data) {
     .append("circle")
     .attr("cx", xCircle + 538)
     .attr("cy", function (d) {
-      return yCircle - size(d) - 165;
+      return yCircle - size(d) - 160;
     })
     .attr("r", function (d) {
       return size(d);
@@ -341,9 +341,9 @@ d3.csv(DATASET_PATH, function (data) {
     .data(valuesToShow3)
     .enter()
     .append("text")
-    .attr("x", xCircle + 534)
+    .attr("x", xCircle + 532)
     .attr("y", function (d) {
-      return yCircle - 155;
+      return yCircle - 150;
     })
     .text(function (d) {
       return d;
@@ -359,7 +359,7 @@ d3.csv(DATASET_PATH, function (data) {
     .append("circle")
     .attr("cx", xCircle + 538)
     .attr("cy", function (d) {
-      return yCircle - size(d) - 140;
+      return yCircle - size(d) - 130;
     })
     .attr("r", function (d) {
       return size(d);
@@ -372,9 +372,9 @@ d3.csv(DATASET_PATH, function (data) {
     .data(valuesToShow4)
     .enter()
     .append("text")
-    .attr("x", xCircle + 534)
+    .attr("x", xCircle + 532)
     .attr("y", function (d) {
-      return yCircle - 130;
+      return yCircle - 121;
     })
     .text(function (d) {
       return d;
@@ -390,7 +390,7 @@ d3.csv(DATASET_PATH, function (data) {
     .append("circle")
     .attr("cx", xCircle + 538)
     .attr("cy", function (d) {
-      return yCircle - size(d) - 120;
+      return yCircle - size(d) - 110;
     })
     .attr("r", function (d) {
       return size(d);
@@ -403,9 +403,9 @@ d3.csv(DATASET_PATH, function (data) {
     .data(valuesToShow5)
     .enter()
     .append("text")
-    .attr("x", xCircle + 534)
+    .attr("x", xCircle + 532)
     .attr("y", function (d) {
-      return yCircle - 110;
+      return yCircle - 100;
     })
     .text(function (d) {
       return d;
