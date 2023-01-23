@@ -13,7 +13,7 @@ var svg = d3
   .append("svg")
   .attr("preserveAspectRatio", "xMinYMin meet")
   .attr("width", width + margin.left + margin.right)
-  .attr("height", height + margin.top + margin.bottom + 30)
+  .attr("height", height + margin.top + margin.bottom + 50)
   .append("g")
   .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
@@ -189,58 +189,59 @@ d3.csv(DATASET_PATH, function (data) {
     .attr("alignment-baseline", "middle");
 
   // Handmade legend
+  const yBottomLegend = 315
   svg
     .append("circle")
-    .attr("cx", 10)
-    .attr("cy", 304)
+    .attr("cx", 60)
+    .attr("cy", yBottomLegend)
     .attr("r", 6)
     .style("fill", d3.schemeSet2[0]);
   svg
     .append("circle")
-    .attr("cx", 150)
-    .attr("cy", 304)
+    .attr("cx", 240)
+    .attr("cy", yBottomLegend)
     .attr("r", 6)
     .style("fill", d3.schemeSet2[1]);
   svg
     .append("circle")
-    .attr("cx", 300)
-    .attr("cy", 304)
+    .attr("cx", 440)
+    .attr("cy", yBottomLegend)
     .attr("r", 6)
     .style("fill", d3.schemeSet2[2]);
   svg
     .append("circle")
-    .attr("cx", 420)
-    .attr("cy", 304)
+    .attr("cx", 590)
+    .attr("cy", yBottomLegend)
     .attr("r", 6)
     .style("fill", d3.schemeSet2[3]);
   svg
     .append("text")
-    .attr("x", 16.5)
-    .attr("y", 304)
+    .attr("x", 70)
+    .attr("y", yBottomLegend)
     .text("morning")
     .style("fill", "#fff")
     .style("font-size", "15px")
     .attr("alignment-baseline", "middle");
   svg
     .append("text")
-    .attr("x", 160)
-    .attr("y", 304)
+    .attr("x", 250)
+    .attr("y", yBottomLegend)
     .text("afternoon")
     .style("fill", "#fff")
     .style("font-size", "15px")
     .attr("alignment-baseline", "middle");
   svg
     .append("text")
-    .attr("x", 310)
-    .attr("y", 304)
+    .attr("x", 450)
+    .attr("y", yBottomLegend)
     .text("evening")
     .style("fill", "#fff")
     .style("font-size", "15px")
     .attr("alignment-baseline", "middle");
   svg
     .append("text")
-    .attr("x", 430)
-    .attr("y", 304)
+    .attr("x", 600)
+    .attr("y", yBottomLegend)
     .text("night")
     .style("fill", "#fff")
     .style("font-size", "15px")
