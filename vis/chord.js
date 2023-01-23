@@ -7,7 +7,6 @@ var p,
 var clicked = new Array(65).fill(false);
 var clicked_legend = new Array(12).fill(false);
 
-
 var dict = {
   Documentary: 0,
   Western: 1,
@@ -94,7 +93,7 @@ const data = d3.csv(DATASET_PATH, function (data) {
     .attr("height", "100%")
     .append("g")
     // .attr("transform", "translate(220,215)");
-    .attr("transform", "translate(180,190)");
+    .attr("transform", "translate(180,173)");
 
   //tooltip
   var tooltip = d3
@@ -234,26 +233,26 @@ const data = d3.csv(DATASET_PATH, function (data) {
       if (genres[d.source.index] == genres[d.target.index]) {
         tooltip.html(
           genres[d.source.index] +
-          "<br> Number of films of" +
-          genres[d.source.index] +
-          " :<br>" +
-          matrix2[d.source.index][d.source.index] +
-          " out of " +
-          num_titles
+            "<br> Number of films of" +
+            genres[d.source.index] +
+            " :<br>" +
+            matrix2[d.source.index][d.source.index] +
+            " out of " +
+            num_titles
         );
       } else {
         tooltip.html(
           genres[d.source.index] +
-          "," +
-          genres[d.target.index] +
-          "<br> Number of films of" +
-          genres[d.source.index] +
-          ", " +
-          genres[d.target.index] +
-          " :<br>" +
-          matrix2[d.source.index][d.target.index] +
-          " out of " +
-          num_titles
+            "," +
+            genres[d.target.index] +
+            "<br> Number of films of" +
+            genres[d.source.index] +
+            ", " +
+            genres[d.target.index] +
+            " :<br>" +
+            matrix2[d.source.index][d.target.index] +
+            " out of " +
+            num_titles
         );
       }
       return tooltip.style("visibility", "visible");
@@ -323,7 +322,8 @@ function interactionLegend(svg, data) {
   var gen = "Comedy";
   for (var g = 0; g < 12; g++) {
     var gen = genres[g];
-    svg.select("#" + gen)
+    svg
+      .select("#" + gen)
       .style("cursor", "pointer")
       .on("click", function () {
         if (!clicked_legend[dict[gen]]) {
@@ -339,8 +339,7 @@ function interactionLegend(svg, data) {
             }
           });
           clicked_legend[dict[gen]] = true;
-        }
-        else {
+        } else {
           svg.selectAll("path").style("opacity", 1.2);
           var circles = d3
             .select("#area_bubble")
@@ -455,7 +454,6 @@ function updateYAxis(gen1, gen2, data) {
       return new_y(parseInt(d.duration));
     });
 }
-
 
 function updateYAxis_from_legend(gen1, data) {
   var circleList = [];

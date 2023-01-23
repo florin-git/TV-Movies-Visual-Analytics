@@ -110,9 +110,9 @@ d3.csv(DATASET_PATH, function (data) {
   //variabili che servono per la legenda bubble size
   var valuesToShow = [4];
   var valuesToShow2 = [5];
-  var valuesToShow3=[3];
-  var valuesToShow4=[2];
-  var valuesToShow5=[1];
+  var valuesToShow3 = [3];
+  var valuesToShow4 = [2];
+  var valuesToShow5 = [1];
 
   var xCircle = 230;
   var xLabel = 380;
@@ -253,9 +253,9 @@ d3.csv(DATASET_PATH, function (data) {
     .data(valuesToShow)
     .enter()
     .append("circle")
-    .attr("cx", xCircle+538)
+    .attr("cx", xCircle + 538)
     .attr("cy", function (d) {
-      return yCircle - size(d)-200;
+      return yCircle - size(d) - 200;
     })
     .attr("r", function (d) {
       return size(d);
@@ -263,7 +263,7 @@ d3.csv(DATASET_PATH, function (data) {
     .style("fill", "grey")
     .attr("stroke", "white");
 
-    svg
+  svg
     .selectAll("legend")
     .data(valuesToShow)
     .enter()
@@ -276,21 +276,19 @@ d3.csv(DATASET_PATH, function (data) {
       return d;
     })
     .style("font-size", 10)
-    .attr("fill","#fff")
-  
-  
+    .attr("fill", "#fff");
+
   //titolo legenda bubble size
   svg
     .append("text")
-    .attr("x",xCircle + 520 ) 
-    .attr("y", yCircle - 290) 
-    .text("Duration:") 
-    .style("font-size", 10) 
-    .attr("fill", "#fff"); 
+    .attr("x", xCircle + 520)
+    .attr("y", yCircle - 290)
+    .text("Duration:")
+    .style("font-size", 10)
+    .attr("fill", "#fff");
 
-  
-    //primo cerchio
-    svg
+  //primo cerchio
+  svg
     .selectAll("legend")
     .data(valuesToShow2)
     .enter()
@@ -319,17 +317,17 @@ d3.csv(DATASET_PATH, function (data) {
       return d;
     })
     .style("font-size", 10)
-    .attr("fill","#fff")
+    .attr("fill", "#fff");
 
-    //terzo cerchio 
-    svg
+  //terzo cerchio
+  svg
     .selectAll("legend")
     .data(valuesToShow3)
     .enter()
     .append("circle")
-    .attr("cx", xCircle+538)
+    .attr("cx", xCircle + 538)
     .attr("cy", function (d) {
-      return yCircle - size(d)-165;
+      return yCircle - size(d) - 165;
     })
     .attr("r", function (d) {
       return size(d);
@@ -337,7 +335,7 @@ d3.csv(DATASET_PATH, function (data) {
     .style("fill", "grey")
     .attr("stroke", "white");
 
-    svg
+  svg
     .selectAll("legend")
     .data(valuesToShow3)
     .enter()
@@ -350,17 +348,17 @@ d3.csv(DATASET_PATH, function (data) {
       return d;
     })
     .style("font-size", 10)
-    .attr("fill","#fff")
+    .attr("fill", "#fff");
 
-    //quarto cerchio 
-    svg
+  //quarto cerchio
+  svg
     .selectAll("legend")
     .data(valuesToShow4)
     .enter()
     .append("circle")
-    .attr("cx", xCircle+538)
+    .attr("cx", xCircle + 538)
     .attr("cy", function (d) {
-      return yCircle - size(d)-140;
+      return yCircle - size(d) - 140;
     })
     .attr("r", function (d) {
       return size(d);
@@ -368,7 +366,7 @@ d3.csv(DATASET_PATH, function (data) {
     .style("fill", "grey")
     .attr("stroke", "white");
 
-    svg
+  svg
     .selectAll("legend")
     .data(valuesToShow4)
     .enter()
@@ -381,17 +379,17 @@ d3.csv(DATASET_PATH, function (data) {
       return d;
     })
     .style("font-size", 10)
-    .attr("fill","#fff")
+    .attr("fill", "#fff");
 
-    //quinto cerchio 
-    svg
+  //quinto cerchio
+  svg
     .selectAll("legend")
     .data(valuesToShow5)
     .enter()
     .append("circle")
-    .attr("cx", xCircle+538)
+    .attr("cx", xCircle + 538)
     .attr("cy", function (d) {
-      return yCircle - size(d)-120;
+      return yCircle - size(d) - 120;
     })
     .attr("r", function (d) {
       return size(d);
@@ -399,7 +397,7 @@ d3.csv(DATASET_PATH, function (data) {
     .style("fill", "grey")
     .attr("stroke", "white");
 
-    svg
+  svg
     .selectAll("legend")
     .data(valuesToShow5)
     .enter()
@@ -412,13 +410,5 @@ d3.csv(DATASET_PATH, function (data) {
       return d;
     })
     .style("font-size", 10)
-    .attr("fill","#fff")
-    
-
-
-
-
-
-
-
+    .attr("fill", "#fff");
 });

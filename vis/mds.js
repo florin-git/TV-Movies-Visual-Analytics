@@ -5,7 +5,7 @@ var brushed_ids = new Array();
 
 var margin = { top: 0, right: 0, bottom: 0, left: 5 };
 var width = 470 - margin.left - margin.right;
-var height = 355 - margin.top - margin.bottom;
+var height = 340 - margin.top - margin.bottom;
 
 var sky = ["Sky Drama", "Sky Due", "Sky Suspense", "Sky Comedy", "Sky Action"];
 var mediaset = ["Italia 1", "Iris", "Rete 4", "Cine34"];

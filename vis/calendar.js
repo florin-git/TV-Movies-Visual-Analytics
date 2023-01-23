@@ -158,7 +158,7 @@ function calendarCreate(chosenData, level) {
     .entries(chosenData);
 
   var svg = d3
-    .select("#area_1_" + level)
+    .select("#area_calendar_" + level)
     .append("svg")
     .attr("width", "100%")
     .attr("height", "110px");
@@ -207,6 +207,7 @@ function calendarCreate(chosenData, level) {
   // Create day labels
   var days = ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"];
   var dayLabels = cals.append("g").attr("id", "dayLabels");
+
   days.forEach(function (d, i) {
     dayLabels
       .append("text")
@@ -227,31 +228,20 @@ function calendarCreate(chosenData, level) {
     .append("g")
     .attr("id", "dataDays")
     .selectAll(".dataday")
-    // .data(function (d) {
-    //   return d.values;
-    // })
     .data(dataGroupByDate)
     .enter()
     .append("rect")
-    // .attr("id", function (d) {
-    //   return format(d.date) + ":" + d.value;
-    // })
     .attr("stroke", "#ccc")
-    .attr("class", "mannaggia")
+    .attr("class", "cell")
     .attr("width", cellSize)
     .attr("height", cellSize)
     .attr("x", function (d) {
       var now = new Date();
-      // console.log(now.getDate())
-      // console.log()
-      // return calX + d3.timeWeek.count(d3.timeYear(now), d.date) * cellSize;
       return (
         calX + d3.timeWeek.count(d3.timeYear(now), new Date(d.key)) * cellSize
       );
     })
     .attr("y", function (d) {
-      // return calY + d.date.getDay() * cellSize;
-      // console.log(parseDate(d.key).getDay())
       return calY + new Date(d.key).getDay() * cellSize;
     })
     .attr("fill", function (d) {
@@ -272,12 +262,8 @@ function calendarCreate(chosenData, level) {
     })
     .style("cursor", "pointer");
 
-  //append a title element to give basic mouseover info
+  // Append a title element to give basic mouseover info
   dataRects.append("title").text(function (d) {
-    // var perc = parseFloat(
-    //   (parseInt(d.advertising) / parseInt(d.duration_with_advertising)) * 100
-    // ).toFixed(2);
-
     var value = (
       (d.value.advertising_all / d.value.duration_with_advertising_all) *
       100
@@ -293,7 +279,7 @@ function calendarCreate(chosenData, level) {
     );
   });
 
-  //add montly outlines for calendar
+  // Add montly outlines for calendar
   cals
     .append("g")
     .attr("id", "monthOutlines")
@@ -368,7 +354,7 @@ function create_legend() {
     .attr("id", "key")
     .attr("class", "key")
     .attr("transform", function (d) {
-      return "translate(70, 15)";
+      return "translate(35, 25)";
     });
 
   key
@@ -397,52 +383,55 @@ function create_legend() {
     .attr("y", "1rem")
     .text(function (d, i) {
       if (i < colours.length - 1) {
-        return "up to " + breaks[i];
+        return "up to " + breaks[i] + "%";
       } else {
-        return "over " + breaks[i - 1];
+        return "over " + breaks[i - 1] + "%";
       }
     })
     .style("fill", "#fff");
 }
 
-function updateHoliday(checkbox) {
-  var rect = d3.selectAll(".mannaggia");
+function updateHoliday() {
+  var checkbox = document.getElementById("holiday_check");
 
-  if (checkbox.checked) {
-    var rect = d3
-      .selectAll(".mannaggia")
-      .attr("stroke", (d) => {
-        var date = d.date;
-        if (holidaysList.includes(String(date.toLocaleDateString("it-IT")))) {
-          return "black";
-        } else {
-          return "#ccc";
-        }
-      })
-      .attr("stroke-width", (d) => {
-        var date = d.date;
+  checkbox.onclick = (event) => {
+    var selectedChannel = event.target.value;
 
-        if (holidaysList.includes(String(date.toLocaleDateString("it-IT")))) {
-          return 3;
-        } else {
-          return 1;
-        }
-      })
-      .attr("z-index", (d) => {
-        var date = d.date;
+    var rect = d3.selectAll(".cell");
 
-        if (holidaysList.includes(String(date.toLocaleDateString("it-IT")))) {
-          return 100;
-        } else {
-          return 1;
-        }
-      });
-  } else {
-    var rect = d3
-      .selectAll(".mannaggia")
-      .attr("stroke", "#ccc")
-      .attr("stroke-width", 1);
-  }
+    if (checkbox.checked) {
+      rect
+        .attr("stroke", (d) => {
+
+          var date = new Date(d.key);
+          if (holidaysList.includes(String(date.toLocaleDateString("it-IT")))) {
+            return "black";
+          } else {
+            return "#ccc";
+          }
+        })
+        .attr("stroke-width", (d) => {
+          var date = new Date(d.key);
+
+          if (holidaysList.includes(String(date.toLocaleDateString("it-IT")))) {
+            return 3;
+          } else {
+            return 1;
+          }
+        })
+        .attr("z-index", (d) => {
+          var date = new Date(d.key);
+
+          if (holidaysList.includes(String(date.toLocaleDateString("it-IT")))) {
+            return 100;
+          } else {
+            return 1;
+          }
+        });
+    } else {
+      rect.attr("stroke", "#ccc").attr("stroke-width", 1); //.style("opacity", 0.5);
+    }
+  };
 }
 
 export { startCalendar };
