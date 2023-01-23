@@ -422,8 +422,6 @@ function updateHoliday() {
   var checkbox = document.getElementById("holiday_check");
 
   checkbox.onclick = (event) => {
-    var selectedChannel = event.target.value;
-
     var rect = d3.selectAll(".cell");
 
     if (checkbox.checked) {

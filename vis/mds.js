@@ -3,6 +3,10 @@ import { startCalendar } from "./calendar.js";
 var DATASET_PATH = "./dataset/df_mds.csv";
 var brushed_ids = new Array();
 
+var sky = ["Sky Drama", "Sky Due", "Sky Suspense", "Sky Comedy", "Sky Action"];
+var mediaset = ["Italia 1", "Iris", "Rete 4", "Cine34"];
+var other = ["Cielo"];
+
 var margin = { top: 0, right: 0, bottom: 0, left: 5 };
 var width = 470 - margin.left - margin.right;
 var height = 340 - margin.top - margin.bottom;
@@ -13,10 +17,6 @@ var height = 340 - margin.top - margin.bottom;
 */
 var x = d3.scaleLinear().domain([-42, 58]).range([0, width]);
 var y = d3.scaleLinear().domain([-58, 38]).range([height, 0]);
-
-var sky = ["Sky Drama", "Sky Due", "Sky Suspense", "Sky Comedy", "Sky Action"];
-var mediaset = ["Italia 1", "Iris", "Rete 4", "Cine34"];
-var other = ["Cielo"];
 
 var filterdData;
 

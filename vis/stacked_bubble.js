@@ -1,4 +1,5 @@
 import { startMDS } from "./mds.js";
+import { startBubble } from "./bubbleplot.js";
 
 var DATASET_PATH = "./dataset/channel_month_count_sharing.csv";
 
@@ -152,71 +153,6 @@ d3.csv(DATASET_PATH, function (data) {
     .style("color", "white")
     .text("a simple tooltip");
 
-  //serviva per la legenda iniziale con il gradiente
-  //Append a defs (for definition) element to your SVG
-  /*var defs = svg.append("defs");
-
-  //Append a linearGradient element to the defs and give it a unique id
-  var linearGradient = defs
-    .append("linearGradient")
-    .attr("id", "linear-gradient");
-
-  //Vertical gradient
-  linearGradient
-    .attr("x1", "0%")
-    .attr("y1", "0%")
-    .attr("x2", "0%")
-    .attr("y2", "100%");
-
-  // Add color
-  linearGradient
-    .selectAll("stop")
-    .data(colorScale.domain())
-    .enter()
-    .append("stop")
-    .attr("offset", function (d, i) {
-      // console.log((i / d3.max(colorScale.domain())) * 100);
-      return (i / d3.max(colorScale.domain())) * 100;
-    })
-    .attr("stop-color", colorScale.interpolator());
-
-  // Draw the rectangle and fill with gradient
-  svg
-    .append("rect")
-    // .attr("x", 580)
-    .attr("x", width - 0.1 * width)
-    .attr("y", 25)
-    .attr("width", 20)
-    .attr("height", 145)
-    .style("fill", "url(#linear-gradient)");
-
-  svg
-    .append("text")
-    .attr("class", "legendTitle")
-    .attr("x", width - 0.215 * width)
-    .attr("y", 8)
-    .text("Sharing Percentage")
-    .style("fill", "#fff");*/
-
-  /*var legendScale = d3
-    .scaleLinear()
-    // .domain(colorScale.domain())
-    .domain([0, 5])
-    .range([0, 145]);
-
-  var legendAxis = d3.axisLeft().scale(legendScale).ticks(5);
-  svg
-    .append("g")
-    .attr("transform", "translate(" + (width - 0.11 * width) + "," + 25 + ")")
-    .call(legendAxis);*/
-
-  // svg
-  //   .append("g")
-  //   .attr("transform", "translate(560," + 20 + ")")
-  //   .call(legendAxis);
-
-  var id_c = -1;
-  var prova;
   // Add dots
   svg
     .append("g")
@@ -224,11 +160,10 @@ d3.csv(DATASET_PATH, function (data) {
     .data(data)
     .enter()
     .append("circle")
-    .attr("id", function (d, id_c) {
-      prova = "bubble_" + id_c;
-      rad[id_c] = radiusNumberMovies(d.number_movies);
-      id_c += 1;
-      return prova;
+    .attr("id", function (d) {
+      var bubble_id = "bubble_" + d.id;
+      rad[d.id] = radiusNumberMovies(d.number_movies);
+      return bubble_id;
     })
     .attr("cx", function (d) {
       return x(d.channel) + 25.4;
@@ -298,7 +233,7 @@ d3.csv(DATASET_PATH, function (data) {
           }
         }
         //Gestione bubbleplot
-        updateBubble_plot(d);
+        updateBubble(d);
         //Gestione mds
         updateMDS(d);
         //Gestione calendar
@@ -320,7 +255,16 @@ d3.csv(DATASET_PATH, function (data) {
     });
 });
 
-function updateBubble_plot(d) {
+function updateBubble(d) {
+  var selected_info = {
+    name: "stacked",
+    channel: d.channel,
+  };
+
+  startBubble(selected_info);
+
+
+
   var circles = d3
     .select("#area_bubble")
     .selectAll(".bubble")
@@ -330,24 +274,6 @@ function updateBubble_plot(d) {
       return (f.month !== d.month) | (f.channel !== d.channel);
     })
     .style("display", "none");
-
-  var legend_month = d3
-    .select("#area_bubble")
-    .selectAll(".text_legend_month")
-    .text(function (f) {
-      return "Month : " + d.month;
-    })
-    .style("font-size", "15px")
-    .attr("alignment-baseline", "middle");
-
-  var legend_channel = d3
-    .select("#area_bubble")
-    .selectAll(".text_legend_channel")
-    .text(function (f) {
-      return "Channel : " + d.channel;
-    })
-    .style("font-size", "15px")
-    .attr("alignment-baseline", "middle");
 }
 
 function updateMDS(d) {

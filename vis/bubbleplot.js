@@ -1,6 +1,10 @@
-import { startChord } from "./chord.js"
+import { startChord } from "./chord.js";
 var DATASET_PATH = "./dataset/df_main_info.csv";
 var brushed_ids = new Array();
+
+var sky = ["Sky Drama", "Sky Due", "Sky Suspense", "Sky Comedy", "Sky Action"];
+var mediaset = ["Italia 1", "Iris", "Rete 4", "Cine34"];
+var other = ["Cielo"];
 
 var margin = { top: 20, right: 0, bottom: 0, left: 30 };
 var width = 850 - margin.left - margin.right;
@@ -8,9 +12,39 @@ var height = 300 - margin.top - margin.bottom;
 
 var x, y;
 
-function startBubble() {
+function startBubble(selected_info) {
   d3.csv(DATASET_PATH, function (data) {
-    createBubble(data);
+    // At the beginning you do not display anything
+    if (selected_info == null) {
+      createBubble([]);
+      return;
+    }
+
+    if (selected_info.name == "stacked") {
+      /**
+       * When the user clicks on a buble on the Stacked,
+       * in the Bubble plot we will have all the points belonging to
+       * the network channel of the clicked channel.
+       */
+      var chosenData = data.filter(function (d) {
+        // If in Mediaset
+        if (
+          mediaset.includes(selected_info.channel) &
+          mediaset.includes(d.channel)
+        )
+          return d;
+
+        // If in Sky
+        if (sky.includes(selected_info.channel) & sky.includes(d.channel))
+          return d;
+
+        // If in Other
+        if (other.includes(selected_info.channel) & other.includes(d.channel))
+          return d;
+      });
+    }
+
+    createBubble(chosenData);
     createLegend();
   });
 }
@@ -18,6 +52,9 @@ function startBubble() {
 startBubble();
 
 function createBubble(chosenData) {
+  // Reset Bubble plot
+  d3.select("#svg_bubble").remove();
+
   var data = chosenData;
 
   // append the svg object to the body of the page
@@ -31,18 +68,21 @@ function createBubble(chosenData) {
     .append("g")
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-  // Add x axis
-  y = d3
-    .scaleLinear()
-    .domain([
-      d3.min(data, function (d) {
-        return Math.max(d.duration);
-      }) - 10,
-      d3.max(data, function (d) {
-        return Math.max(d.duration);
-      }) + 10,
-    ])
-    .range([height, 0]);
+  if (data.length == 0) {
+    y = d3.scaleLinear().domain([40, 200]).range([height, 0]);
+  } else {
+    y = d3
+      .scaleLinear()
+      .domain([
+        d3.min(data, function (d) {
+          return Math.max(d.duration);
+        }) - 10,
+        d3.max(data, function (d) {
+          return Math.max(d.duration);
+        }) + 10,
+      ])
+      .range([height, 0]);
+  }
 
   x = d3
     .scaleLinear()
@@ -164,43 +204,53 @@ function createBubble(chosenData) {
       return tooltip.style("visibility", "hidden");
     });
 
-  svg
-    .data(data)
-    .append("text")
-    .attr("class", "text_legend_month")
-    .attr("x", width - 0.18 * width)
-    .attr("y", 30)
-    .text(function (d) {
-      return "Month: ";
-    })
-    .style("fill", "#fff")
-    .style("font-size", "15px")
-    .attr("alignment-baseline", "middle");
+  // svg
+  //   .append("div")
+  //   .append("input")
+  //   .attr("id", "bubble_checkbox")
+  //   .attr("brushing")
+  //   // .attr("x", width - 0.18 * width)
+  //   .attr("x", 50)
+  //   .attr("y", 30)
+  //   .attr("type", "checkbox");
 
-  svg
-    .data(data)
-    .append("text")
-    .attr("class", "text_legend_channel")
-    .attr("x", width - 0.18 * width)
-    .attr("y", 10)
-    .text(function (d) {
-      return "Channel: ";
-    })
-    .style("fill", "#fff")
-    .style("font-size", "15px")
-    .attr("alignment-baseline", "middle");
+  // var brush = svg.call(
+  //   d3
+  //     .brush() // Add the brush feature using the d3.brush function
+  //     .extent([
+  //       [0, 0],
+  //       [width, height],
+  //     ]) // initialise the brush area: start at 0,0 and finishes at width,height: it means I select the whole graph area
+  //     .on("start", startBrushing)
+  //     .on("brush", updateChart)
+  // );
 
-  // Add brushing
-  var brush = svg.call(
-    d3
-      .brush() // Add the brush feature using the d3.brush function
-      .extent([
-        [0, 0],
-        [width, height],
-      ]) // initialise the brush area: start at 0,0 and finishes at width,height: it means I select the whole graph area
-      .on("start", startBrushing)
-      .on("brush", updateChart)
-  );
+  activateBrushing();
+}
+
+function activateBrushing() {
+  var checkbox = document.getElementById("bubble_brushing");
+
+  checkbox.onclick = (event) => {
+    if (checkbox.checked) {
+      // Add brushing
+      var brush = d3
+        .brush() // Add the brush feature using the d3.brush function
+        .extent([
+          [0, 0],
+          [width, height],
+        ]) // initialise the brush area: start at 0,0 and finishes at width,height: it means I select the whole graph area
+        .on("start", startBrushing)
+        .on("brush", updateChart);
+
+      d3.select("#svg_bubble").append("g").attr("class", "brush").call(brush);
+    }
+    // Remove brushing
+    else {
+      d3.select(".brush").on("start", null).on("brush", null);
+      d3.select(".brush").remove();
+    }
+  };
 }
 
 function startBrushing() {
@@ -244,9 +294,9 @@ function updateBubble() {
     } // Logs the id attribute.
   });
 
-  console.log(brushed_ids)
+  console.log(brushed_ids);
   if (brushed_ids.length != 0) startChord(brushed_ids);
-  
+
   return;
 }
 
@@ -495,3 +545,5 @@ function createLegend() {
     .style("font-size", 10)
     .attr("fill", "#fff");
 }
+
+export { startBubble };
