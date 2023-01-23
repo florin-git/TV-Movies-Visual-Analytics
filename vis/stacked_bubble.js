@@ -22,6 +22,11 @@ var svg = d3
   .append("g")
   .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
+var keys = ["1", "2", "3", "4", "5"];
+var colors = ["#feebe2", "#fbb4b9", "#f768a1", "#c51b8a", "#7a0177"];
+var breaks = [0.5, 1, 1.5, 3];
+
+
 //Read the data
 d3.csv(DATASET_PATH, function (data) {
   var x = d3
@@ -86,17 +91,55 @@ d3.csv(DATASET_PATH, function (data) {
     )
     .range([1, 17]);
 
-  var colorScale = d3
+  /*var colorScale = d3
     .scaleSequential()
     .domain(
       d3.extent(data, function (d) {
         return Math.max(d.sharing);
       })
     )
-    .interpolator(d3.interpolatePuRd);
+    .interpolator(d3.interpolatePuRd);*/
 
+  var colorScale = d3.scaleOrdinal().domain(keys).range(colors); //colorare i pallini del grafico
+
+  //per legenda del grafico: quadratini
+  var size = 10;
+  svg
+    .selectAll("mydots")
+    .data(keys)
+    .enter()
+    .append("rect")
+    .attr("x", 510)
+    .attr("y", function (d, i) {
+      return 10 + i * (size + 5);
+    }) // 100 is where the first dot appears. 25 is the distance between dots
+    .attr("width", size)
+    .attr("height", size)
+    .attr("fill", function (d) {
+      return colorScale(d);
+    });
+
+  //scritte per i quadratini della legenda
+  svg
+    .selectAll("mylabels")
+    .data(keys)
+    .enter()
+    .append("text")
+    .attr("x", 510 + size * 1.2)
+    .attr("y", function (d, i) {
+      return 14+ i * (size + 5) + size / 2;
+    }) // 100 is where the first dot appears. 25 is the distance between dots
+    .attr("fill","white")
+    .text(function (d,i) {
+      if(i < colors.length - 1){
+        return "up to " + breaks[i] + "%";
+      } else {
+        return "over " + breaks[i - 1] + "%";
+      }
+    })
+    .attr("text-anchor", "left")
+  
   //tooltip
-
   var tooltip = d3
     .select("body")
     .append("div")
@@ -109,10 +152,9 @@ d3.csv(DATASET_PATH, function (data) {
     .style("color", "white")
     .text("a simple tooltip");
 
-  //
-
+  //serviva per la legenda iniziale con il gradiente
   //Append a defs (for definition) element to your SVG
-  var defs = svg.append("defs");
+  /*var defs = svg.append("defs");
 
   //Append a linearGradient element to the defs and give it a unique id
   var linearGradient = defs
@@ -154,9 +196,9 @@ d3.csv(DATASET_PATH, function (data) {
     .attr("x", width - 0.215 * width)
     .attr("y", 8)
     .text("Sharing Percentage")
-    .style("fill", "#fff");
+    .style("fill", "#fff");*/
 
-  var legendScale = d3
+  /*var legendScale = d3
     .scaleLinear()
     // .domain(colorScale.domain())
     .domain([0, 5])
@@ -166,7 +208,7 @@ d3.csv(DATASET_PATH, function (data) {
   svg
     .append("g")
     .attr("transform", "translate(" + (width - 0.11 * width) + "," + 25 + ")")
-    .call(legendAxis);
+    .call(legendAxis);*/
 
   // svg
   //   .append("g")
@@ -197,8 +239,20 @@ d3.csv(DATASET_PATH, function (data) {
     .attr("r", function (d) {
       return radiusNumberMovies(d.number_movies);
     })
-    .style("fill", function (d) {
-      return colorScale(d.sharing);
+    .attr("fill", function (d,i) {
+      var value=d.sharing;
+      if (value < breaks[0]) {
+        return colors[0];
+      }
+      for (i = 0; i < breaks.length + 1; i++) {
+        if (value >= breaks[i] && value < breaks[i + 1]) {
+          return colors[i];
+        }
+      }
+      if (value > breaks.length - 1) {
+        return colors[breaks.length];
+      }
+     
     })
     .style("opacity", "0.7")
     .style("cursor", "pointer")
@@ -210,7 +264,7 @@ d3.csv(DATASET_PATH, function (data) {
         .style("opacity", 2);
       this["style"]["r"] = radiusNumberMovies(d.number_movies) * 2;
       tooltip.html(
-        "Number of movies :" + d.number_movies + "<br>Sharing: " + d.sharing
+        "Number of movies :" + d.number_movies + "<br>Sharing: " + d.sharing +"%"
       );
       tooltip.style("visibility", "visible");
       for (var k = 0; k < clicked.length; k++) {
@@ -219,7 +273,7 @@ d3.csv(DATASET_PATH, function (data) {
         }
       }
       this["style"]["r"] = radiusNumberMovies(d.number_movies) * 2;
-      // d3.select(this).style("stroke", "black").style("stroke-width", 1.5).style("opacity", 2)
+      d3.select(this).style("stroke", "black").style("stroke-width", 1.5).style("opacity", 2)
       return;
     })
     .on("mousemove", function (d) {
@@ -329,7 +383,7 @@ function updateCalendar(channel) {
 
   network.replaceAll(" ", "_");
 
-  document.getElementById("network_selector").value = network
+  document.getElementById("network_selector").value = network;
   var changeEvent = new Event("change");
   document.getElementById("network_selector").dispatchEvent(changeEvent);
 }
