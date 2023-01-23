@@ -1,5 +1,6 @@
 import { startMDS } from "./mds.js";
 import { startBubble } from "./bubbleplot.js";
+import { startChord } from "./chord.js";
 
 var DATASET_PATH = "./dataset/channel_month_count_sharing.csv";
 
@@ -26,7 +27,6 @@ var svg = d3
 var keys = ["1", "2", "3", "4", "5"];
 var colors = ["#feebe2", "#fbb4b9", "#f768a1", "#c51b8a", "#7a0177"];
 var breaks = [0.5, 1, 1.5, 3];
-
 
 //Read the data
 d3.csv(DATASET_PATH, function (data) {
@@ -128,18 +128,18 @@ d3.csv(DATASET_PATH, function (data) {
     .append("text")
     .attr("x", 510 + size * 1.2)
     .attr("y", function (d, i) {
-      return 14+ i * (size + 5) + size / 2;
+      return 14 + i * (size + 5) + size / 2;
     }) // 100 is where the first dot appears. 25 is the distance between dots
-    .attr("fill","white")
-    .text(function (d,i) {
-      if(i < colors.length - 1){
+    .attr("fill", "white")
+    .text(function (d, i) {
+      if (i < colors.length - 1) {
         return "up to " + breaks[i] + "%";
       } else {
         return "over " + breaks[i - 1] + "%";
       }
     })
-    .attr("text-anchor", "left")
-  
+    .attr("text-anchor", "left");
+
   //tooltip
   var tooltip = d3
     .select("body")
@@ -174,8 +174,8 @@ d3.csv(DATASET_PATH, function (data) {
     .attr("r", function (d) {
       return radiusNumberMovies(d.number_movies);
     })
-    .attr("fill", function (d,i) {
-      var value=d.sharing;
+    .attr("fill", function (d, i) {
+      var value = d.sharing;
       if (value < breaks[0]) {
         return colors[0];
       }
@@ -187,7 +187,6 @@ d3.csv(DATASET_PATH, function (data) {
       if (value > breaks.length - 1) {
         return colors[breaks.length];
       }
-     
     })
     .style("opacity", "0.7")
     .style("cursor", "pointer")
@@ -199,7 +198,11 @@ d3.csv(DATASET_PATH, function (data) {
         .style("opacity", 2);
       this["style"]["r"] = radiusNumberMovies(d.number_movies) * 2;
       tooltip.html(
-        "Number of movies :" + d.number_movies + "<br>Sharing: " + d.sharing +"%"
+        "Number of movies :" +
+          d.number_movies +
+          "<br>Sharing: " +
+          d.sharing +
+          "%"
       );
       tooltip.style("visibility", "visible");
       for (var k = 0; k < clicked.length; k++) {
@@ -208,7 +211,10 @@ d3.csv(DATASET_PATH, function (data) {
         }
       }
       this["style"]["r"] = radiusNumberMovies(d.number_movies) * 2;
-      d3.select(this).style("stroke", "black").style("stroke-width", 1.5).style("opacity", 2)
+      d3.select(this)
+        .style("stroke", "black")
+        .style("stroke-width", 1.5)
+        .style("opacity", 2);
       return;
     })
     .on("mousemove", function (d) {
@@ -228,7 +234,10 @@ d3.csv(DATASET_PATH, function (data) {
       if (!clicked[id_c]) {
         for (var k = 0; k < clicked.length; k++) {
           if (clicked[k] == true) {
-            svg.select("#bubble_" + k).style("r", rad[k]);
+            svg
+              .select("#bubble_" + k)
+              .style("r", rad[k])
+              .style("stroke-width", 0.8);
             clicked[k] = false;
           }
         }
@@ -242,15 +251,16 @@ d3.csv(DATASET_PATH, function (data) {
         clicked[id_c] = true;
         this["style"]["r"] = radiusNumberMovies(d.number_movies) * 2;
       } else {
-        for (var k = 0; k < clicked.length; k++) {
-          clicked[k] = false;
-        }
-        d3.select("#area_bubble")
-          .selectAll(".bubble")
-          .style("display", "block");
-        d3.select("#area_mds").selectAll(".bubble").style("display", "block");
+        // Reset all clicks
+        clicked.fill(false);
         d3.select(this).style("stroke-width", 0.8);
         this["style"]["r"] = radiusNumberMovies(d.number_movies);
+
+        // Reset all graphs
+        startBubble();
+        startChord();
+        startMDS();
+        updateCalendar("All_Channels");
       }
     });
 });
@@ -273,26 +283,29 @@ function updateMDS(d) {
   startMDS(selected_info);
 }
 
-// function removeCircles(elementsToRemove) {
-//   elementsToRemove.selectAll(".remove").remove();
-// }
-
 // The calendar is updated by changing the value (the channel) of the selector
 function updateCalendar(channel) {
   // Spaces in selectors are automatically converted to "_" in JS.
   // Thus, I will replace spaces with "_"
 
-  document.getElementById("channel_selector").value = channel.replaceAll(
-    " ",
-    "_"
-  );
-  var changeEvent = new Event("change");
-  document.getElementById("channel_selector").dispatchEvent(changeEvent);
+  if (
+    mediaset.includes(channel) |
+    sky.includes(channel) |
+    other.includes(channel)
+  ) {
+    document.getElementById("channel_selector").value = channel.replaceAll(
+      " ",
+      "_"
+    );
+    var changeEvent = new Event("change");
+    document.getElementById("channel_selector").dispatchEvent(changeEvent);
+  }
 
   var network;
   if (mediaset.includes(channel)) network = "Mediaset";
   else if (sky.includes(channel)) network = "Sky";
-  else network = "Other";
+  else if (other.includes(channel)) network = "Other";
+  else network = "All_Channels";
 
   network.replaceAll(" ", "_");
 

@@ -4,7 +4,8 @@ import { startMDS } from "./mds.js";
 var DATASET_PATH = "./dataset/df_main_info.csv";
 var genres = new Array();
 
-var p, stringhe = new Array();
+var p,
+  stringhe = new Array();
 var clicked = new Array().fill(false);
 var clicked_legend = new Array(genres.length).fill(false);
 
@@ -37,26 +38,9 @@ var genres = [
   "Crime",
 ];
 var reverse_dict = {};
-for (var i= 0; i< genres.length; i++){
+for (var i = 0; i < genres.length; i++) {
   reverse_dict[i] = genres[i];
 }
-
-
-// const color = [
-//   "#8dd3c7",
-//   "#ffffb3",
-//   "#bebada",
-//   "#fb8072",
-//   "#80b1d3",
-//   "#fdb462",
-//   "#b3de69",
-//   "#fccde5",
-//   "#d9d9d9",
-//   "#bc80bd",
-//   "#ccebc5",
-//   "#ffed6f",
-// ];
-
 
 var colors = {
   Documentary: "#8dd3c7",
@@ -71,14 +55,11 @@ var colors = {
   Action: "#bc80bd",
   Romance: "#ccebc5",
   Crime: "#ffed6f",
-}
-
+};
 
 //start chord
 function startChord(brushed_ids) {
   d3.csv(DATASET_PATH, function (data) {
-
-
     if (brushed_ids != null) {
       var chosenData = data.filter(function (d) {
         return brushed_ids.includes(d.id);
@@ -92,48 +73,16 @@ function startChord(brushed_ids) {
             genres.push(genres_extracted[i]);
           }
         }
-      })
+      });
       console.log("Questi sono i generi del nuovo chord " + genres);
       //Creo dizionario per i generi
       dict = {};
-      reverse_dict = {}
+      reverse_dict = {};
       for (var i = 0; i < genres.length; i++) {
         dict[genres[i]] = i;
         reverse_dict[i] = genres[i];
       }
-      
-    }
-    else {
-      var chosenData = data;
-      // var dict = {
-      //   Documentary: 0,
-      //   Western: 1,
-      //   Adventure: 2,
-      //   Fantasy: 3,
-      //   Horror: 4,
-      //   "Sci-Fi": 5,
-      //   Comedy: 6,
-      //   Drama: 7,
-      //   Thriller: 8,
-      //   Action: 9,
-      //   Romance: 10,
-      //   Crime: 11,
-      // };
-      // var genres = [
-      //   "Documentary",
-      //   "Western",
-      //   "Adventure",
-      //   "Fantasy",
-      //   "Horror",
-      //   "Sci-Fi",
-      //   "Comedy",
-      //   "Drama",
-      //   "Thriller",
-      //   "Action",
-      //   "Romance",
-      //   "Crime",
-      // ];
-    }
+    } else var chosenData = data;
 
     //Creo matrice per i paths
     var matrix = new Array(genres.length);
@@ -150,11 +99,9 @@ function startChord(brushed_ids) {
         }
       }
     });
-    createChord(chosenData, matrix, reverse_dict, genres)
-
-  })
+    createChord(chosenData, matrix, reverse_dict, genres);
+  });
 }
-
 
 function createChord(data, matrix, reverse_dict, genres) {
   d3.select("#area_chord").select("svg").remove();
@@ -198,20 +145,11 @@ function createChord(data, matrix, reverse_dict, genres) {
 
     //al momento evidenzia soltanto la parte in alto degli archi ma non tutto il collegamento. Che classe devo usare??
     .append("path")
-    // .style("fill", (d, i) => colors[i])
-    .style("fill", function(d, i){
+    .style("fill", function (d, i) {
       return colors[reverse_dict[i]];
     })
     .style("stroke", "white")
-    .attr(
-      "d",
-      d3
-        .arc()
-        // .innerRadius(200)
-        // .outerRadius(210)
-        .innerRadius(150)
-        .outerRadius(160)
-    );
+    .attr("d", d3.arc().innerRadius(150).outerRadius(160));
 
   const group = svg
     .datum(res)
@@ -226,8 +164,6 @@ function createChord(data, matrix, reverse_dict, genres) {
     .style("fill", "grey")
     .style("stroke", "white")
     .style("stroke-width", 0.01)
-
-    // .attr("d", d3.arc().innerRadius(190).outerRadius(200));
     .attr("d", d3.arc().innerRadius(140).outerRadius(150));
 
   // Add one gradient for each link
@@ -260,9 +196,7 @@ function createChord(data, matrix, reverse_dict, genres) {
     .attr("class", "start")
     .attr("offset", "0%")
     .attr("stop-color", function (d) {
-      // return colors[d.source.index];
       return colors[genres[d.source.index]];
-
     })
     .attr("stop-opacity", 1);
 
@@ -285,7 +219,6 @@ function createChord(data, matrix, reverse_dict, genres) {
     .data((d) => d)
     .enter()
     .append("path")
-    // .attr("d", d3.ribbon().radius(200))
     .attr("d", d3.ribbon().radius(150))
     .attr("id", function (d, k) {
       k += 1;
@@ -298,9 +231,7 @@ function createChord(data, matrix, reverse_dict, genres) {
       );
     })
     .style("cursor", "pointer")
-    //.style("fill", d => colors[d.source.index]) // colors depend on the source group. Change to target otherwise.
     .style("fill", function (d, k) {
-      // p = [genres[d.source.index], genres[d.target.index]];
       return "url(#gradient-" + d.source.index + "-" + d.target.index + ")";
     })
     //evidenza i path
@@ -309,26 +240,26 @@ function createChord(data, matrix, reverse_dict, genres) {
       if (genres[d.source.index] == genres[d.target.index]) {
         tooltip.html(
           genres[d.source.index] +
-          "<br> Number of films of" +
-          genres[d.source.index] +
-          " :<br>" +
-          matrix[d.source.index][d.source.index] +
-          " out of " +
-          data.length
+            "<br> Number of films of" +
+            genres[d.source.index] +
+            " :<br>" +
+            matrix[d.source.index][d.source.index] +
+            " out of " +
+            data.length
         );
       } else {
         tooltip.html(
           genres[d.source.index] +
-          "," +
-          genres[d.target.index] +
-          "<br> Number of films of" +
-          genres[d.source.index] +
-          ", " +
-          genres[d.target.index] +
-          " :<br>" +
-          matrix[d.source.index][d.target.index] +
-          " out of " +
-          data.length
+            "," +
+            genres[d.target.index] +
+            "<br> Number of films of" +
+            genres[d.source.index] +
+            ", " +
+            genres[d.target.index] +
+            " :<br>" +
+            matrix[d.source.index][d.target.index] +
+            " out of " +
+            data.length
         );
       }
       return tooltip.style("visibility", "visible");
@@ -351,8 +282,12 @@ function createChord(data, matrix, reverse_dict, genres) {
 
         // false: I've clicked on the path
         updateMDS(false, genres[d.source.index], genres[d.target.index]);
-        //false: i've clicked now 
-        updateBubble_plot(false,genres[d.source.index], genres[d.target.index]);
+        //false: i've clicked now
+        updateBubble_plot(
+          false,
+          genres[d.source.index],
+          genres[d.target.index]
+        );
         clicked[d.source.index] = true;
         clicked[d.targetindex] = true;
         for (var i = 0; i < clicked_legend.length; i++) {
@@ -361,10 +296,9 @@ function createChord(data, matrix, reverse_dict, genres) {
       }
       // Was already selected
       else {
-
         // true: deselected the path
         updateMDS(true, genres[d.source.index], genres[d.target.index]);
-        updateBubble_plot(true,genres[d.source.index], genres[d.target.index]);
+        updateBubble_plot(true, genres[d.source.index], genres[d.target.index]);
 
         svg.selectAll("path").style("opacity", 1.2);
         for (var k = 0; k < clicked.length; k++) {
@@ -380,7 +314,6 @@ function createChord(data, matrix, reverse_dict, genres) {
       .attr("cx", 560 - 0.585 * 620)
       .attr("cy", -120 + 20 * t)
       .attr("r", 6)
-      // .style("fill", colors[t]);
       .style("fill", colors[genres[t]]);
 
     svg
@@ -413,7 +346,7 @@ function interactionLegend(svg, data, genres) {
           svg.selectAll("path").each(function () {
             stringhe = this.id.split("_");
             if (stringhe.includes(gen)) {
-              updateBubble_plot_from_legend(false,gen);
+              updateBubble_plot_from_legend(false, gen);
               this["style"]["stroke-width"] = "0.2";
               this["style"]["stroke"] = "black";
               this["style"]["opacity"] = 2;
@@ -422,7 +355,7 @@ function interactionLegend(svg, data, genres) {
           clicked_legend[dict[gen]] = true;
         } else {
           svg.selectAll("path").style("opacity", 1.2);
-          updateBubble_plot_from_legend(true,gen);
+          updateBubble_plot_from_legend(true, gen);
           for (var k = 0; k < clicked_legend.length; k++) {
             clicked_legend[dict[gen]] = false;
           }
@@ -436,27 +369,10 @@ function updateMDS(deselected, gen1, gen2) {
     name: "chord",
     deselected: deselected,
     gen1: gen1,
-    gen2: gen2
-  }
+    gen2: gen2,
+  };
 
-  startMDS(selected_info)
-  // var mds_circles = d3
-  //   .select("#area_mds")
-  //   .selectAll(".bubble")
-  //   .style("display", "block");
-  // if (gen1 == gen2) {
-  //   mds_circles
-  //     .filter(function (f) {
-  //       return f.genres != gen1;
-  //     })
-  //     .style("display", "none");
-  // } else {
-  //   mds_circles
-  //     .filter(function (f) {
-  //       return !f.genres.includes(gen1) | !f.genres.includes(gen2);
-  //     })
-  //     .style("display", "none");
-  // }
+  startMDS(selected_info);
 }
 //normal update from chord
 function updateBubble_plot(deselected, gen1, gen2) {
@@ -464,102 +380,20 @@ function updateBubble_plot(deselected, gen1, gen2) {
     name: "chord",
     deselected: deselected,
     gen1: gen1,
-    gen2: gen2
-  }
+    gen2: gen2,
+  };
   startBubble(selected_info);
-  // updateYAxis(gen1, gen2, data);
 }
 //normal update from legend
-function updateBubble_plot_from_legend(deselected,gen1) {
+function updateBubble_plot_from_legend(deselected, gen1) {
   var selected_info = {
     name: "chord",
     deselected: deselected,
     gen1: gen1,
     gen2: null,
-    legend :true
-  }
+    legend: true,
+  };
   startBubble(selected_info);
-  // updateYAxis_from_legend(gen1, data);
 }
 
-function updateYAxis(gen1, gen2, data) {
-  var circleList = [];
-  d3.select("#area_bubble")
-    .selectAll(".bubble")
-    .data(data)
-    .filter(function (d) {
-      if (gen1 == gen2) return d.genres == gen1;
-      else return d.genres.includes(gen1) & d.genres.includes(gen2);
-      // return d.genres.includes(genre_1) ; //prende tutti i cerchi con il genere uguale a quello passato
-    })
-    .each(function (d) {
-      circleList.push(parseInt(d.duration));
-    });
-  console.log(circleList);
-
-  //ricalcolo l'asse
-  var new_y = d3
-    .scaleLinear()
-    .domain([d3.min(circleList) - 5, d3.max(circleList) + 5])
-    .range([280, 0]);
-
-  var y_axis = d3.axisLeft(new_y).ticks();
-
-  d3.selectAll("#y-axis").call(y_axis).selectAll("text").style("fill", "white");
-  d3.select("#area_bubble").selectAll("line").style("stroke", "#fff");
-  // d3.select("#area_bubble").selectAll("path").style("stroke", "#fff");
-
-  //update positions
-  d3.select("#area_bubble")
-    .data(data)
-    .selectAll(".bubble")
-    .filter(function (d) {
-      if (gen1 == gen2) return d.genres == gen1;
-      else return d.genres.includes(gen1) & d.genres.includes(gen2);
-      // return d.genres == genre; //prende tutti i cerchi con il genere uguale a quello passato
-    })
-    .attr("cy", function (d) {
-      return new_y(parseInt(d.duration));
-    });
-}
-
-function updateYAxis_from_legend(gen1, data) {
-  var circleList = [];
-  d3.select("#area_bubble")
-    .selectAll(".bubble")
-    .data(data)
-    .filter(function (d) {
-      return d.genres.includes(gen1);
-    })
-    .each(function (d) {
-      circleList.push(parseInt(d.duration));
-    });
-  // console.log(circleList);
-
-  //ricalcolo l'asse
-  var new_y = d3
-    .scaleLinear()
-    .domain([d3.min(circleList) - 5, d3.max(circleList) + 5])
-    .range([280, 0]);
-
-  var y_axis = d3.axisLeft(new_y).ticks();
-
-  d3.selectAll("#y-axis").call(y_axis).selectAll("text").style("fill", "white");
-  d3.select("#area_bubble").selectAll("line").style("stroke", "#fff");
-  // d3.select("#area_bubble").selectAll("path").style("stroke", "#fff");
-
-  //update positions
-  d3.select("#area_bubble")
-    .data(data)
-    .selectAll(".bubble")
-    .filter(function (d) {
-      return d.genres.includes(gen1);
-    })
-    .attr("cy", function (d) {
-      return new_y(parseInt(d.duration));
-    });
-}
-
-
-
-export { startChord, startBubble }
+export { startChord, startBubble };

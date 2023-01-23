@@ -18,7 +18,7 @@ var height = 340 - margin.top - margin.bottom;
 var x = d3.scaleLinear().domain([-42, 58]).range([0, width]);
 var y = d3.scaleLinear().domain([-58, 38]).range([height, 0]);
 
-var filterdData;
+var filteredData;
 
 function startMDS(selected_info) {
   d3.csv(DATASET_PATH, function (data) {
@@ -55,7 +55,7 @@ function startMDS(selected_info) {
           return d;
       });
 
-      filterdData = chosenData;
+      filteredData = chosenData;
     }
 
     // Manage filtering from Chord
@@ -67,7 +67,7 @@ function startMDS(selected_info) {
        */
       if (selected_info.deselected) {
         // If already filterd from the Stacked
-        if (filterdData != null) chosenData = filterdData;
+        if (filteredData != null) chosenData = filteredData;
         // If you start filtering from Chord
         else chosenData = data;
 
@@ -77,8 +77,8 @@ function startMDS(selected_info) {
       }
 
       // If already filterd from the Stacked
-      if (filterdData != null) {
-        var chosenData = filterdData.filter(function (d) {
+      if (filteredData != null) {
+        var chosenData = filteredData.filter(function (d) {
           // Only one genre
           if (selected_info.gen1 == selected_info.gen2) {
             return d.genres == selected_info.gen1;
@@ -135,6 +135,22 @@ function createMDS(chosenData) {
     .text("");
   ///
 
+  // d3.select("#area_mds")
+  //   .append("label")
+  //   .attr("x", "50")
+  //   // .attr("transform", "translate(5150,100)")
+  //   .attr("id", "prroro")
+  //   .text("Show/Hide something")
+  //   .style("color", "#fff")
+  // .attr("transform", "translate()")
+  // .insert("input")
+  // .attr("type", "checkbox")
+  // .attr("checked", true)
+  // .style("z-index")
+  // .style("position", "absolute")
+  // .style("top", "10px")
+  // .style("left", "20px");
+
   var svg = d3
     .select("#area_mds")
     .append("svg")
@@ -188,19 +204,36 @@ function createMDS(chosenData) {
       return tooltip.style("visibility", "hidden");
     });
 
-  // Add brushing
-  var brush = svg.call(
-    d3
-      .brush() // Add the brush feature using the d3.brush function
-      .extent([
-        [0, 0],
-        [width, height],
-      ]) // initialise the brush area: start at 0,0 and finishes at width,height: it means I select the whole graph area
-      .on("start", startBrushing)
-      .on("brush", updateChart)
-  );
+  document.getElementById("mds_brushing").checked = false;
+  activateBrushing();
 }
 
+function activateBrushing() {
+  var checkbox = document.getElementById("mds_brushing");
+
+  checkbox.onclick = (event) => {
+    if (checkbox.checked) {
+      // Add brushing
+      var brush = d3
+        .brush() // Add the brush feature using the d3.brush function
+        .extent([
+          [0, 0],
+          [width, height],
+        ]) // initialise the brush area: start at 0,0 and finishes at width,height: it means I select the whole graph area
+        .on("start", startBrushing)
+        .on("brush", updateChart);
+
+      d3.select("#svg_mds").append("g").attr("class", "brush").call(brush);
+    }
+    // Remove brushing
+    else {
+      d3.select(".brush").on("start", null).on("brush", null);
+      d3.select(".brush").remove();
+
+      checkbox.attr("checked", false);
+    }
+  };
+}
 function startBrushing() {
   d3.event.sourceEvent.stopPropagation();
 }

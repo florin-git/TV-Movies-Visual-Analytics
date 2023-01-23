@@ -14,7 +14,6 @@ var x, y;
 
 var filteredData;
 
-
 function startBubble(selected_info) {
   d3.csv(DATASET_PATH, function (data) {
     // At the beginning you do not display anything
@@ -29,7 +28,6 @@ function startBubble(selected_info) {
        * in the Bubble plot we will have all the points belonging to
        * the network channel of the clicked channel.
        */
-      console.log(selected_info);
       var chosenData = data.filter(function (d) {
         // If in Mediaset
         if (
@@ -45,10 +43,16 @@ function startBubble(selected_info) {
         // If in Other
         if (other.includes(selected_info.channel) & other.includes(d.channel))
           return d;
-
-
       });
       filteredData = chosenData;
+
+      // When the Bubble plot is changing,
+      // we are re-creating the Chord
+      var selected_ids = [];
+      filteredData.forEach(function (d) {
+        selected_ids.push(d.id);
+      });
+      startChord(selected_ids);
     }
     if (selected_info.name == "chord") {
       if (selected_info.deselected) {
@@ -99,16 +103,9 @@ function startBubble(selected_info) {
         });
       }
     }
-    if (selected_info.name == "chord_legend") {
-      var chosenData = data.filter(function (d) {
-        return d.genres.includes(gen1);
-      })
-    }
 
     createBubble(chosenData);
     createLegend();
-
-
   });
 }
 
@@ -117,7 +114,6 @@ startBubble();
 function createBubble(chosenData) {
   // Reset Bubble plot
   d3.select("#svg_bubble").remove();
-  console.log(chosenData);
 
   var data = chosenData;
 
@@ -248,14 +244,14 @@ function createBubble(chosenData) {
     .on("mouseover", function (d) {
       tooltip.html(
         d.title +
-        "<br> Rating: " +
-        d.rating +
-        "<br>" +
-        d.genres +
-        "duration <br>" +
-        d.duration +
-        "channel <br>" +
-        d.channel
+          "<br> Rating: " +
+          d.rating +
+          "<br>" +
+          d.genres +
+          "duration <br>" +
+          d.duration +
+          "channel <br>" +
+          d.channel
       );
       return tooltip.style("visibility", "visible");
     })
@@ -289,6 +285,7 @@ function createBubble(chosenData) {
   //     .on("brush", updateChart)
   // );
 
+  document.getElementById("bubble_brushing").checked = false;
   activateBrushing();
 }
 
@@ -331,12 +328,9 @@ function updateChart() {
 
   var movies = d3.select("#area_bubble").selectAll(".bubble");
 
-  console.log(movies);
   movies.classed("selected", function (d) {
     return isBrushed(extent, x(d.day_number), y(d.duration));
   });
-
-  console.log(brushed_ids);
 
   updateBubble();
 }
