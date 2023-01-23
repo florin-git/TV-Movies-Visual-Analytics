@@ -140,6 +140,190 @@ d3.csv(DATASET_PATH, function (data) {
     })
     .attr("text-anchor", "left");
 
+  var size_bubble = d3
+    .scaleSqrt()
+    .domain([1, 100]) // What's in the data
+    .range([2, 100]); // Size in pixel
+
+  //variabili che servono per la legenda bubble size
+  var valuesToShow = [4.5];
+  var valuesToShow2 = [5.5];
+  var valuesToShow3 = [3.5];
+  var valuesToShow4 = [2.5];
+  var valuesToShow5 = [1.5];
+
+  var xCircle = 230;
+  var xLabel = 380;
+  var yCircle = 330;
+
+  //per la legenda del raggio del cerchio
+  //secondo cerchio
+  svg
+    .selectAll("legend")
+    .data(valuesToShow)
+    .enter()
+    .append("circle")
+    .attr("cx", xCircle +310)
+    .attr("cy", function (d) {
+      return yCircle - size_bubble(d)-150 ;
+    })
+    .attr("r", function (d) {
+      return size_bubble(d);
+    })
+    .style("fill", "grey")
+    .attr("stroke", "white");
+
+  svg
+    .selectAll("legend")
+    .data(valuesToShow)
+    .enter()
+    .append("text")
+    .attr("x", xCircle + 296)
+    .attr("y", function (d) {
+      return yCircle - 140;
+    })
+    .text(function (d) {
+      return "up to" +""+d;
+    })
+    .style("font-size", 10)
+    .attr("fill", "#fff");
+
+  //titolo legenda bubble size
+  svg
+    .append("text")
+    .attr("x", xCircle + 275)
+    .attr("y", yCircle - 235)
+    .text("Number of movies:")
+    .style("font-size", 10)
+    .attr("fill", "#fff");
+
+  //primo cerchio
+  svg
+    .selectAll("legend")
+    .data(valuesToShow2)
+    .enter()
+    .append("circle")
+    .attr("cx", xCircle + 310)
+    .attr("cy", function (d) {
+      return yCircle - 215;
+    })
+    .attr("r", function (d) {
+      //d sarebbe il valore preso da "valuesToShow2"
+      return size_bubble(d);
+    })
+    .style("fill", "grey")
+    .attr("stroke", "white");
+
+  svg
+    .selectAll("legend")
+    .data(valuesToShow2)
+    .enter()
+    .append("text")
+    .attr("x", xCircle + 296)
+    .attr("y", function (d) {
+      return yCircle - 185;
+    })
+    .text(function (d) {
+      return "over "+d;
+    })
+    .style("font-size", 10)
+    .attr("fill", "#fff");
+
+  //terzo cerchio
+  svg
+    .selectAll("legend")
+    .data(valuesToShow3)
+    .enter()
+    .append("circle")
+    .attr("cx", xCircle + 310)
+    .attr("cy", function (d) {
+      return yCircle - size_bubble(d) - 110;
+    })
+    .attr("r", function (d) {
+      return size_bubble(d);
+    })
+    .style("fill", "grey")
+    .attr("stroke", "white");
+
+  svg
+    .selectAll("legend")
+    .data(valuesToShow3)
+    .enter()
+    .append("text")
+    .attr("x", xCircle + 296)
+    .attr("y", function (d) {
+      return yCircle - 100;
+    })
+    .text(function (d) {
+      return "up to"+""+d;
+    })
+    .style("font-size", 10)
+    .attr("fill", "#fff");
+
+  //quarto cerchio
+  svg
+    .selectAll("legend")
+    .data(valuesToShow4)
+    .enter()
+    .append("circle")
+    .attr("cx", xCircle + 310)
+    .attr("cy", function (d) {
+      return yCircle - size_bubble(d) - 75;
+    })
+    .attr("r", function (d) {
+      return size_bubble(d);
+    })
+    .style("fill", "grey")
+    .attr("stroke", "white");
+
+  svg
+    .selectAll("legend")
+    .data(valuesToShow4)
+    .enter()
+    .append("text")
+    .attr("x", xCircle + 296)
+    .attr("y", function (d) {
+      return yCircle - 60;
+    })
+    .text(function (d) {
+      return "up to"+""+d;
+    })
+    .style("font-size", 10)
+    .attr("fill", "#fff");
+
+  //quinto cerchio
+  svg
+    .selectAll("legend")
+    .data(valuesToShow5)
+    .enter()
+    .append("circle")
+    .attr("cx", xCircle + 310)
+    .attr("cy", function (d) {
+      return yCircle - size_bubble(d) - 45;
+    })
+    .attr("r", function (d) {
+      return size_bubble(d);
+    })
+    .style("fill", "grey")
+    .attr("stroke", "white");
+
+  svg
+    .selectAll("legend")
+    .data(valuesToShow5)
+    .enter()
+    .append("text")
+    .attr("x", xCircle + 296)
+    .attr("y", function (d) {
+      return yCircle - 30;
+    })
+    .text(function (d) {
+      return "up to"+""+d;
+    })
+    .style("font-size", 10)
+    .attr("fill", "#fff");
+
+
+
   //tooltip
   var tooltip = d3
     .select("body")
