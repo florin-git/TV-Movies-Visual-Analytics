@@ -7,6 +7,7 @@ var genres = new Array();
 var p,
   stringhe = new Array();
 var clicked = new Array().fill(false);
+var clicked_legend;
 var clicked_legend = new Array(genres.length).fill(false);
 
 var dict = {
@@ -99,6 +100,7 @@ function startChord(brushed_ids) {
         }
       }
     });
+    clicked_legend = new Array(genres.length).fill(false);
     createChord(chosenData, matrix, reverse_dict, genres);
   });
 }
@@ -240,20 +242,20 @@ function createChord(data, matrix, reverse_dict, genres) {
       if (genres[d.source.index] == genres[d.target.index]) {
         tooltip.html(
           genres[d.source.index] +
-            "<br> Number of broadcast movies: <br>" +
-            matrix[d.source.index][d.source.index] +
-            " out of " +
-            data.length
+          "<br> Number of broadcast movies: <br>" +
+          matrix[d.source.index][d.source.index] +
+          " out of " +
+          data.length
         );
       } else {
         tooltip.html(
           genres[d.source.index] +
-            ", " +
-            genres[d.target.index] +
-            "<br> Number of broadcast movies: <br>" +
-            matrix[d.source.index][d.target.index] +
-            " out of " +
-            data.length
+          ", " +
+          genres[d.target.index] +
+          "<br> Number of broadcast movies: <br>" +
+          matrix[d.source.index][d.target.index] +
+          " out of " +
+          data.length
         );
       }
       return tooltip.style("visibility", "visible");
@@ -334,22 +336,26 @@ function interactionLegend(svg, data, genres) {
       .select("#" + gen)
       .style("cursor", "pointer")
       .on("click", function () {
+        gen = this.id;
         if (!clicked_legend[dict[gen]]) {
-          gen = this.id;
+          console.log("prova");
           svg.selectAll("path").style("opacity", 0.3).style("stroke", "none");
           svg.selectAll("path").each(function () {
             stringhe = this.id.split("_");
             if (stringhe.includes(gen)) {
               updateBubble_plot_from_legend(false, gen);
+              updateMDS_from_legend(false, gen);
               this["style"]["stroke-width"] = "0.2";
               this["style"]["stroke"] = "black";
               this["style"]["opacity"] = 2;
             }
           });
           clicked_legend[dict[gen]] = true;
-        } else {
+        }
+        else {
           svg.selectAll("path").style("opacity", 1.2);
           updateBubble_plot_from_legend(true, gen);
+          updateMDS_from_legend(true, gen);
           for (var k = 0; k < clicked_legend.length; k++) {
             clicked_legend[dict[gen]] = false;
           }
@@ -357,7 +363,7 @@ function interactionLegend(svg, data, genres) {
       });
   }
 }
-//updateMDS
+//updateMDS from chord
 function updateMDS(deselected, gen1, gen2) {
   var selected_info = {
     name: "chord",
@@ -368,6 +374,23 @@ function updateMDS(deselected, gen1, gen2) {
 
   startMDS(selected_info);
 }
+
+//normal update from legend
+function updateMDS_from_legend(deselected, gen1) {
+  var selected_info = {
+    name: "chord",
+    deselected: deselected,
+    gen1: gen1,
+    gen2: null,
+    legend: true
+  };
+
+  startMDS(selected_info);
+}
+
+
+
+
 //normal update from chord
 function updateBubble_plot(deselected, gen1, gen2) {
   var selected_info = {

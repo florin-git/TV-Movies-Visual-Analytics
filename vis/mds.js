@@ -158,7 +158,6 @@ function startMDS(selected_info) {
         if (filteredData != null) chosenData = filteredData;
         // If you start filtering from Chord
         else chosenData = data;
-
         createMDS(chosenData);
         createLegend();
         return;
@@ -167,6 +166,10 @@ function startMDS(selected_info) {
       // If already filterd from the Stacked
       if (filteredData != null) {
         var chosenData = filteredData.filter(function (d) {
+          // One genre from legend, so we use includes
+          if (selected_info.legend) {
+            return d.genres.includes(selected_info.gen1);
+          }
           // Only one genre
           if (selected_info.gen1 == selected_info.gen2) {
             return d.genres == selected_info.gen1;
@@ -183,6 +186,10 @@ function startMDS(selected_info) {
       // Filtering only from Chord
       else {
         var chosenData = data.filter(function (d) {
+          //From legend
+          if (selected_info.legend) {
+            return d.genres.includes(selected_info.gen1);
+          }
           // Only one genre
           if (selected_info.gen1 == selected_info.gen2) {
             return d.genres == selected_info.gen1;
@@ -197,7 +204,6 @@ function startMDS(selected_info) {
         });
       }
     }
-
     createMDS(chosenData);
     createLegend();
   });
@@ -483,7 +489,11 @@ function createLegend() {
     .text(textLegend[0])
     .style("fill", "#fff")
     .style("font-size", "15px")
-    .attr("alignment-baseline", "middle");
+    .style("cursor", "pointer")
+    .attr("alignment-baseline", "middle")
+    .on("click", function () {
+      updateBubble_plot_legend_month(false, textLegend[0], monthLegend[0]);
+    })
   svg
     .append("text")
     .attr("x", width - 0.18 * width)
@@ -491,7 +501,11 @@ function createLegend() {
     .text(monthLegend[0])
     .style("fill", "#fff")
     .style("font-size", "15px")
-    .attr("alignment-baseline", "middle");
+    .style("cursor", "pointer")
+    .attr("alignment-baseline", "middle")
+    .on("click", function () {
+      updateBubble_plot_legend_month(false, textLegend[0], monthLegend[0]);
+    });
 
   svg
     .append("text")
@@ -500,7 +514,11 @@ function createLegend() {
     .text(textLegend[1])
     .style("fill", "#fff")
     .style("font-size", "15px")
-    .attr("alignment-baseline", "middle");
+    .style("cursor", "pointer")
+    .attr("alignment-baseline", "middle")
+    .on("click", function () {
+      updateBubble_plot_legend_others(false, textLegend[1], monthLegend[0]);
+    });
   svg
     .append("text")
     .attr("x", width - 0.18 * width)
@@ -508,7 +526,11 @@ function createLegend() {
     .text(monthLegend[1])
     .style("fill", "#fff")
     .style("font-size", "15px")
-    .attr("alignment-baseline", "middle");
+    .style("cursor", "pointer")
+    .attr("alignment-baseline", "middle")
+    .on("click", function () {
+      updateBubble_plot_legend_others(false, textLegend[1], monthLegend[0]);
+    });
 
   svg
     .append("text")
@@ -517,7 +539,11 @@ function createLegend() {
     .text(textLegend[2])
     .style("fill", "#fff")
     .style("font-size", "15px")
-    .attr("alignment-baseline", "middle");
+    .style("cursor", "pointer")
+    .attr("alignment-baseline", "middle")
+    .on("click", function () {
+      updateBubble_plot_legend_networks(false, textLegend[0]);
+    });
 
   svg
     .append("text")
@@ -526,7 +552,67 @@ function createLegend() {
     .text(monthLegend[2])
     .style("fill", "#fff")
     .style("font-size", "15px")
-    .attr("alignment-baseline", "middle");
+    .style("cursor", "pointer")
+    .attr("alignment-baseline", "middle")
+    .on("click", function () {
+      updateBubble_plot_legend_networks(false, textLegend[0]);
+    });
 }
+
+
+
+
+function updateBubble_plot_legend_month(deselected, channel, month) {
+  month = month.replace('(', '');
+  month = month.replace(')', '');
+  var selected_info = {
+    name: "mds",
+    deselected: deselected,
+    channel: channel,
+    month: month,
+    legend_month: true
+  };
+  startBubble(selected_info);
+}
+
+
+
+function updateBubble_plot_legend_others(deselected, channel, month) {
+  month = month.replace('(', '');
+  month = month.replace(')', '');
+  var selected_info = {
+    name: "mds",
+    deselected: deselected,
+    channel: channel,
+    month: month,
+    legend_month: false,
+    legend_others: true
+  };
+  startBubble(selected_info);
+}
+function updateBubble_plot_legend_networks(deselected, channel) {
+  var network;
+  if (mediaset.includes(channel)) {
+    network = mediaset;
+  }
+  else if (sky.includes(channel)) {
+    network = sky;
+  }
+  else {
+    network = other;
+  }
+  var selected_info = {
+    name: "mds",
+    deselected: deselected,
+    channel: channel,
+    legend_month: false,
+    legend_others: false,
+    from_network: true,
+    network: network
+  };
+  startBubble(selected_info);
+}
+
+
 
 export { startMDS };
