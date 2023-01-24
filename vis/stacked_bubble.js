@@ -10,7 +10,7 @@ var other = ["Cielo"];
 
 var margin = { top: 5, right: 0, bottom: 25, left: 55 };
 var width = 660 - margin.left - margin.right;
-var height = 340 - margin.top - margin.bottom;
+var height = 345 - margin.top - margin.bottom;
 
 var clicked = new Array(110).fill(false);
 var rad = new Array(110);
@@ -356,10 +356,10 @@ d3.csv(DATASET_PATH, function (data) {
       return bubble_id;
     })
     .attr("cx", function (d) {
-      return x(d.channel) + 25.4;
+      return x(d.channel) + 25.3;
     })
     .attr("cy", function (d) {
-      return y(d.month) + 20.5;
+      return y(d.month) + 14.1;
     })
     .attr("r", function (d, id_c) {
       var value = d.number_movies;
