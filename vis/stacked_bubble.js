@@ -409,7 +409,7 @@ d3.csv(DATASET_PATH, function (data) {
     })
     .on("mouseout", function (d, id_c) {
       if (!clicked[id_c]) {
-        d3.select(this).style("stroke-width", 0.8);
+        d3.select(this).style("stroke-width", null);
         this["style"]["r"] = radiusNumberMovies(d.number_movies);
       }
       return tooltip.style("visibility", "hidden");

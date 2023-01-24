@@ -179,16 +179,19 @@ function createMDS(chosenData) {
     .attr("r", 2)
     .style("stroke", "black")
     .style("stroke-width", "0.2")
-    .style("opacity", 0.8)
+    .style("opacity", 0.7)
     .style("pointer-events", "all")
     .style("cursor", "pointer")
     .style("fill", function (d) {
       if (sky.includes(d.channel)) {
-        return "#7fc97f";
+        // return "#7fc97f";
+        return "#d8b365";
       } else if (mediaset.includes(d.channel)) {
-        return "#beaed4";
+        // return "#beaed4";
+        return "#f5f5f5";
       } else {
-        return "#fdc086";
+        // return "#fdc086";
+        return "#5ab4ac";
       }
     })
     .on("mouseover", function (d) {
@@ -227,10 +230,10 @@ function activateBrushing() {
     }
     // Remove brushing
     else {
+      // Reset Opacity
+      d3.selectAll(".bubble").style("opacity", 0.7);
       d3.select(".brush").on("start", null).on("brush", null);
       d3.select(".brush").remove();
-
-      checkbox.attr("checked", false);
     }
   };
 }
@@ -244,6 +247,9 @@ function updateChart() {
 
   // Reset ids
   brushed_ids = [];
+
+  // Reset Opacity
+  d3.selectAll(".bubble").style("opacity", 0.7);
 
   var movies = d3.select("#area_mds").selectAll(".bubble");
 
@@ -270,6 +276,13 @@ function updateCalendar() {
     if (!brushed_ids.includes(brush_id)) {
       brushed_ids.push(brush_id);
     } // Logs the id attribute.
+  });
+
+  // Change the opacity to both MDS and Bubble
+  d3.selectAll(".bubble").each(function (d) {
+    if (brushed_ids.includes(d.id)) {
+      this["style"]["opacity"] = 1;
+    }
   });
 
   if (brushed_ids.length != 0) startCalendar(brushed_ids);

@@ -10,7 +10,7 @@ var margin = { top: 20, right: 0, bottom: 0, left: 30 };
 var width = 850 - margin.left - margin.right;
 var height = 300 - margin.top - margin.bottom;
 var breaks = [1, 3, 6, 8];
-var ray_circles_legend=[5.5,4.5,3.5,2.5,1.5]
+var ray_circles_legend = [5.5, 4.5, 3.5, 2.5, 1.5];
 
 var x, y;
 
@@ -302,7 +302,7 @@ function activateBrushing() {
         .extent([
           [0, 0],
           [width, height],
-        ]) // initialise the brush area: start at 0,0 and finishes at width,height: it means I select the whole graph area
+        ]) // Initialise the brush area: start at 0,0 and finishes at width,height: it means I select the whole graph area
         .on("start", startBrushing)
         .on("brush", updateChart);
 
@@ -310,6 +310,8 @@ function activateBrushing() {
     }
     // Remove brushing
     else {
+      // Reset Opacity
+      d3.selectAll(".bubble").style("opacity", 0.7);
       d3.select(".brush").on("start", null).on("brush", null);
       d3.select(".brush").remove();
     }
@@ -328,13 +330,16 @@ function updateChart() {
   // Reset ids
   brushed_ids = [];
 
+  // Reset Opacity
+  d3.selectAll(".bubble").style("opacity", 0.7)
+
   var movies = d3.select("#area_bubble").selectAll(".bubble");
 
   movies.classed("selected", function (d) {
     return isBrushed(extent, x(d.day_number), y(d.duration));
   });
 
-  updateBubble();
+  updateChord();
 }
 
 function isBrushed(brush_coords, cx, cy) {
@@ -346,15 +351,24 @@ function isBrushed(brush_coords, cx, cy) {
   // This return TRUE or FALSE depending on if the points is in the selected area
 }
 
-function updateBubble() {
-  d3.selectAll(".selected").each(function () {
-    var brush_id = d3.select(this).attr("id");
-    if (!brushed_ids.includes(brush_id)) {
-      brushed_ids.push(brush_id);
-    } // Logs the id attribute.
+function updateChord() {
+  d3.select("#area_bubble")
+    .selectAll(".selected")
+    .each(function () {
+      var brush_id = d3.select(this).attr("id");
+      if (!brushed_ids.includes(brush_id)) {
+        brushed_ids.push(brush_id);
+      } // Logs the id attribute.
+    });
+
+
+  // Change the opacity to both MDS and Bubble
+  d3.selectAll(".bubble").each(function (d) {
+    if (brushed_ids.includes(d.id)) {
+      this["style"]["opacity"] = 1;
+    }
   });
 
-  console.log(brushed_ids);
   if (brushed_ids.length != 0) startChord(brushed_ids);
 
   return;
@@ -466,7 +480,7 @@ function createLegend() {
       return yCircle - 190;
     })
     .text(function (d) {
-      return "up to" +""+d;
+      return "up to" + "" + d;
     })
     .style("font-size", 10)
     .attr("fill", "#fff");
@@ -507,7 +521,7 @@ function createLegend() {
       return yCircle - 230;
     })
     .text(function (d) {
-      return "over "+d;
+      return "over " + d;
     })
     .style("font-size", 10)
     .attr("fill", "#fff");
@@ -538,7 +552,7 @@ function createLegend() {
       return yCircle - 150;
     })
     .text(function (d) {
-      return "up to"+""+d;
+      return "up to" + "" + d;
     })
     .style("font-size", 10)
     .attr("fill", "#fff");
@@ -569,7 +583,7 @@ function createLegend() {
       return yCircle - 121;
     })
     .text(function (d) {
-      return "up to"+""+d;
+      return "up to" + "" + d;
     })
     .style("font-size", 10)
     .attr("fill", "#fff");
@@ -600,7 +614,7 @@ function createLegend() {
       return yCircle - 100;
     })
     .text(function (d) {
-      return "up to"+""+d;
+      return "up to" + "" + d;
     })
     .style("font-size", 10)
     .attr("fill", "#fff");
