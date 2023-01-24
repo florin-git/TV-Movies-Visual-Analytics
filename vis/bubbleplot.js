@@ -172,11 +172,11 @@ function createBubble(chosenData) {
 
   svg
     .append("text")
-    .attr("x", 705) // set x position of text
-    .attr("y", 305) // set y position of text
-    .text("Days") // set the text content
-    .attr("font-size", "15px") // set font size
-    .attr("fill", "#fff"); // set text color
+    .attr("x", 705) 
+    .attr("y", 287 ) 
+    .text("Days") 
+    .attr("font-size", "15px") 
+    .attr("fill", "#fff"); 
 
   var y_axis = d3.axisLeft(y);
 
@@ -223,7 +223,7 @@ function createBubble(chosenData) {
   var myColor = d3
     .scaleOrdinal()
     .domain(["mattina", "pomeriggio", "sera", "notte"])
-    .range(d3.schemeSet2); //funzione che mette i colori alla legenda
+    .range(["#66c2a5","#fc8d62","#8da0cb","#e78ac3"]); //colori presi da Color Brewer
 
   var tooltip = d3
     .select("body")
@@ -430,25 +430,25 @@ function createLegend() {
     .attr("cx", 60)
     .attr("cy", yBottomLegend)
     .attr("r", 6)
-    .style("fill", d3.schemeSet2[0]);
+    .style("fill", "#66c2a5");
   svg
     .append("circle")
     .attr("cx", 240)
     .attr("cy", yBottomLegend)
     .attr("r", 6)
-    .style("fill", d3.schemeSet2[1]);
+    .style("fill", "#fc8d62");
   svg
     .append("circle")
     .attr("cx", 440)
     .attr("cy", yBottomLegend)
     .attr("r", 6)
-    .style("fill", d3.schemeSet2[2]);
+    .style("fill", "#8da0cb");
   svg
     .append("circle")
     .attr("cx", 590)
     .attr("cy", yBottomLegend)
     .attr("r", 6)
-    .style("fill", d3.schemeSet2[3]);
+    .style("fill", "#e78ac3");
   svg
     .append("text")
     .attr("x", 70)
@@ -506,9 +506,9 @@ function createLegend() {
     .data(valuesToShow)
     .enter()
     .append("circle")
-    .attr("cx", xCircle + 538)
+    .attr("cx", xCircle + 590)
     .attr("cy", function (d) {
-      return yCircle - size(d) - 200;
+      return yCircle - size(d) - 145;
     })
     .attr("r", function (d) {
       return size(d);
@@ -521,9 +521,9 @@ function createLegend() {
     .data(valuesToShow)
     .enter()
     .append("text")
-    .attr("x", xCircle + 524)
+    .attr("x", xCircle + 575)
     .attr("y", function (d) {
-      return yCircle - 190;
+      return yCircle - 134;
     })
     .text(function (d) {
       return "up to" + "" + d;
@@ -534,8 +534,8 @@ function createLegend() {
   //titolo legenda bubble size
   svg
     .append("text")
-    .attr("x", xCircle + 525)
-    .attr("y", yCircle - 290)
+    .attr("x", xCircle + 575)
+    .attr("y", yCircle - 230)
     .text("Rating:")
     .style("font-size", 10)
     .attr("fill", "#fff");
@@ -546,9 +546,9 @@ function createLegend() {
     .data(valuesToShow2)
     .enter()
     .append("circle")
-    .attr("cx", xCircle + 538)
+    .attr("cx", xCircle + 590)
     .attr("cy", function (d) {
-      return yCircle - 260;
+      return yCircle - 206;
     })
     .attr("r", function (d) {
       //d sarebbe il valore preso da "valuesToShow2"
@@ -562,9 +562,9 @@ function createLegend() {
     .data(valuesToShow2)
     .enter()
     .append("text")
-    .attr("x", xCircle + 524)
+    .attr("x", xCircle + 575)
     .attr("y", function (d) {
-      return yCircle - 230;
+      return yCircle - 180;
     })
     .text(function (d) {
       return "over " + d;
@@ -578,9 +578,9 @@ function createLegend() {
     .data(valuesToShow3)
     .enter()
     .append("circle")
-    .attr("cx", xCircle + 538)
+    .attr("cx", xCircle + 590)
     .attr("cy", function (d) {
-      return yCircle - size(d) - 160;
+      return yCircle - size(d) - 105;
     })
     .attr("r", function (d) {
       return size(d);
@@ -593,9 +593,9 @@ function createLegend() {
     .data(valuesToShow3)
     .enter()
     .append("text")
-    .attr("x", xCircle + 524)
+    .attr("x", xCircle + 575)
     .attr("y", function (d) {
-      return yCircle - 150;
+      return yCircle - 95;
     })
     .text(function (d) {
       return "up to" + "" + d;
@@ -609,9 +609,9 @@ function createLegend() {
     .data(valuesToShow4)
     .enter()
     .append("circle")
-    .attr("cx", xCircle + 538)
+    .attr("cx", xCircle + 590)
     .attr("cy", function (d) {
-      return yCircle - size(d) - 130;
+      return yCircle - size(d) - 75;
     })
     .attr("r", function (d) {
       return size(d);
@@ -624,9 +624,9 @@ function createLegend() {
     .data(valuesToShow4)
     .enter()
     .append("text")
-    .attr("x", xCircle + 524)
+    .attr("x", xCircle + 575)
     .attr("y", function (d) {
-      return yCircle - 121;
+      return yCircle - 65;
     })
     .text(function (d) {
       return "up to" + "" + d;
@@ -640,9 +640,9 @@ function createLegend() {
     .data(valuesToShow5)
     .enter()
     .append("circle")
-    .attr("cx", xCircle + 538)
+    .attr("cx", xCircle + 590)
     .attr("cy", function (d) {
-      return yCircle - size(d) - 110;
+      return yCircle - size(d) - 50;
     })
     .attr("r", function (d) {
       return size(d);
@@ -655,9 +655,9 @@ function createLegend() {
     .data(valuesToShow5)
     .enter()
     .append("text")
-    .attr("x", xCircle + 524)
+    .attr("x", xCircle + 575)
     .attr("y", function (d) {
-      return yCircle - 100;
+      return yCircle - 40;
     })
     .text(function (d) {
       return "up to" + "" + d;
