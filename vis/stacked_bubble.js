@@ -441,7 +441,7 @@ d3.csv(DATASET_PATH, function (data) {
             var ra = parseInt(radius_div) / 1.3
 
             svg.select("#bubble_" + k).attr("r", ra);
-            svg.select("#bubble_" + k).style("stroke-width", 0.8);
+            svg.select("#bubble_" + k).style("stroke-width", null);
             svg.select("#bubble_" + k).style("opacity", 0.7);
             clicked[k] = false;
           }
@@ -466,7 +466,7 @@ d3.csv(DATASET_PATH, function (data) {
         this["style"]["opacity"] = 0.7;
         var radius_div = this["style"]["r"];
         this["style"]["r"] = parseInt(radius_div) / 1.3;
-        
+
         // Reset all graphs
         startBubble();
         startChord();
