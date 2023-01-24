@@ -21,6 +21,9 @@ var height = 340 - margin.top - margin.bottom;
 */
 var x = d3.scaleLinear().domain([-42, 58]).range([0, width]);
 var y = d3.scaleLinear().domain([-58, 38]).range([height, 0]);
+// Axis when zoom is applied
+var newX = x;
+var newY = y;
 
 var filteredData;
 var moviesFirstColor = [];
@@ -317,6 +320,38 @@ function createMDS(chosenData) {
 
   document.getElementById("mds_brushing").checked = false;
   activateBrushing();
+
+  // Zoom
+  var zoom = d3
+    .zoom()
+    .scaleExtent([0.8, 20]) // This control how much you can unzoom (x0.8) and zoom (x20)
+    .extent([
+      [0, 0],
+      [width, height],
+    ])
+    .on("zoom", handleZoom);
+
+  svg
+    .attr("width", "100%")
+    .attr("height", "100%")
+    .call(zoom)
+    .on("dblclick.zoom", null);
+}
+
+function handleZoom() {
+  // Get the new scale
+  newX = d3.event.transform.rescaleX(x);
+  newY = d3.event.transform.rescaleY(y);
+
+  // console.log(d3.event.transform);
+  d3.select("#area_mds")
+    .selectAll(".bubble")
+    .attr("cx", function (d) {
+      return newX(d.mds_x);
+    })
+    .attr("cy", function (d) {
+      return newY(d.mds_y);
+    });
 }
 
 function activateBrushing() {
@@ -362,7 +397,7 @@ function updateChart() {
   var movies = d3.select("#area_mds").selectAll(".bubble");
 
   movies.classed("selected", function (d) {
-    return isBrushed(extent, x(d.mds_x), y(d.mds_y));
+    return isBrushed(extent, newX(d.mds_x), newY(d.mds_y));
   });
 
   updateCalendar();
