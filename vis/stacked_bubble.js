@@ -332,14 +332,17 @@ d3.csv(DATASET_PATH, function (data) {
   var tooltip = d3
     .select("body")
     .append("div")
-    .attr("id", "tooltip2")
-    .style("background-color", "rgb(0, 0, 0)")
+    .attr("id", "tooltip3")
+    .style("background-color", "#636363")
+    .style("color", "white")
     .style("position", "absolute")
     .style("z-index", "10")
     .style("visibility", "hidden")
     .style("font-size", "20px")
-    .style("color", "white")
-    .text("a simple tooltip");
+    // .style("max-width", "130px")
+    // .style("width", "130px")
+    .style("overflow", "hidden")
+    .text("");
 
   // Add dots
   svg
@@ -404,10 +407,10 @@ d3.csv(DATASET_PATH, function (data) {
       this["style"]["r"] = parseInt(radius) * 1.2;
       console.log(radius);
       tooltip.html(
-        "Number of movies :" +
+        "Number of movies: " +
           d.number_movies +
           "<br>Sharing: " +
-          d.sharing +
+          parseFloat(d.sharing).toFixed(3) +
           "%"
       );
       tooltip.style("visibility", "visible");

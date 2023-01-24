@@ -11,7 +11,7 @@ var other = ["Cielo"];
 
 var colors = ["#f5f5f5", "#d8b365", "#5ab4ac"];
 var textLegend = ["Mediaset", "Sky", "Other"];
-var monthLegend = ["", ""];
+var monthLegend = ["", "", ""];
 
 var margin = { top: 0, right: 0, bottom: 0, left: 5 };
 var width = 470 - margin.left - margin.right;
@@ -38,7 +38,7 @@ function startMDS(selected_info) {
     if (selected_info == null) {
       createMDS(data);
       textLegend = ["Mediaset", "Sky", "Other"];
-      monthLegend = ["", ""];
+      monthLegend = ["", "", ""];
       createLegend();
       return;
     }
@@ -66,7 +66,8 @@ function startMDS(selected_info) {
           // The other channels in this network are colored with the third color
           if (d.channel != selected_info.channel) {
             moviesThirdColor.push(d.id);
-            textLegend[2] = "Mediaset";
+            textLegend[2] = "Network's";
+            monthLegend[2] = "Channels";
           }
           // This channel
           else {
@@ -92,7 +93,8 @@ function startMDS(selected_info) {
           // The other channels in this network are colored with the third color
           if (d.channel != selected_info.channel) {
             moviesThirdColor.push(d.id);
-            textLegend[2] = "Sky";
+            textLegend[2] = "Network's";
+            monthLegend[2] = "Channels";
           }
           // This channel
           else {
@@ -118,19 +120,22 @@ function startMDS(selected_info) {
           // The other channels in this network are colored with the third color
           if (d.channel != selected_info.channel) {
             moviesThirdColor.push(d.id);
-            textLegend[2] = "Other";
+            textLegend[2] = "Network's";
+            monthLegend[2] = "Channels";
           }
           // This channel
           else {
             // The movies of the clicked month are colored with the first color
             if (d.month == selected_info.month) {
               moviesFirstColor.push(d.id);
-              textLegend[0] = d.channel + "(" + d.month + ")";
+              textLegend[0] = d.channel;
+              monthLegend[0] = "(" + d.month + ")";
             }
             // The movies of the others months are colored with the second color
             else {
               moviesSecondColor.push(d.id);
-              textLegend[1] = d.channel + "(others)";
+              textLegend[1] = d.channel;
+              monthLegend[1] = "(others)";
             }
           }
 
@@ -303,15 +308,7 @@ function createMDS(chosenData) {
       }
     })
     .on("mouseover", function (d) {
-      tooltip.html(
-        d.title +
-          "<br>Genres: " +
-          d.genres +
-          "<br>channel: " +
-          d.channel +
-          "<br>Month: " +
-          d.month
-      );
+      tooltip.html(d.title + " (" + d.year + ")");
 
       return tooltip.style("visibility", "visible");
     })
@@ -518,6 +515,15 @@ function createLegend() {
     .attr("x", width - 0.18 * width)
     .attr("y", 150)
     .text(textLegend[2])
+    .style("fill", "#fff")
+    .style("font-size", "15px")
+    .attr("alignment-baseline", "middle");
+
+  svg
+    .append("text")
+    .attr("x", width - 0.18 * width)
+    .attr("y", 165)
+    .text(monthLegend[2])
     .style("fill", "#fff")
     .style("font-size", "15px")
     .attr("alignment-baseline", "middle");

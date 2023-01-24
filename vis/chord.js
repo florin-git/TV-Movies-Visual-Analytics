@@ -117,13 +117,13 @@ function createChord(data, matrix, reverse_dict, genres) {
   var tooltip = d3
     .select("body")
     .append("div")
-    .attr("id", "tooltip2")
-    .style("background-color", "#000")
+    .attr("id", "tooltip5")
+    .style("background-color", "#636363")
+    .style("color", "white")
     .style("position", "absolute")
     .style("z-index", "10")
     .style("visibility", "hidden")
     .style("font-size", "20px")
-    .style("color", "white")
     .text("");
   //end tooltip
 
@@ -240,9 +240,7 @@ function createChord(data, matrix, reverse_dict, genres) {
       if (genres[d.source.index] == genres[d.target.index]) {
         tooltip.html(
           genres[d.source.index] +
-            "<br> Number of films of" +
-            genres[d.source.index] +
-            " :<br>" +
+            "<br> Number of broadcast movies: <br>" +
             matrix[d.source.index][d.source.index] +
             " out of " +
             data.length
@@ -250,13 +248,9 @@ function createChord(data, matrix, reverse_dict, genres) {
       } else {
         tooltip.html(
           genres[d.source.index] +
-            "," +
-            genres[d.target.index] +
-            "<br> Number of films of" +
-            genres[d.source.index] +
             ", " +
             genres[d.target.index] +
-            " :<br>" +
+            "<br> Number of broadcast movies: <br>" +
             matrix[d.source.index][d.target.index] +
             " out of " +
             data.length

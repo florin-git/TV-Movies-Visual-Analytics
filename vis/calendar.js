@@ -184,6 +184,21 @@ function createCalendar(chosenData, level) {
     })
     .entries(chosenData);
 
+  var tooltip = d3
+    .select("body")
+    .append("div")
+    .attr("id", "tooltip4")
+    .style("background-color", "#636363")
+    .style("color", "white")
+    .style("position", "absolute")
+    .style("z-index", "10")
+    .style("visibility", "hidden")
+    .style("font-size", "20px")
+    // .style("max-width", "130px")
+    // .style("width", "130px")
+    .style("overflow", "hidden")
+    .text("");
+
   var svg = d3
     .select("#area_calendar_" + level)
     .append("svg")
@@ -287,24 +302,32 @@ function createCalendar(chosenData, level) {
         return colours[breaks.length];
       }
     })
-    .style("cursor", "pointer");
+    .style("cursor", "pointer")
+    .on("mouseover", function (d) {
+      var value = (
+        (d.value.advertising_all / d.value.duration_with_advertising_all) *
+        100
+      ).toFixed(2);
 
-  // Append a title element to give basic mouseover info
-  dataRects.append("title").text(function (d) {
-    var value = (
-      (d.value.advertising_all / d.value.duration_with_advertising_all) *
-      100
-    ).toFixed(2);
-
-    return (
-      toolDate(new Date(d.key)) +
-      ":\n" +
-      value.toString() +
-      "% of advertising in " +
-      d.value.duration_with_advertising_all +
-      units
-    );
-  });
+      tooltip.html(
+        toolDate(new Date(d.key)) +
+          "<br>" +
+          value.toString() +
+          "% of advertising in " +
+          d.value.duration_with_advertising_all +
+          " " +
+          units
+      );
+      return tooltip.style("visibility", "visible");
+    })
+    .on("mousemove", function () {
+      return tooltip
+        .style("top", d3.event.pageY - 10 + "px")
+        .style("left", d3.event.pageX + 10 + "px");
+    })
+    .on("mouseout", function () {
+      return tooltip.style("visibility", "hidden");
+    });
 
   // Add montly outlines for calendar
   cals

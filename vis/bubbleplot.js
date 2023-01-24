@@ -229,13 +229,16 @@ function createBubble(chosenData) {
     .select("body")
     .append("div")
     .attr("id", "tooltip2")
-    .style("background-color", "rgb(0, 0, 0)")
+    .style("background-color", "#636363")
+    .style("color", "white")
     .style("position", "absolute")
     .style("z-index", "10")
     .style("visibility", "hidden")
     .style("font-size", "20px")
-    .style("color", "white")
-    .text("a simple tooltip");
+    // .style("max-width", "130px")
+    // .style("width", "130px")
+    .style("overflow", "hidden")
+    .text("");
 
   // Add circles
   svg
@@ -266,14 +269,14 @@ function createBubble(chosenData) {
     .on("mouseover", function (d) {
       tooltip.html(
         d.title +
-          "<br> Rating: " +
-          d.rating +
           "<br>" +
           d.genres +
-          "duration <br>" +
-          d.duration +
-          "channel <br>" +
-          d.channel
+          "<br>Rating: " +
+          d.rating +
+          "<br>Channel: " +
+          d.channel +
+          "<br>Month: " +
+          d.month
       );
       return tooltip.style("visibility", "visible");
     })
@@ -314,7 +317,7 @@ function createBubble(chosenData) {
 
   var label = div
     .append("label")
-    .text("Checkbox Label")
+    .text("Activate Brushing")
     .style("color", "#fff")
     .style("position", "absolute")
     .style("left", "600px")
@@ -326,7 +329,7 @@ function createBubble(chosenData) {
     .attr("id", "bubble_brushing")
     .attr("checked", false)
     .style("position", "absolute")
-    .style("left", "110px")
+    .style("left", "120px")
     .style("top", "0px");
 
   document.getElementById("bubble_brushing").checked = false;
