@@ -101,13 +101,6 @@
         top: 0px;
         margin-left: 65%;
       }
-
-      /* #mds_brushing  {
-        position: absolute;
-        top: 20px;
-      } */
-      
-
     </style>
 
     <script src="https://d3js.org/d3.v4.min.js"></script>
@@ -165,10 +158,10 @@
           margin-top: 1%;
         "
       >
-        <label for="bubble_brushing" style="color: #fff; margin-left: 80%;"
+        <!-- <label for="bubble_brushing" style="color: #fff; margin-left: 80%"
           >Activate Brushing</label
         >
-        <input type="checkbox" id="bubble_brushing" name="bubble_brushing" />
+        <input type="checkbox" id="bubble_brushing" name="bubble_brushing" /> -->
       </div>
 
       <!-- BOTTOM Charts -->
@@ -203,8 +196,15 @@
           <option value="Sky_Suspense">Sky Suspense</option>
         </select>
 
-        <label for="holiday" style="color: #fff">Highlight Holidays</label>
-        <input type="checkbox" id="holiday_check" name="Holiday" />
+        <label for="holiday" style="color: #fff"
+          >Highlight Holidays
+          <input
+            type="checkbox"
+            id="holiday_check"
+            name="Holiday"
+            style="position: absolute; top: 0.7px; right: 185px"
+        /></label>
+
         <div id="area_calendar_top"></div>
 
         <label for="network_selector" style="color: #fff"
@@ -249,10 +249,15 @@
           margin-top: 1%;
         "
       >
-        <label for="mds_brushing" id="label_mds_brushing" style="color: #fff; margin-left: 70%;"
-          >Activate Brushing</label
-        >
-        <input type="checkbox" id="mds_brushing" name="mds_brushing" />
+        <label
+          for="mds_brushing"
+          id="label_mds_brushing"
+          style="color: #fff; margin-left: 70%"
+          >Activate Brushing<input
+            type="checkbox"
+            id="mds_brushing"
+            name="mds_brushing"
+        /></label>
       </div>
     </div>
   </body>

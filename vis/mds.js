@@ -1,4 +1,6 @@
 import { startCalendar } from "./calendar.js";
+import { startBubble } from "./bubbleplot.js";
+import { startChord } from "./chord.js";
 
 var DATASET_PATH = "./dataset/df_mds.csv";
 var brushed_ids = new Array();
@@ -13,7 +15,7 @@ var monthLegend = ["", ""];
 
 var margin = { top: 0, right: 0, bottom: 0, left: 5 };
 var width = 470 - margin.left - margin.right;
-var height = 340 - margin.top - margin.bottom;
+var height = 320 - margin.top - margin.bottom;
 
 /* Axis
  x_range: [-38.7, 56.5]
@@ -216,7 +218,10 @@ function createMDS(chosenData) {
     .text("");
   ///
 
-  // d3.select("#area_mds")
+  d3.select("#mds_brushing")
+    .style("position", "absolute")
+    .style("right", "1px")
+    .style("top", "1px");
   //   .append("label")
   //   .attr("x", "50")
   //   // .attr("transform", "translate(5150,100)")
@@ -238,6 +243,7 @@ function createMDS(chosenData) {
     .attr("id", "svg_mds")
     .attr("width", "100%")
     .attr("height", "100%")
+    .style("z-index", 10)
     .classed("svg-content", true)
     .attr("transform", "translate(" + margin.left + "," + 0 + ")");
 
@@ -374,9 +380,12 @@ function activateBrushing() {
     // Remove brushing
     else {
       // Reset Opacity
-      d3.selectAll(".bubble").style("opacity", 0.7);
-      d3.select(".brush").on("start", null).on("brush", null);
-      d3.select(".brush").remove();
+      d3.select("#svg_mds").selectAll(".bubble").style("opacity", 0.7);
+      d3.select("#svg_mds")
+        .select(".brush")
+        .on("start", null)
+        .on("brush", null);
+      d3.select("#svg_mds").select(".brush").remove();
     }
   };
 }
@@ -428,8 +437,20 @@ function updateCalendar() {
     }
   });
 
-  if (brushed_ids.length != 0) startCalendar(brushed_ids);
+  if (brushed_ids.length != 0) {
+    startCalendar(brushed_ids);
 
+    var isBubbleEmpty = d3.select("#area_bubble").selectAll(".bubble");
+
+    if (isBubbleEmpty) {
+      var selected_info = {
+        name: "mds",
+        selectedIds: brushed_ids,
+      };
+      startBubble(selected_info);
+      startChord(brushed_ids);
+    }
+  }
   return;
 }
 

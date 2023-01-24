@@ -106,6 +106,12 @@ function startBubble(selected_info) {
       }
     }
 
+    if (selected_info.name == "mds") {
+      var chosenData = data.filter(function (d) {
+        return selected_info.selectedIds.includes(d.id);
+      });
+    }
+
     createBubble(chosenData);
     createLegend();
   });
@@ -116,6 +122,7 @@ startBubble();
 function createBubble(chosenData) {
   // Reset Bubble plot
   d3.select("#svg_bubble").remove();
+  d3.select("#div_bubble_brushing").remove();
 
   var data = chosenData;
 
@@ -185,11 +192,24 @@ function createBubble(chosenData) {
 
   svg
     .append("text")
-    .attr("x", -25) // set x position of text
-    .attr("y", -6) // set y position of text
-    .text("Duration") // set the text content
-    .attr("font-size", "15px") // set font size
-    .attr("fill", "#fff"); // set text color
+    .attr("x", -25)
+    .attr("y", -6)
+    .text("Duration")
+    .attr("font-size", "15px")
+    .attr("fill", "#fff");
+
+  // .attr("transform", "translate(50, 50)");
+  // .style("position", "absolute")
+  // .style("top", "10px")
+  // .style("left", "20px");
+
+  // svg
+  //   .append("text")
+  //   .attr("x", -25) // set x position of text
+  //   .attr("y", -6) // set y position of text
+  //   .text("Duration") // set the text content
+  //   .attr("font-size", "15px") // set font size
+  //   .attr("fill", "#fff"); // set text color
 
   var radiusRating = d3
     .scaleLinear()
@@ -287,6 +307,28 @@ function createBubble(chosenData) {
   //     .on("brush", updateChart)
   // );
 
+  var div = d3
+    .select("#area_bubble")
+    .append("div")
+    .attr("id", "div_bubble_brushing");
+
+  var label = div
+    .append("label")
+    .text("Checkbox Label")
+    .style("color", "#fff")
+    .style("position", "absolute")
+    .style("left", "600px")
+    .style("top", "0");
+
+  label
+    .append("input")
+    .attr("type", "checkbox")
+    .attr("id", "bubble_brushing")
+    .attr("checked", false)
+    .style("position", "absolute")
+    .style("left", "110px")
+    .style("top", "0px");
+
   document.getElementById("bubble_brushing").checked = false;
   activateBrushing();
 }
@@ -312,14 +354,16 @@ function activateBrushing() {
     else {
       // Reset Opacity
       d3.selectAll(".bubble").style("opacity", 0.7);
-      d3.select(".brush").on("start", null).on("brush", null);
-      d3.select(".brush").remove();
+      d3.select("#svg_bubble")
+        .select(".brush")
+        .on("start", null)
+        .on("brush", null);
+      d3.select("#svg_bubble").select(".brush").remove();
     }
   };
 }
 
 function startBrushing() {
-  console.log("START");
   d3.event.sourceEvent.stopPropagation();
 }
 
@@ -331,7 +375,7 @@ function updateChart() {
   brushed_ids = [];
 
   // Reset Opacity
-  d3.selectAll(".bubble").style("opacity", 0.7)
+  d3.selectAll(".bubble").style("opacity", 0.7);
 
   var movies = d3.select("#area_bubble").selectAll(".bubble");
 
@@ -360,7 +404,6 @@ function updateChord() {
         brushed_ids.push(brush_id);
       } // Logs the id attribute.
     });
-
 
   // Change the opacity to both MDS and Bubble
   d3.selectAll(".bubble").each(function (d) {
