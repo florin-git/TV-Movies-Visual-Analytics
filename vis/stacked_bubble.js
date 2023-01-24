@@ -12,9 +12,8 @@ var margin = { top: 5, right: 0, bottom: 25, left: 55 };
 var width = 660 - margin.left - margin.right;
 var height = 340 - margin.top - margin.bottom;
 
-var clicked = new Array(120).fill(false);
-var rad = new Array(120);
-
+var clicked = new Array(110).fill(false);
+var rad = new Array(110);
 // append the svg object to the body of the page
 var svg = d3
   .select("#area_stacked")
@@ -27,9 +26,16 @@ var svg = d3
 var keys = ["1", "2", "3", "4", "5"];
 var colors = ["#feebe2", "#fbb4b9", "#f768a1", "#c51b8a", "#7a0177"];
 var breaks = [0.5, 1, 1.5, 3];
+var breaks_radius = [10, 50, 100, 150];
+var radius_len = [4.5, 8.32, 11.48, 14.2, 16.64];
 
 //Read the data
 d3.csv(DATASET_PATH, function (data) {
+  console.log(
+    d3.extent(data, function (d) {
+      return Math.max(d.number_movies);
+    })
+  );
   var x = d3
     .scaleBand()
     .domain([
@@ -163,9 +169,9 @@ d3.csv(DATASET_PATH, function (data) {
     .data(valuesToShow)
     .enter()
     .append("circle")
-    .attr("cx", xCircle +310)
+    .attr("cx", xCircle + 310)
     .attr("cy", function (d) {
-      return yCircle - size_bubble(d)-150 ;
+      return yCircle - size_bubble(d) - 150;
     })
     .attr("r", function (d) {
       return size_bubble(d);
@@ -183,7 +189,7 @@ d3.csv(DATASET_PATH, function (data) {
       return yCircle - 140;
     })
     .text(function (d) {
-      return "up to" +""+d;
+      return "up to" + "" + d;
     })
     .style("font-size", 10)
     .attr("fill", "#fff");
@@ -224,7 +230,7 @@ d3.csv(DATASET_PATH, function (data) {
       return yCircle - 185;
     })
     .text(function (d) {
-      return "over "+d;
+      return "over " + d;
     })
     .style("font-size", 10)
     .attr("fill", "#fff");
@@ -255,7 +261,7 @@ d3.csv(DATASET_PATH, function (data) {
       return yCircle - 100;
     })
     .text(function (d) {
-      return "up to"+""+d;
+      return "up to" + "" + d;
     })
     .style("font-size", 10)
     .attr("fill", "#fff");
@@ -286,7 +292,7 @@ d3.csv(DATASET_PATH, function (data) {
       return yCircle - 60;
     })
     .text(function (d) {
-      return "up to"+""+d;
+      return "up to" + "" + d;
     })
     .style("font-size", 10)
     .attr("fill", "#fff");
@@ -317,12 +323,10 @@ d3.csv(DATASET_PATH, function (data) {
       return yCircle - 30;
     })
     .text(function (d) {
-      return "up to"+""+d;
+      return "up to" + "" + d;
     })
     .style("font-size", 10)
     .attr("fill", "#fff");
-
-
 
   //tooltip
   var tooltip = d3
@@ -346,7 +350,6 @@ d3.csv(DATASET_PATH, function (data) {
     .append("circle")
     .attr("id", function (d) {
       var bubble_id = "bubble_" + d.id;
-      rad[d.id] = radiusNumberMovies(d.number_movies);
       return bubble_id;
     })
     .attr("cx", function (d) {
@@ -355,20 +358,34 @@ d3.csv(DATASET_PATH, function (data) {
     .attr("cy", function (d) {
       return y(d.month) + 20.5;
     })
-    .attr("r", function (d) {
-      return radiusNumberMovies(d.number_movies);
+    .attr("r", function (d, id_c) {
+      var value = d.number_movies;
+      if (value < breaks_radius[0]) {
+        rad[id_c] = radius_len[0];
+        return radius_len[0];
+      }
+      for (var i = 1; i < breaks_radius.length; i++) {
+        if (value >= breaks_radius[i - 1] && value < breaks_radius[i]) {
+          rad[id_c] = radius_len[i];
+          return radius_len[i];
+        }
+      }
+      if (value > breaks_radius[breaks_radius.length - 1]) {
+        rad[id_c] = radius_len[radius_len.length];
+        return radius_len[breaks_radius.length];
+      }
     })
     .attr("fill", function (d, i) {
       var value = d.sharing;
       if (value < breaks[0]) {
         return colors[0];
       }
-      for (i = 0; i < breaks.length + 1; i++) {
-        if (value >= breaks[i] && value < breaks[i + 1]) {
+      for (i = 1; i < breaks.length + 1; i++) {
+        if (value >= breaks[i - 1] && value < breaks[i]) {
           return colors[i];
         }
       }
-      if (value > breaks.length - 1) {
+      if (value > breaks[breaks.length - 1]) {
         return colors[breaks.length];
       }
     })
@@ -376,11 +393,16 @@ d3.csv(DATASET_PATH, function (data) {
     .style("cursor", "pointer")
     .attr("stroke", "black")
     .on("mouseover", function (d) {
-      d3.select(this)
-        .style("stroke", "#fff")
-        .style("stroke-width", 1.5)
-        .style("opacity", 2);
-      this["style"]["r"] = radiusNumberMovies(d.number_movies) * 2;
+      this["style"]["stroke"] = "#fff";
+      this["style"]["stroke-width"] = 1.5;
+      this["style"]["opacity"] = 2;
+      // this.style("stroke", "#fff");
+      // this.style("stroke-width", 1.5);
+      // this.style("opacity", 2);
+
+      var radius = this["style"]["r"];
+      this["style"]["r"] = parseInt(radius) * 1.2;
+      console.log(radius);
       tooltip.html(
         "Number of movies :" +
           d.number_movies +
@@ -394,28 +416,26 @@ d3.csv(DATASET_PATH, function (data) {
           return;
         }
       }
-      this["style"]["r"] = radiusNumberMovies(d.number_movies) * 2;
-      d3.select(this)
-        .style("stroke", "black")
-        .style("stroke-width", 1.5)
-        .style("opacity", 2);
       return;
     })
     .on("mousemove", function (d) {
-      //this["style"]["r"] = radiusNumberMovies(d.number_movies);
       return tooltip
         .style("top", d3.event.pageY - 10 + "px")
         .style("left", d3.event.pageX + 10 + "px");
     })
     .on("mouseout", function (d, id_c) {
       if (!clicked[id_c]) {
-        d3.select(this).style("stroke-width", null);
-        this["style"]["r"] = radiusNumberMovies(d.number_movies);
+        this["style"]["stroke"] = "none";
+        this["style"]["stroke-width"] = 0.8;
+        this["style"]["opacity"] = 0.7;
+
+        this["style"]["r"] = rad[id_c];
       }
       return tooltip.style("visibility", "hidden");
     })
     .on("click", function (d, id_c) {
       if (!clicked[id_c]) {
+        console;
         for (var k = 0; k < clicked.length; k++) {
           if (clicked[k] == true) {
             svg
@@ -433,12 +453,13 @@ d3.csv(DATASET_PATH, function (data) {
         updateCalendar(d.channel);
         //Has been clicked?
         clicked[id_c] = true;
-        this["style"]["r"] = radiusNumberMovies(d.number_movies) * 2;
+        var radius = this["style"]["r"];
+        this["style"]["r"] = parseInt(radius) * 1.3;
       } else {
         // Reset all clicks
         clicked.fill(false);
-        d3.select(this).style("stroke-width", 0.8);
-        this["style"]["r"] = radiusNumberMovies(d.number_movies);
+        this["style"]["stroke-width"] = 0.8;
+        this["style"]["r"] = rad[id_c];
 
         // Reset all graphs
         startBubble();
