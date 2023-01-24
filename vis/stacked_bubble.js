@@ -13,7 +13,7 @@ var width = 660 - margin.left - margin.right;
 var height = 340 - margin.top - margin.bottom;
 
 var clicked = new Array(110).fill(false);
-var rad = new Array(110);
+var radArray = new Array(110);
 // append the svg object to the body of the page
 var svg = d3
   .select("#area_stacked")
@@ -361,17 +361,17 @@ d3.csv(DATASET_PATH, function (data) {
     .attr("r", function (d, id_c) {
       var value = d.number_movies;
       if (value < breaks_radius[0]) {
-        rad[id_c] = radius_len[0];
+        radArray[id_c] = radius_len[0];
         return radius_len[0];
       }
       for (var i = 1; i < breaks_radius.length; i++) {
         if (value >= breaks_radius[i - 1] && value < breaks_radius[i]) {
-          rad[id_c] = radius_len[i];
+          radArray[id_c] = radius_len[i];
           return radius_len[i];
         }
       }
       if (value > breaks_radius[breaks_radius.length - 1]) {
-        rad[id_c] = radius_len[radius_len.length];
+        radArray[id_c] = radius_len[radius_len.length];
         return radius_len[breaks_radius.length];
       }
     })
@@ -393,22 +393,12 @@ d3.csv(DATASET_PATH, function (data) {
     .style("cursor", "pointer")
     .attr("stroke", "black")
     .on("mouseover", function (d) {
-      this["style"]["stroke"] = "#fff";
-      this["style"]["stroke-width"] = 1.5;
-      this["style"]["opacity"] = 2;
-      // this.style("stroke", "#fff");
-      // this.style("stroke-width", 1.5);
-      // this.style("opacity", 2);
-
-      var radius = this["style"]["r"];
-      this["style"]["r"] = parseInt(radius) * 1.2;
-      console.log(radius);
       tooltip.html(
         "Number of movies :" +
-          d.number_movies +
-          "<br>Sharing: " +
-          d.sharing +
-          "%"
+        d.number_movies +
+        "<br>Sharing: " +
+        d.sharing +
+        "%"
       );
       tooltip.style("visibility", "visible");
       for (var k = 0; k < clicked.length; k++) {
@@ -416,7 +406,13 @@ d3.csv(DATASET_PATH, function (data) {
           return;
         }
       }
+      this["style"]["stroke"] = "#fff";
+      this["style"]["stroke-width"] = 1.5;
+      this["style"]["opacity"] = 2;
+      var radius = this["style"]["r"];
+      this["style"]["r"] = parseInt(radius) * 1.3;
       return;
+
     })
     .on("mousemove", function (d) {
       return tooltip
@@ -428,20 +424,26 @@ d3.csv(DATASET_PATH, function (data) {
         this["style"]["stroke"] = "none";
         this["style"]["stroke-width"] = 0.8;
         this["style"]["opacity"] = 0.7;
-
-        this["style"]["r"] = rad[id_c];
+        var radius_div = this["style"]["r"];
+        this["style"]["r"] = parseInt(radius_div) / 1.3;
+        // this["style"]["r"] = radArray[id_c];
       }
       return tooltip.style("visibility", "hidden");
     })
     .on("click", function (d, id_c) {
       if (!clicked[id_c]) {
-        console;
         for (var k = 0; k < clicked.length; k++) {
           if (clicked[k] == true) {
-            svg
-              .select("#bubble_" + k)
-              .style("r", rad[k])
-              .style("stroke-width", 0.8);
+            var radius_div = svg.select("#bubble_" + k).attr("r");
+            console.log(radius_div)
+            var ra = parseInt(radius_div) / 1.3
+            console.log(ra);
+            svg.select("#bubble_" + k).attr("r", ra);
+            // svg
+            //   .select("#bubble_" + k)
+            //   .style("r", radArray[k])
+            svg.select("#bubble_" + k).style("stroke-width", 0.8);
+            svg.select("#bubble_" + k).style("opacity", 0.7);
             clicked[k] = false;
           }
         }
@@ -455,12 +457,20 @@ d3.csv(DATASET_PATH, function (data) {
         clicked[id_c] = true;
         var radius = this["style"]["r"];
         this["style"]["r"] = parseInt(radius) * 1.3;
+        this["style"]["stroke"] = "#fff";
+        this["style"]["stroke-width"] = 1.5;
+        this["style"]["opacity"] = 2;
       } else {
         // Reset all clicks
         clicked.fill(false);
         this["style"]["stroke-width"] = 0.8;
-        this["style"]["r"] = rad[id_c];
+        this["style"]["opacity"] = 0.7;
+        var radius_div = this["style"]["r"];
+        this["style"]["r"] = parseInt(radius_div) / 1.3;
 
+
+        // this["style"]["r"] = radArray[id_c];
+        // console.log(radArray);
         // Reset all graphs
         startBubble();
         startChord();
