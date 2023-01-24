@@ -10,7 +10,7 @@ var margin = { top: 20, right: 0, bottom: 0, left: 30 };
 var width = 850 - margin.left - margin.right;
 var height = 300 - margin.top - margin.bottom;
 var breaks = [1, 3, 6, 8];
-var breaks_radius = [2.5, 5, 7, 9]; //i nuovi valori da considerare per i raggi in rapporto alla legenda
+var breaks_radius = [3.5, 5, 7, 8]; //i nuovi valori da considerare per i raggi in rapporto alla legenda
 var radius_len = [4.5, 8.32, 11.48, 14.2, 16.64]; //raggio dei cerchi della legenda bubble size che e' uguale a quella dello stacked_bubble
 var rad = new Array(192);
 
@@ -285,20 +285,21 @@ function createBubble(chosenData) {
       var value= d.rating;
       if (value < breaks_radius[0]) {
         rad[id_c] = radius_len[0];
+        console.log(value,radius_len[0])
         return radius_len[0];
       }
-      for (var i = 1; i < breaks_radius.length; i++) {
+      for (var i = 1; i < breaks_radius.length + 1; i++) {
         if (value >= breaks_radius[i - 1] && value < breaks_radius[i]) {
           rad[id_c] = radius_len[i];
+          console.log(value,radius_len[i])
           return radius_len[i];
         }
       }
       if (value > breaks_radius[breaks_radius.length - 1]) {
         rad[id_c] = radius_len[radius_len.length];
-        return radius_len[breaks_radius.length];
+        console.log(value,radius_len[radius_len.length - 1]);
+        return radius_len[radius_len.length - 1];
       }
-
-      //return radiusRating(d.rating);
     })
     .style("fill", function (d) {
       return myColor(d.daytime);
