@@ -109,9 +109,31 @@ function startBubble(selected_info) {
     }
 
     if (selected_info.name == "mds") {
-      var chosenData = data.filter(function (d) {
-        return selected_info.selectedIds.includes(d.id);
-      });
+      if (selected_info.legend_month == true) {
+        console.log("from month")
+        var chosenData = data.filter(function (d) {
+          return selected_info.channel == d.channel & selected_info.month == d.month;
+        });
+      }
+      else if (selected_info.legend_others) {
+        console.log("from others")
+        var chosenData = data.filter(function (d) {
+          return selected_info.channel == d.channel & selected_info.month != d.month;
+        });
+      }
+      else if (selected_info.from_network) {
+        console.log("from network");
+        console.log(selected_info.network);
+        var chosenData = data.filter(function (d) {
+          return selected_info.network.includes(d.channel);
+        });
+
+
+      }else {
+        var chosenData = data.filter(function (d) {
+          return selected_info.selectedIds.includes(d.id);
+        });
+      }
     }
 
     createBubble(chosenData);
