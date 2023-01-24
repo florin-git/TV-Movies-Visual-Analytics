@@ -396,16 +396,6 @@ d3.csv(DATASET_PATH, function (data) {
     .style("cursor", "pointer")
     .attr("stroke", "black")
     .on("mouseover", function (d) {
-      this["style"]["stroke"] = "#fff";
-      this["style"]["stroke-width"] = 1.5;
-      this["style"]["opacity"] = 2;
-      // this.style("stroke", "#fff");
-      // this.style("stroke-width", 1.5);
-      // this.style("opacity", 2);
-
-      var radius = this["style"]["r"];
-      this["style"]["r"] = parseInt(radius) * 1.2;
-      console.log(radius);
       tooltip.html(
         "Number of movies: " +
           d.number_movies +
@@ -419,6 +409,12 @@ d3.csv(DATASET_PATH, function (data) {
           return;
         }
       }
+      this["style"]["stroke"] = "#fff";
+      this["style"]["stroke-width"] = 1.5;
+      this["style"]["opacity"] = 2;
+
+      var radius = this["style"]["r"];
+      this["style"]["r"] = parseInt(radius) * 1.3;
       return;
     })
     .on("mousemove", function (d) {
@@ -431,20 +427,22 @@ d3.csv(DATASET_PATH, function (data) {
         this["style"]["stroke"] = "none";
         this["style"]["stroke-width"] = 0.8;
         this["style"]["opacity"] = 0.7;
-
-        this["style"]["r"] = rad[id_c];
+        var radius_div = this["style"]["r"];
+        this["style"]["r"] = parseInt(radius_div) / 1.3;
       }
       return tooltip.style("visibility", "hidden");
     })
     .on("click", function (d, id_c) {
       if (!clicked[id_c]) {
-        console;
         for (var k = 0; k < clicked.length; k++) {
           if (clicked[k] == true) {
-            svg
-              .select("#bubble_" + k)
-              .style("r", rad[k])
-              .style("stroke-width", 0.8);
+            var radius_div = svg.select("#bubble_" + k).attr("r");
+            console.log(radius_div)
+            var ra = parseInt(radius_div) / 1.3
+
+            svg.select("#bubble_" + k).attr("r", ra);
+            svg.select("#bubble_" + k).style("stroke-width", 0.8);
+            svg.select("#bubble_" + k).style("opacity", 0.7);
             clicked[k] = false;
           }
         }
@@ -458,12 +456,17 @@ d3.csv(DATASET_PATH, function (data) {
         clicked[id_c] = true;
         var radius = this["style"]["r"];
         this["style"]["r"] = parseInt(radius) * 1.3;
+        this["style"]["stroke"] = "#fff";
+        this["style"]["stroke-width"] = 1.5;
+        this["style"]["opacity"] = 2;
       } else {
         // Reset all clicks
         clicked.fill(false);
         this["style"]["stroke-width"] = 0.8;
-        this["style"]["r"] = rad[id_c];
-
+        this["style"]["opacity"] = 0.7;
+        var radius_div = this["style"]["r"];
+        this["style"]["r"] = parseInt(radius_div) / 1.3;
+        
         // Reset all graphs
         startBubble();
         startChord();
