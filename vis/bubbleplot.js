@@ -65,6 +65,7 @@ function startBubble(selected_info) {
         // If you start filtering from Chord
         else chosenData = data;
         createBubble(chosenData);
+        createLegend();
         return;
       }
       //GIa filtrato dallo stacked
@@ -287,19 +288,17 @@ function createBubble(chosenData) {
       var value = d.rating;
       if (value < breaks_radius[0]) {
         rad[id_c] = radius_len[0];
-        console.log(value, radius_len[0]);
         return radius_len[0];
       }
       for (var i = 1; i < breaks_radius.length + 1; i++) {
         if (value >= breaks_radius[i - 1] && value < breaks_radius[i]) {
           rad[id_c] = radius_len[i];
-          console.log(value, radius_len[i]);
           return radius_len[i];
         }
       }
       if (value > breaks_radius[breaks_radius.length - 1]) {
         rad[id_c] = radius_len[radius_len.length];
-        console.log(value, radius_len[radius_len.length - 1]);
+
         return radius_len[radius_len.length - 1];
       }
     })

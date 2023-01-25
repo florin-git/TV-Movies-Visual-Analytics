@@ -85,7 +85,7 @@ function startChord(brushed_ids) {
       }
     } else var chosenData = data;
 
-    //Creo matrice per i paths
+    // Create matrix for paths
     var matrix = new Array(genres.length);
     for (var i = 0; i < matrix.length; i++) {
       matrix[i] = new Array(genres.length).fill(0);
@@ -100,6 +100,8 @@ function startChord(brushed_ids) {
         }
       }
     });
+
+    console.log(matrix)
     clicked_legend = new Array(genres.length).fill(false);
     createChord(chosenData, matrix, reverse_dict, genres);
   });
@@ -240,22 +242,24 @@ function createChord(data, matrix, reverse_dict, genres) {
     .on("mouseover", function (d) {
       this["style"]["stroke"] = "#000";
       if (genres[d.source.index] == genres[d.target.index]) {
+
+        // console.log(matrix[d.source.index][d.source.index])
         tooltip.html(
           genres[d.source.index] +
-          "<br> Number of broadcast movies: <br>" +
-          matrix[d.source.index][d.source.index] +
-          " out of " +
-          data.length
+            "<br> Number of broadcast movies: <br>" +
+            matrix[d.source.index][d.source.index] +
+            " out of " +
+            data.length
         );
       } else {
         tooltip.html(
           genres[d.source.index] +
-          ", " +
-          genres[d.target.index] +
-          "<br> Number of broadcast movies: <br>" +
-          matrix[d.source.index][d.target.index] +
-          " out of " +
-          data.length
+            ", " +
+            genres[d.target.index] +
+            "<br> Number of broadcast movies: <br>" +
+            matrix[d.source.index][d.target.index] +
+            " out of " +
+            data.length
         );
       }
       return tooltip.style("visibility", "visible");
@@ -313,6 +317,14 @@ function createChord(data, matrix, reverse_dict, genres) {
       .style("fill", colors[genres[t]]);
 
     svg
+      .append("rect")
+      .attr("id", "rect_" + genres[t])
+      .attr("width", 82)
+      .attr("height", 18)
+      .attr("x", 560 - 0.565 * 620)
+      .attr("y", -130 + 20 * t);
+    // .style("fill", "rgb(141, 111, 199)");
+    svg
       .append("text")
       .attr("x", 560 - 0.565 * 620)
       .attr("y", -120 + 20 * t)
@@ -338,7 +350,11 @@ function interactionLegend(svg, data, genres) {
       .on("click", function () {
         gen = this.id;
         if (!clicked_legend[dict[gen]]) {
-          console.log("prova");
+          genres.forEach((gen) => {
+            d3.select("#rect_" + gen).style("fill", "black");
+          });
+          d3.select("#rect_" + gen).style("fill", "rgb(141, 111, 199)");
+
           svg.selectAll("path").style("opacity", 0.3).style("stroke", "none");
           svg.selectAll("path").each(function () {
             stringhe = this.id.split("_");
@@ -351,8 +367,8 @@ function interactionLegend(svg, data, genres) {
             }
           });
           clicked_legend[dict[gen]] = true;
-        }
-        else {
+        } else {
+          d3.select("#rect_" + gen).style("fill", "black");
           svg.selectAll("path").style("opacity", 1.2);
           updateBubble_plot_from_legend(true, gen);
           updateMDS_from_legend(true, gen);
@@ -382,14 +398,11 @@ function updateMDS_from_legend(deselected, gen1) {
     deselected: deselected,
     gen1: gen1,
     gen2: null,
-    legend: true
+    legend: true,
   };
 
   startMDS(selected_info);
 }
-
-
-
 
 //normal update from chord
 function updateBubble_plot(deselected, gen1, gen2) {
