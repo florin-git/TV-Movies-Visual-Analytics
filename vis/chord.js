@@ -75,7 +75,7 @@ function startChord(brushed_ids) {
           }
         }
       });
-      console.log("Questi sono i generi del nuovo chord " + genres);
+
       //Creo dizionario per i generi
       dict = {};
       reverse_dict = {};
@@ -96,12 +96,12 @@ function startChord(brushed_ids) {
       var extracted = d.genres.split(",");
       for (var i = 0; i < extracted.length; i++) {
         for (var j = 0; j < extracted.length; j++) {
+          if ((extracted.length > 1) & (i == j)) continue;
           matrix[dict[extracted[i]]][dict[extracted[j]]] += 1;
         }
       }
     });
 
-    console.log(matrix)
     clicked_legend = new Array(genres.length).fill(false);
     createChord(chosenData, matrix, reverse_dict, genres);
   });
@@ -242,7 +242,6 @@ function createChord(data, matrix, reverse_dict, genres) {
     .on("mouseover", function (d) {
       this["style"]["stroke"] = "#000";
       if (genres[d.source.index] == genres[d.target.index]) {
-
         // console.log(matrix[d.source.index][d.source.index])
         tooltip.html(
           genres[d.source.index] +

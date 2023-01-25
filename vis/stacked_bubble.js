@@ -31,11 +31,6 @@ var radius_len = [4.5, 8.32, 11.48, 14.2, 16.64];
 
 //Read the data
 d3.csv(DATASET_PATH, function (data) {
-  console.log(
-    d3.extent(data, function (d) {
-      return Math.max(d.number_movies);
-    })
-  );
   var x = d3
     .scaleBand()
     .domain([
@@ -405,6 +400,7 @@ d3.csv(DATASET_PATH, function (data) {
             var ra = parseInt(radius_div) / 1.3;
 
             svg.select("#bubble_" + k).attr("r", ra);
+            svg.select("#bubble_" + k).style("stroke", null);
             svg.select("#bubble_" + k).style("stroke-width", null);
             svg.select("#bubble_" + k).style("opacity", 0.7);
             clicked[k] = false;
