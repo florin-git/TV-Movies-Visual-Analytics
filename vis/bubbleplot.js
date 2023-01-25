@@ -555,17 +555,10 @@ function createLegend() {
     .attr("stroke", "white");
 
   svg
-    .selectAll("legend")
-    .data(valuesToShow)
-    .enter()
     .append("text")
-    .attr("x", xCircle + 575)
-    .attr("y", function (d) {
-      return yCircle - 134;
-    })
-    .text(function (d) {
-      return "up to" + "" + d;
-    })
+    .attr("x", xCircle + 580)
+    .attr("y", yCircle - 134)
+    .text("[7,8]")
     .style("font-size", 10)
     .attr("fill", "#fff");
 
@@ -596,17 +589,10 @@ function createLegend() {
     .attr("stroke", "white");
 
   svg
-    .selectAll("legend")
-    .data(valuesToShow2)
-    .enter()
     .append("text")
-    .attr("x", xCircle + 575)
-    .attr("y", function (d) {
-      return yCircle - 180;
-    })
-    .text(function (d) {
-      return "over " + d;
-    })
+    .attr("x", xCircle + 580)
+    .attr("y", yCircle - 95)
+    .text("[5,7]")
     .style("font-size", 10)
     .attr("fill", "#fff");
 
@@ -627,17 +613,10 @@ function createLegend() {
     .attr("stroke", "white");
 
   svg
-    .selectAll("legend")
-    .data(valuesToShow3)
-    .enter()
     .append("text")
-    .attr("x", xCircle + 575)
-    .attr("y", function (d) {
-      return yCircle - 95;
-    })
-    .text(function (d) {
-      return "up to" + "" + d;
-    })
+    .attr("x", xCircle + 585)
+    .attr("y", yCircle - 178)
+    .text(">8")
     .style("font-size", 10)
     .attr("fill", "#fff");
 
@@ -658,17 +637,10 @@ function createLegend() {
     .attr("stroke", "white");
 
   svg
-    .selectAll("legend")
-    .data(valuesToShow4)
-    .enter()
     .append("text")
-    .attr("x", xCircle + 575)
-    .attr("y", function (d) {
-      return yCircle - 65;
-    })
-    .text(function (d) {
-      return "up to" + "" + d;
-    })
+    .attr("x", xCircle + 577)
+    .attr("y", yCircle - 65)
+    .text("[3.5,5]")
     .style("font-size", 10)
     .attr("fill", "#fff");
 
@@ -689,17 +661,10 @@ function createLegend() {
     .attr("stroke", "white");
 
   svg
-    .selectAll("legend")
-    .data(valuesToShow5)
-    .enter()
     .append("text")
-    .attr("x", xCircle + 575)
-    .attr("y", function (d) {
-      return yCircle - 40;
-    })
-    .text(function (d) {
-      return "up to" + "" + d;
-    })
+    .attr("x", xCircle + 579.5)
+    .attr("y", yCircle - 38)
+    .text("<3.5")
     .style("font-size", 10)
     .attr("fill", "#fff");
 }
