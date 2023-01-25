@@ -14,7 +14,7 @@ var height = 345 - margin.top - margin.bottom;
 
 var clicked = new Array(110).fill(false);
 var rad = new Array(110);
-var radArray = {}
+var radius_dict = {}
 // append the svg object to the body of the page
 var svg = d3
   .select("#area_stacked")
@@ -25,7 +25,7 @@ var svg = d3
   .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
 var keys = ["1", "2", "3", "4", "5"];
-var colors = ["#feebe2", "#fbb4b9", "#f768a1", "#c51b8a", "#7a0177"];
+var colors = ["#fcc5c0", "#fa9fb5", "#f768a1", "#c51b8a", "#7a0177"];
 var breaks = [0.5, 1, 1.5, 3];
 var breaks_radius = [10, 50, 100, 150];
 var radius_len = [4.5, 8.32, 11.48, 14.2, 16.64];
@@ -325,17 +325,17 @@ d3.csv(DATASET_PATH, function (data) {
     .attr("r", function (d, id_c) {
       var value = d.number_movies;
       if (value < breaks_radius[0]) {
-        radArray[d.id] = radius_len[0];
+        radius_dict[d.id] = radius_len[0];
         return radius_len[0];
       }
       for (var i = 1; i < breaks_radius.length; i++) {
         if (value >= breaks_radius[i - 1] && value < breaks_radius[i]) {
-          radArray[d.id] = radius_len[i];
+          radius_dict[d.id] = radius_len[i];
           return radius_len[i];
         }
       }
       if (value > breaks_radius[breaks_radius.length - 1]) {
-        radArray[d.id] = radius_len[radius_len.length - 1];
+        radius_dict[d.id] = radius_len[radius_len.length - 1];
         return radius_len[radius_len.length - 1];
       }
     })
@@ -355,7 +355,7 @@ d3.csv(DATASET_PATH, function (data) {
     })
     .style("opacity", "0.7")
     .style("cursor", "pointer")
-    .attr("stroke", "black")
+    // .attr("stroke", "black")
     .on("mouseover", function (d) {
       tooltip.html(
         "Number of movies: " +
@@ -370,11 +370,11 @@ d3.csv(DATASET_PATH, function (data) {
           return;
         }
       }
-      this["style"]["stroke"] = "#fff";
+      this["style"]["stroke"] = "#feebe2";
       this["style"]["stroke-width"] = 1.5;
       this["style"]["opacity"] = 2;
-      var radius = radArray[d.id];
-      this["style"]["r"] = parseInt(radius) * 1.3;
+      var radius = radius_dict[d.id];
+      this["style"]["r"] = parseInt(radius) * 1.5;
       return;
     })
     .on("mousemove", function (d) {
@@ -387,8 +387,7 @@ d3.csv(DATASET_PATH, function (data) {
         this["style"]["stroke"] = "none";
         this["style"]["stroke-width"] = 0.8;
         this["style"]["opacity"] = 0.7;
-        // var radius_div = radArray[d.id];
-        this["style"]["r"] = radArray[d.id];
+        this["style"]["r"] = radius_dict[d.id];
       }
       return tooltip.style("visibility", "hidden");
     })
@@ -396,9 +395,7 @@ d3.csv(DATASET_PATH, function (data) {
       if (!clicked[id_c]) {
         for (var k = 0; k < clicked.length; k++) {
           if (clicked[k] == true) {
-            //var radius_div = svg.select("#bubble_" + k).attr("r");
-            //var ra = parseInt(radius_div) / 1.3;
-            svg.select("#bubble_" + k).attr("r", radArray[d.id]);
+            svg.select("#bubble_" + k).style("r", radius_dict[k]);
             svg.select("#bubble_" + k).style("stroke", null);
             svg.select("#bubble_" + k).style("stroke-width", null);
             svg.select("#bubble_" + k).style("opacity", 0.7);
@@ -413,9 +410,8 @@ d3.csv(DATASET_PATH, function (data) {
         updateCalendar(d.channel);
         //Has been clicked?
         clicked[id_c] = true;
-        // var radius = this["style"]["r"];
-        this["style"]["r"] = parseInt(radArray[d.id]) * 1.3;
-        this["style"]["stroke"] = "#fff";
+        this["style"]["r"] = parseInt(radius_dict[d.id]) * 1.5;
+        this["style"]["stroke"] = "#feebe2";
         this["style"]["stroke-width"] = 1.5;
         this["style"]["opacity"] = 2;
       } else {
@@ -423,8 +419,7 @@ d3.csv(DATASET_PATH, function (data) {
         clicked.fill(false);
         this["style"]["stroke-width"] = 0.8;
         this["style"]["opacity"] = 0.7;
-        // var radius_div = this["style"]["r"];
-        this["style"]["r"] = radArray[d.id];
+        this["style"]["r"] = radius_dict[d.id];
 
         // Reset all graphs
         startBubble();
