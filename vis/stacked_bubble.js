@@ -311,7 +311,6 @@ d3.csv(DATASET_PATH, function (data) {
     .append("circle")
     .attr("id", function (d) {
       var bubble_id = "bubble_" + d.id;
-      stack_id = bubble_id;
       return bubble_id;
     })
     .attr("cx", function (d) {
