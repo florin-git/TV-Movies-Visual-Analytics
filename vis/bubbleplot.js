@@ -110,26 +110,28 @@ function startBubble(selected_info) {
 
     if (selected_info.name == "mds") {
       if (selected_info.legend_month == true) {
-        console.log("from month")
+        console.log("from month");
         var chosenData = data.filter(function (d) {
-          return selected_info.channel == d.channel & selected_info.month == d.month;
+          return (
+            (selected_info.channel == d.channel) &
+            (selected_info.month == d.month)
+          );
         });
-      }
-      else if (selected_info.legend_others) {
-        console.log("from others")
+      } else if (selected_info.legend_others) {
+        console.log("from others");
         var chosenData = data.filter(function (d) {
-          return selected_info.channel == d.channel & selected_info.month != d.month;
+          return (
+            (selected_info.channel == d.channel) &
+            (selected_info.month != d.month)
+          );
         });
-      }
-      else if (selected_info.from_network) {
+      } else if (selected_info.from_network) {
         console.log("from network");
         console.log(selected_info.network);
         var chosenData = data.filter(function (d) {
           return selected_info.network.includes(d.channel);
         });
-
-
-      }else {
+      } else {
         var chosenData = data.filter(function (d) {
           return selected_info.selectedIds.includes(d.id);
         });
@@ -196,11 +198,11 @@ function createBubble(chosenData) {
 
   svg
     .append("text")
-    .attr("x", 705) 
-    .attr("y", 287 ) 
-    .text("Days") 
-    .attr("font-size", "15px") 
-    .attr("fill", "#fff"); 
+    .attr("x", 705)
+    .attr("y", 287)
+    .text("Days")
+    .attr("font-size", "15px")
+    .attr("fill", "#fff");
 
   var y_axis = d3.axisLeft(y);
 
@@ -247,7 +249,7 @@ function createBubble(chosenData) {
   var myColor = d3
     .scaleOrdinal()
     .domain(["mattina", "pomeriggio", "sera", "notte"])
-    .range(["#66c2a5","#fc8d62","#8da0cb","#e78ac3"]); //colori presi da Color Brewer
+    .range(["#66c2a5", "#fc8d62", "#8da0cb", "#e78ac3"]); //colori presi da Color Brewer
 
   var tooltip = d3
     .select("body")
@@ -281,23 +283,23 @@ function createBubble(chosenData) {
     .attr("cy", function (d) {
       return y(d.duration);
     })
-    .attr("r", function (d,id_c) {
-      var value= d.rating;
+    .attr("r", function (d, id_c) {
+      var value = d.rating;
       if (value < breaks_radius[0]) {
         rad[id_c] = radius_len[0];
-        console.log(value,radius_len[0])
+        console.log(value, radius_len[0]);
         return radius_len[0];
       }
       for (var i = 1; i < breaks_radius.length + 1; i++) {
         if (value >= breaks_radius[i - 1] && value < breaks_radius[i]) {
           rad[id_c] = radius_len[i];
-          console.log(value,radius_len[i])
+          console.log(value, radius_len[i]);
           return radius_len[i];
         }
       }
       if (value > breaks_radius[breaks_radius.length - 1]) {
         rad[id_c] = radius_len[radius_len.length];
-        console.log(value,radius_len[radius_len.length - 1]);
+        console.log(value, radius_len[radius_len.length - 1]);
         return radius_len[radius_len.length - 1];
       }
     })

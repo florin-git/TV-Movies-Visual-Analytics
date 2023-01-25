@@ -80,7 +80,6 @@ d3.csv(DATASET_PATH, function (data) {
       "september",
       "october",
       "november",
-      "december",
     ])
     .range([height, 0]);
 
