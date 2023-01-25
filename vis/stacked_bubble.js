@@ -180,20 +180,12 @@ d3.csv(DATASET_PATH, function (data) {
     .attr("stroke", "white");
 
   svg
-    .selectAll("legend")
-    .data(valuesToShow)
-    .enter()
     .append("text")
-    .attr("x", xCircle + 296)
-    .attr("y", function (d) {
-      return yCircle - 140;
-    })
-    .text(function (d) {
-      return "up to" + "" + d;
-    })
+    .attr("x", xCircle + 291)
+    .attr("y", yCircle - 140)
+    .text("[100,150]")
     .style("font-size", 10)
     .attr("fill", "#fff");
-
   //titolo legenda bubble size
   svg
     .append("text")
@@ -221,17 +213,10 @@ d3.csv(DATASET_PATH, function (data) {
     .attr("stroke", "white");
 
   svg
-    .selectAll("legend")
-    .data(valuesToShow2)
-    .enter()
     .append("text")
-    .attr("x", xCircle + 296)
-    .attr("y", function (d) {
-      return yCircle - 185;
-    })
-    .text(function (d) {
-      return "over " + d;
-    })
+    .attr("x", xCircle + 301)
+    .attr("y", yCircle - 185)
+    .text(">150")
     .style("font-size", 10)
     .attr("fill", "#fff");
 
@@ -252,17 +237,10 @@ d3.csv(DATASET_PATH, function (data) {
     .attr("stroke", "white");
 
   svg
-    .selectAll("legend")
-    .data(valuesToShow3)
-    .enter()
     .append("text")
-    .attr("x", xCircle + 296)
-    .attr("y", function (d) {
-      return yCircle - 100;
-    })
-    .text(function (d) {
-      return "up to" + "" + d;
-    })
+    .attr("x", xCircle + 294)
+    .attr("y", yCircle - 98)
+    .text("[50,100]")
     .style("font-size", 10)
     .attr("fill", "#fff");
 
@@ -283,17 +261,10 @@ d3.csv(DATASET_PATH, function (data) {
     .attr("stroke", "white");
 
   svg
-    .selectAll("legend")
-    .data(valuesToShow4)
-    .enter()
     .append("text")
-    .attr("x", xCircle + 296)
-    .attr("y", function (d) {
-      return yCircle - 60;
-    })
-    .text(function (d) {
-      return "up to" + "" + d;
-    })
+    .attr("x", xCircle + 294)
+    .attr("y", yCircle - 64)
+    .text("[10,50]")
     .style("font-size", 10)
     .attr("fill", "#fff");
 
@@ -314,17 +285,10 @@ d3.csv(DATASET_PATH, function (data) {
     .attr("stroke", "white");
 
   svg
-    .selectAll("legend")
-    .data(valuesToShow5)
-    .enter()
     .append("text")
-    .attr("x", xCircle + 296)
-    .attr("y", function (d) {
-      return yCircle - 30;
-    })
-    .text(function (d) {
-      return "up to" + "" + d;
-    })
+    .attr("x", xCircle + 301)
+    .attr("y", yCircle - 35)
+    .text("<10")
     .style("font-size", 10)
     .attr("fill", "#fff");
 
