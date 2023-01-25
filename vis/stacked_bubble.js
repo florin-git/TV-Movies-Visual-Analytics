@@ -3,7 +3,6 @@ import { startBubble } from "./bubbleplot.js";
 import { startChord } from "./chord.js";
 
 var DATASET_PATH = "./dataset/channel_month_count_sharing.csv";
-var stack_id;
 var sky = ["Sky Drama", "Sky Due", "Sky Suspense", "Sky Comedy", "Sky Action"];
 var mediaset = ["Italia 1", "Iris", "Rete 4", "Cine34"];
 var other = ["Cielo"];
@@ -13,7 +12,6 @@ var width = 660 - margin.left - margin.right;
 var height = 345 - margin.top - margin.bottom;
 
 var clicked = new Array(110).fill(false);
-var rad = new Array(110);
 var radius_dict = {}
 // append the svg object to the body of the page
 var svg = d3
