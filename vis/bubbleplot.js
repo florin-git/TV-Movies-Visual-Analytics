@@ -619,10 +619,10 @@ function createLegend() {
   //titolo legenda bubble size
   svg
     .append("text")
-    .attr("x", xCircle + 575)
+    .attr("x", xCircle + 572)
     .attr("y", yCircle - 230)
-    .text("Rating:")
-    .style("font-size", 10)
+    .text("Rating")
+    .style("font-size", 12)
     .attr("fill", "#fff");
 
   //primo cerchio

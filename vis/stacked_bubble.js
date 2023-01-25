@@ -380,10 +380,10 @@ function createLegend(svg) {
   //titolo legenda bubble size
   svg
     .append("text")
-    .attr("x", xCircle + 275)
+    .attr("x", xCircle + 268)
     .attr("y", yCircle - 235)
-    .text("Number of movies:")
-    .style("font-size", 10)
+    .text("Number of movies")
+    .style("font-size", 12)
     .attr("fill", "#fff");
 
   svg
