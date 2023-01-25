@@ -69,17 +69,18 @@ d3.csv(DATASET_PATH, function (data) {
   var y = d3
     .scaleBand()
     .domain([
-      "gennaio",
-      "febbraio",
-      "marzo",
-      "aprile",
-      "maggio",
-      "giugno",
-      "luglio",
-      "agosto",
-      "settembre",
-      "ottobre",
-      "novembre",
+      "january",
+      "february",
+      "march",
+      "april",
+      "may",
+      "june",
+      "july",
+      "august",
+      "september",
+      "october",
+      "november",
+      "december",
     ])
     .range([height, 0]);
 
@@ -437,8 +438,8 @@ d3.csv(DATASET_PATH, function (data) {
         for (var k = 0; k < clicked.length; k++) {
           if (clicked[k] == true) {
             var radius_div = svg.select("#bubble_" + k).attr("r");
-            console.log(radius_div)
-            var ra = parseInt(radius_div) / 1.3
+            console.log(radius_div);
+            var ra = parseInt(radius_div) / 1.3;
 
             svg.select("#bubble_" + k).attr("r", ra);
             svg.select("#bubble_" + k).style("stroke-width", null);
