@@ -225,19 +225,6 @@ function createBubble(chosenData) {
     .attr("font-size", "15px")
     .attr("fill", "#fff");
 
-  // .attr("transform", "translate(50, 50)");
-  // .style("position", "absolute")
-  // .style("top", "10px")
-  // .style("left", "20px");
-
-  // svg
-  //   .append("text")
-  //   .attr("x", -25) // set x position of text
-  //   .attr("y", -6) // set y position of text
-  //   .text("Duration") // set the text content
-  //   .attr("font-size", "15px") // set font size
-  //   .attr("fill", "#fff"); // set text color
-
   var radiusRating = d3
     .scaleLinear()
     .domain(
@@ -279,7 +266,7 @@ function createBubble(chosenData) {
       return d.id;
     })
     .attr("cx", function (d) {
-      return x(d.day_number) + 0;
+      return x(d.day_number);
     })
     .attr("cy", function (d) {
       return y(d.duration);
@@ -386,9 +373,13 @@ function activateBrushing() {
       // Add brushing
       var brush = d3
         .brush() // Add the brush feature using the d3.brush function
+        // .extent([
+        //   [0, 0],
+        //   [width - 90, height + 20],
+        // ])
         .extent([
-          [0, 0],
-          [width, height],
+          [margin.left, margin.top],
+          [width - 60, height + 20],
         ]) // Initialise the brush area: start at 0,0 and finishes at width,height: it means I select the whole graph area
         .on("start", startBrushing)
         .on("brush", updateChart);
@@ -432,10 +423,15 @@ function updateChart() {
 }
 
 function isBrushed(brush_coords, cx, cy) {
-  var x0 = brush_coords[0][0],
-    x1 = brush_coords[1][0],
-    y0 = brush_coords[0][1],
-    y1 = brush_coords[1][1];
+  /**
+   * The brush coordinates must be adjusted according to
+   * the margins.
+   */
+  var x0 = brush_coords[0][0] - margin.left,
+    x1 = brush_coords[1][0] - margin.left,
+    y0 = brush_coords[0][1] - margin.top,
+    y1 = brush_coords[1][1] - margin.top;
+
   return x0 <= cx && cx <= x1 && y0 <= cy && cy <= y1;
   // This return TRUE or FALSE depending on if the points is in the selected area
 }
