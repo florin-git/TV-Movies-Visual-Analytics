@@ -3,7 +3,7 @@ import { startBubble } from "./bubbleplot.js";
 import { startChord } from "./chord.js";
 
 var DATASET_PATH = "./dataset/channel_month_count_sharing.csv";
-
+var stack_id;
 var sky = ["Sky Drama", "Sky Due", "Sky Suspense", "Sky Comedy", "Sky Action"];
 var mediaset = ["Italia 1", "Iris", "Rete 4", "Cine34"];
 var other = ["Cielo"];
@@ -14,6 +14,7 @@ var height = 345 - margin.top - margin.bottom;
 
 var clicked = new Array(110).fill(false);
 var rad = new Array(110);
+var radArray = {}
 // append the svg object to the body of the page
 var svg = d3
   .select("#area_stacked")
@@ -312,6 +313,7 @@ d3.csv(DATASET_PATH, function (data) {
     .append("circle")
     .attr("id", function (d) {
       var bubble_id = "bubble_" + d.id;
+      stack_id = bubble_id;
       return bubble_id;
     })
     .attr("cx", function (d) {
@@ -323,18 +325,18 @@ d3.csv(DATASET_PATH, function (data) {
     .attr("r", function (d, id_c) {
       var value = d.number_movies;
       if (value < breaks_radius[0]) {
-        rad[id_c] = radius_len[0];
+        radArray[d.id] = radius_len[0];
         return radius_len[0];
       }
       for (var i = 1; i < breaks_radius.length; i++) {
         if (value >= breaks_radius[i - 1] && value < breaks_radius[i]) {
-          rad[id_c] = radius_len[i];
+          radArray[d.id] = radius_len[i];
           return radius_len[i];
         }
       }
       if (value > breaks_radius[breaks_radius.length - 1]) {
-        rad[id_c] = radius_len[radius_len.length];
-        return radius_len[breaks_radius.length];
+        radArray[d.id] = radius_len[radius_len.length - 1];
+        return radius_len[radius_len.length - 1];
       }
     })
     .attr("fill", function (d, i) {
@@ -357,10 +359,10 @@ d3.csv(DATASET_PATH, function (data) {
     .on("mouseover", function (d) {
       tooltip.html(
         "Number of movies: " +
-          d.number_movies +
-          "<br>Sharing: " +
-          parseFloat(d.sharing).toFixed(3) +
-          "%"
+        d.number_movies +
+        "<br>Sharing: " +
+        parseFloat(d.sharing).toFixed(3) +
+        "%"
       );
       tooltip.style("visibility", "visible");
       for (var k = 0; k < clicked.length; k++) {
@@ -371,8 +373,7 @@ d3.csv(DATASET_PATH, function (data) {
       this["style"]["stroke"] = "#fff";
       this["style"]["stroke-width"] = 1.5;
       this["style"]["opacity"] = 2;
-
-      var radius = this["style"]["r"];
+      var radius = radArray[d.id];
       this["style"]["r"] = parseInt(radius) * 1.3;
       return;
     })
@@ -386,8 +387,8 @@ d3.csv(DATASET_PATH, function (data) {
         this["style"]["stroke"] = "none";
         this["style"]["stroke-width"] = 0.8;
         this["style"]["opacity"] = 0.7;
-        var radius_div = this["style"]["r"];
-        this["style"]["r"] = parseInt(radius_div) / 1.3;
+        // var radius_div = radArray[d.id];
+        this["style"]["r"] = radArray[d.id];
       }
       return tooltip.style("visibility", "hidden");
     })
@@ -395,11 +396,9 @@ d3.csv(DATASET_PATH, function (data) {
       if (!clicked[id_c]) {
         for (var k = 0; k < clicked.length; k++) {
           if (clicked[k] == true) {
-            var radius_div = svg.select("#bubble_" + k).attr("r");
-            console.log(radius_div);
-            var ra = parseInt(radius_div) / 1.3;
-
-            svg.select("#bubble_" + k).attr("r", ra);
+            //var radius_div = svg.select("#bubble_" + k).attr("r");
+            //var ra = parseInt(radius_div) / 1.3;
+            svg.select("#bubble_" + k).attr("r", radArray[d.id]);
             svg.select("#bubble_" + k).style("stroke", null);
             svg.select("#bubble_" + k).style("stroke-width", null);
             svg.select("#bubble_" + k).style("opacity", 0.7);
@@ -414,8 +413,8 @@ d3.csv(DATASET_PATH, function (data) {
         updateCalendar(d.channel);
         //Has been clicked?
         clicked[id_c] = true;
-        var radius = this["style"]["r"];
-        this["style"]["r"] = parseInt(radius) * 1.3;
+        // var radius = this["style"]["r"];
+        this["style"]["r"] = parseInt(radArray[d.id]) * 1.3;
         this["style"]["stroke"] = "#fff";
         this["style"]["stroke-width"] = 1.5;
         this["style"]["opacity"] = 2;
@@ -424,8 +423,8 @@ d3.csv(DATASET_PATH, function (data) {
         clicked.fill(false);
         this["style"]["stroke-width"] = 0.8;
         this["style"]["opacity"] = 0.7;
-        var radius_div = this["style"]["r"];
-        this["style"]["r"] = parseInt(radius_div) / 1.3;
+        // var radius_div = this["style"]["r"];
+        this["style"]["r"] = radArray[d.id];
 
         // Reset all graphs
         startBubble();
