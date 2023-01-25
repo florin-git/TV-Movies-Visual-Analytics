@@ -18,6 +18,9 @@ var x, y;
 
 var filteredData;
 
+var meanDurationBefore;
+var meanDurationAfter;
+
 function startBubble(selected_info) {
   d3.csv(DATASET_PATH, function (data) {
     // At the beginning you do not display anything
@@ -225,15 +228,6 @@ function createBubble(chosenData) {
     .attr("font-size", "15px")
     .attr("fill", "#fff");
 
-  var radiusRating = d3
-    .scaleLinear()
-    .domain(
-      d3.extent(data, function (d) {
-        return Math.max(d.rating);
-      })
-    )
-    .range([3.5, 10]);
-
   var myColor = d3
     .scaleOrdinal()
     .domain(["mattina", "pomeriggio", "sera", "notte"])
@@ -318,26 +312,27 @@ function createBubble(chosenData) {
       return tooltip.style("visibility", "hidden");
     });
 
-  // svg
-  //   .append("div")
-  //   .append("input")
-  //   .attr("id", "bubble_checkbox")
-  //   .attr("brushing")
-  //   // .attr("x", width - 0.18 * width)
-  //   .attr("x", 50)
-  //   .attr("y", 30)
-  //   .attr("type", "checkbox");
+  if (data.length != 0) {
+    meanDurationAfter = d3.mean(data, function (d) {
+      return Math.max(d.duration);
+    });
 
-  // var brush = svg.call(
-  //   d3
-  //     .brush() // Add the brush feature using the d3.brush function
-  //     .extent([
-  //       [0, 0],
-  //       [width, height],
-  //     ]) // initialise the brush area: start at 0,0 and finishes at width,height: it means I select the whole graph area
-  //     .on("start", startBrushing)
-  //     .on("brush", updateChart)
-  // );
+    if (meanDurationBefore == undefined) meanDurationBefore = meanDurationAfter;
+    svg
+      .append("line")
+      .style("stroke", "#a6d854")
+      .style("stroke-width", 2)
+      .attr("x1", 0)
+      .attr("x2", width - 100)
+      .attr("y1", y(meanDurationBefore))
+      .attr("y2", y(meanDurationBefore))
+      .transition()
+      .duration(1000)
+      .attr("y1", y(meanDurationAfter))
+      .attr("y2", y(meanDurationAfter));
+
+    meanDurationBefore = meanDurationAfter;
+  }
 
   var div = d3
     .select("#area_bubble")
@@ -373,10 +368,6 @@ function activateBrushing() {
       // Add brushing
       var brush = d3
         .brush() // Add the brush feature using the d3.brush function
-        // .extent([
-        //   [0, 0],
-        //   [width - 90, height + 20],
-        // ])
         .extent([
           [margin.left, margin.top],
           [width - 60, height + 20],
