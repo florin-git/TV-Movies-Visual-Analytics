@@ -7,16 +7,17 @@ var sky = ["Sky Drama", "Sky Due", "Sky Suspense", "Sky Comedy", "Sky Action"];
 var mediaset = ["Italia 1", "Iris", "Rete 4", "Cine34"];
 var other = ["Cielo"];
 
-var margin = { top: 5, right: 0, bottom: 25, left: 55 };
+var margin = { top: 5, right: 0, bottom: 25, left: 60 };
 var width = 660 - margin.left - margin.right;
 var height = 345 - margin.top - margin.bottom;
 
 var clicked = new Array(110).fill(false);
-var radius_dict = {}
+var radius_dict = {};
 // append the svg object to the body of the page
 var svg = d3
   .select("#area_stacked")
   .append("svg")
+  .attr("id", "svg_stacked")
   .attr("width", width + margin.left + margin.right)
   .attr("height", height + margin.top + margin.bottom)
   .append("g")
@@ -26,7 +27,8 @@ var keys = ["1", "2", "3", "4", "5"];
 var colors = ["#fcc5c0", "#fa9fb5", "#f768a1", "#c51b8a", "#7a0177"];
 var breaks = [0.5, 1, 1.5, 3];
 var breaks_radius = [10, 50, 100, 150];
-var radius_len = [4.5, 8.32, 11.48, 14.2, 16.64];
+// var radius_len = [4.5, 8.32, 11.48, 14.2, 16.64];
+var radius_len = [4, 6.5, 9, 11.5, 14.4];
 
 //Read the data
 d3.csv(DATASET_PATH, function (data) {
@@ -83,208 +85,7 @@ d3.csv(DATASET_PATH, function (data) {
   svg.selectAll("line").style("stroke", "#fff");
   svg.selectAll("path").style("stroke", "#fff");
 
-  var radiusNumberMovies = d3
-    .scaleLinear()
-    .domain(
-      d3.extent(data, function (d) {
-        return Math.max(d.number_movies);
-      })
-    )
-    .range([1, 17]);
-
-  /*var colorScale = d3
-    .scaleSequential()
-    .domain(
-      d3.extent(data, function (d) {
-        return Math.max(d.sharing);
-      })
-    )
-    .interpolator(d3.interpolatePuRd);*/
-
-  var colorScale = d3.scaleOrdinal().domain(keys).range(colors); //colorare i pallini del grafico
-
-  //per legenda del grafico: quadratini
-  var size = 10;
-  svg
-    .selectAll("mydots")
-    .data(keys)
-    .enter()
-    .append("rect")
-    .attr("x", 510)
-    .attr("y", function (d, i) {
-      return 10 + i * (size + 5);
-    }) // 100 is where the first dot appears. 25 is the distance between dots
-    .attr("width", size)
-    .attr("height", size)
-    .attr("fill", function (d) {
-      return colorScale(d);
-    });
-
-  //scritte per i quadratini della legenda
-  svg
-    .selectAll("mylabels")
-    .data(keys)
-    .enter()
-    .append("text")
-    .attr("x", 510 + size * 1.2)
-    .attr("y", function (d, i) {
-      return 14 + i * (size + 5) + size / 2;
-    }) // 100 is where the first dot appears. 25 is the distance between dots
-    .attr("fill", "white")
-    .text(function (d, i) {
-      if (i < colors.length - 1) {
-        return "up to " + breaks[i] + "%";
-      } else {
-        return "over " + breaks[i - 1] + "%";
-      }
-    })
-    .attr("text-anchor", "left");
-
-  var size_bubble = d3
-    .scaleSqrt()
-    .domain([1, 100]) // What's in the data
-    .range([2, 100]); // Size in pixel
-
-  //variabili che servono per la legenda bubble size
-  var valuesToShow = [4.5];
-  var valuesToShow2 = [5.5];
-  var valuesToShow3 = [3.5];
-  var valuesToShow4 = [2.5];
-  var valuesToShow5 = [1.5];
-
-  var xCircle = 230;
-  var xLabel = 380;
-  var yCircle = 330;
-
-  //per la legenda del raggio del cerchio
-  //secondo cerchio
-  svg
-    .selectAll("legend")
-    .data(valuesToShow)
-    .enter()
-    .append("circle")
-    .attr("cx", xCircle + 310)
-    .attr("cy", function (d) {
-      return yCircle - size_bubble(d) - 150;
-    })
-    .attr("r", function (d) {
-      return size_bubble(d);
-    })
-    .style("fill", "grey")
-    .attr("stroke", "white");
-
-  svg
-    .append("text")
-    .attr("x", xCircle + 291)
-    .attr("y", yCircle - 140)
-    .text("[100,150]")
-    .style("font-size", 10)
-    .attr("fill", "#fff");
-  //titolo legenda bubble size
-  svg
-    .append("text")
-    .attr("x", xCircle + 275)
-    .attr("y", yCircle - 235)
-    .text("Number of movies:")
-    .style("font-size", 10)
-    .attr("fill", "#fff");
-
-  //primo cerchio
-  svg
-    .selectAll("legend")
-    .data(valuesToShow2)
-    .enter()
-    .append("circle")
-    .attr("cx", xCircle + 310)
-    .attr("cy", function (d) {
-      return yCircle - 215;
-    })
-    .attr("r", function (d) {
-      //d sarebbe il valore preso da "valuesToShow2"
-      return size_bubble(d);
-    })
-    .style("fill", "grey")
-    .attr("stroke", "white");
-
-  svg
-    .append("text")
-    .attr("x", xCircle + 301)
-    .attr("y", yCircle - 185)
-    .text(">150")
-    .style("font-size", 10)
-    .attr("fill", "#fff");
-
-  //terzo cerchio
-  svg
-    .selectAll("legend")
-    .data(valuesToShow3)
-    .enter()
-    .append("circle")
-    .attr("cx", xCircle + 310)
-    .attr("cy", function (d) {
-      return yCircle - size_bubble(d) - 110;
-    })
-    .attr("r", function (d) {
-      return size_bubble(d);
-    })
-    .style("fill", "grey")
-    .attr("stroke", "white");
-
-  svg
-    .append("text")
-    .attr("x", xCircle + 294)
-    .attr("y", yCircle - 98)
-    .text("[50,100]")
-    .style("font-size", 10)
-    .attr("fill", "#fff");
-
-  //quarto cerchio
-  svg
-    .selectAll("legend")
-    .data(valuesToShow4)
-    .enter()
-    .append("circle")
-    .attr("cx", xCircle + 310)
-    .attr("cy", function (d) {
-      return yCircle - size_bubble(d) - 75;
-    })
-    .attr("r", function (d) {
-      return size_bubble(d);
-    })
-    .style("fill", "grey")
-    .attr("stroke", "white");
-
-  svg
-    .append("text")
-    .attr("x", xCircle + 294)
-    .attr("y", yCircle - 64)
-    .text("[10,50]")
-    .style("font-size", 10)
-    .attr("fill", "#fff");
-
-  //quinto cerchio
-  svg
-    .selectAll("legend")
-    .data(valuesToShow5)
-    .enter()
-    .append("circle")
-    .attr("cx", xCircle + 310)
-    .attr("cy", function (d) {
-      return yCircle - size_bubble(d) - 45;
-    })
-    .attr("r", function (d) {
-      return size_bubble(d);
-    })
-    .style("fill", "grey")
-    .attr("stroke", "white");
-
-  svg
-    .append("text")
-    .attr("x", xCircle + 301)
-    .attr("y", yCircle - 35)
-    .text("<10")
-    .style("font-size", 10)
-    .attr("fill", "#fff");
+  createLegend(svg);
 
   //tooltip
   var tooltip = d3
@@ -356,10 +157,10 @@ d3.csv(DATASET_PATH, function (data) {
     .on("mouseover", function (d) {
       tooltip.html(
         "Number of movies: " +
-        d.number_movies +
-        "<br>Sharing: " +
-        parseFloat(d.sharing).toFixed(3) +
-        "%"
+          d.number_movies +
+          "<br>Sharing: " +
+          parseFloat(d.sharing).toFixed(3) +
+          "%"
       );
       tooltip.style("visibility", "visible");
       for (var k = 0; k < clicked.length; k++) {
@@ -474,4 +275,197 @@ function updateCalendar(channel) {
   document.getElementById("network_selector").value = network;
   var changeEvent = new Event("change");
   document.getElementById("network_selector").dispatchEvent(changeEvent);
+}
+
+function createLegend(svg) {
+  var colorScale = d3.scaleOrdinal().domain(keys).range(colors); //colorare i pallini del grafico
+
+  //per legenda del grafico: quadratini
+  var size = 10;
+  svg
+    .selectAll("mydots")
+    .data(keys)
+    .enter()
+    .append("rect")
+    .attr("x", 510)
+    .attr("y", function (d, i) {
+      return 10 + i * (size + 5);
+    }) // 100 is where the first dot appears. 25 is the distance between dots
+    .attr("width", size)
+    .attr("height", size)
+    .attr("fill", function (d) {
+      return colorScale(d);
+    });
+
+  //scritte per i quadratini della legenda
+  svg
+    .selectAll("mylabels")
+    .data(keys)
+    .enter()
+    .append("text")
+    .attr("x", 510 + size * 1.2)
+    .attr("y", function (d, i) {
+      return 14 + i * (size + 5) + size / 2;
+    }) // 100 is where the first dot appears. 25 is the distance between dots
+    .attr("fill", "white")
+    .text(function (d, i) {
+      if (i < colors.length - 1) {
+        return "up to " + breaks[i] + "%";
+      } else {
+        return "over " + breaks[i - 1] + "%";
+      }
+    })
+    .attr("text-anchor", "left");
+
+  var size_bubble = d3
+    .scaleSqrt()
+    .domain([1, 100]) // What's in the data
+    .range([2, 100]); // Size in pixel
+
+  //variabili che servono per la legenda bubble size
+  var valuesToShow = [4.5];
+  var valuesToShow2 = [5.5];
+  var valuesToShow3 = [3.5];
+  var valuesToShow4 = [2.5];
+  var valuesToShow5 = [1.5];
+
+  var xCircle = 230;
+  var xLabel = 380;
+  var yCircle = 330;
+
+  //per la legenda del raggio del cerchio
+
+  //primo cerchio
+  svg
+    .selectAll("legend")
+    .data(valuesToShow2)
+    .enter()
+    .append("circle")
+    .attr("cx", xCircle + 310)
+    .attr("cy", function (d) {
+      return yCircle - 215;
+    })
+    .attr("r", function (d) {
+      //d sarebbe il valore preso da "valuesToShow2"
+      // return size_bubble(d);
+      return radius_len[4];
+    })
+    .style("fill", "grey")
+    .attr("stroke", "white");
+
+  //secondo cerchio
+  svg
+    .selectAll("legend")
+    .data(valuesToShow)
+    .enter()
+    .append("circle")
+    .attr("cx", xCircle + 310)
+    .attr("cy", function (d) {
+      return yCircle - size_bubble(d) - 150;
+    })
+    .attr("r", function (d) {
+      // return size_bubble(d);
+      return radius_len[3];
+    })
+    .style("fill", "grey")
+    .attr("stroke", "white");
+
+  svg
+    .append("text")
+    .attr("x", xCircle + 291)
+    .attr("y", yCircle - 140)
+    .text("[100,150]")
+    .style("font-size", 10)
+    .attr("fill", "#fff");
+  //titolo legenda bubble size
+  svg
+    .append("text")
+    .attr("x", xCircle + 275)
+    .attr("y", yCircle - 235)
+    .text("Number of movies:")
+    .style("font-size", 10)
+    .attr("fill", "#fff");
+
+  svg
+    .append("text")
+    .attr("x", xCircle + 301)
+    .attr("y", yCircle - 185)
+    .text(">150")
+    .style("font-size", 10)
+    .attr("fill", "#fff");
+
+  //terzo cerchio
+  svg
+    .selectAll("legend")
+    .data(valuesToShow3)
+    .enter()
+    .append("circle")
+    .attr("cx", xCircle + 310)
+    .attr("cy", function (d) {
+      return yCircle - size_bubble(d) - 110;
+    })
+    .attr("r", function (d) {
+      // return size_bubble(d);
+      return radius_len[2];
+    })
+    .style("fill", "grey")
+    .attr("stroke", "white");
+
+  svg
+    .append("text")
+    .attr("x", xCircle + 294)
+    .attr("y", yCircle - 98)
+    .text("[50,100]")
+    .style("font-size", 10)
+    .attr("fill", "#fff");
+
+  //quarto cerchio
+  svg
+    .selectAll("legend")
+    .data(valuesToShow4)
+    .enter()
+    .append("circle")
+    .attr("cx", xCircle + 310)
+    .attr("cy", function (d) {
+      return yCircle - size_bubble(d) - 75;
+    })
+    .attr("r", function (d) {
+      // return size_bubble(d);
+      return radius_len[1];
+    })
+    .style("fill", "grey")
+    .attr("stroke", "white");
+
+  svg
+    .append("text")
+    .attr("x", xCircle + 294)
+    .attr("y", yCircle - 64)
+    .text("[10,50]")
+    .style("font-size", 10)
+    .attr("fill", "#fff");
+
+  //quinto cerchio
+  svg
+    .selectAll("legend")
+    .data(valuesToShow5)
+    .enter()
+    .append("circle")
+    .attr("cx", xCircle + 310)
+    .attr("cy", function (d) {
+      return yCircle - size_bubble(d) - 45;
+    })
+    .attr("r", function (d) {
+      // return size_bubble(d);
+      return radius_len[0];
+    })
+    .style("fill", "grey")
+    .attr("stroke", "white");
+
+  svg
+    .append("text")
+    .attr("x", xCircle + 301)
+    .attr("y", yCircle - 35)
+    .text("<10")
+    .style("font-size", 10)
+    .attr("fill", "#fff");
 }

@@ -9,10 +9,9 @@ var other = ["Cielo"];
 var margin = { top: 20, right: 0, bottom: 0, left: 30 };
 var width = 850 - margin.left - margin.right;
 var height = 300 - margin.top - margin.bottom;
-var breaks = [1, 3, 6, 8];
+
 var breaks_radius = [3.5, 5, 7, 8]; //i nuovi valori da considerare per i raggi in rapporto alla legenda
 var radius_len = [4.5, 8.32, 11.48, 14.2, 16.64]; //raggio dei cerchi della legenda bubble size che e' uguale a quella dello stacked_bubble
-var rad = new Array(192);
 
 var x, y;
 
@@ -29,6 +28,7 @@ function startBubble(selected_info) {
       return;
     }
 
+    /// Stacked
     if (selected_info.name == "stacked") {
       /**
        * When the user clicks on a buble on the Stacked,
@@ -61,6 +61,8 @@ function startBubble(selected_info) {
       });
       startChord(selected_ids);
     }
+
+    /// Chord
     if (selected_info.name == "chord") {
       if (selected_info.deselected) {
         // If already filterd from the Stacked
@@ -71,7 +73,7 @@ function startBubble(selected_info) {
         createLegend();
         return;
       }
-      //GIa filtrato dallo stacked
+      // Already filtered from Stacked
       if (filteredData != null) {
         var chosenData = filteredData.filter(function (d) {
           if (selected_info.legend) {
@@ -90,7 +92,7 @@ function startBubble(selected_info) {
           }
         });
       }
-      //Non filtrato
+      // Not filtered from Stacked
       else {
         var chosenData = data.filter(function (d) {
           //From legend
@@ -112,30 +114,92 @@ function startBubble(selected_info) {
       }
     }
 
+    /// MDS
     if (selected_info.name == "mds") {
-      if (selected_info.legend_month == true) {
-        console.log("from month");
+      // If clicked on MDS after selection from Stacked
+      if (selected_info.type == "channel") {
+        // Reset Bubble to the channels' movies
+        if (selected_info.deselected) {
+          var chosenData = data.filter(function (d) {
+            // If in Mediaset
+            if (
+              mediaset.includes(selected_info.channelOrNetwork) &
+              mediaset.includes(d.channel)
+            )
+              return d;
+
+            // If in Sky
+            if (
+              sky.includes(selected_info.channelOrNetwork) &
+              sky.includes(d.channel)
+            )
+              return d;
+
+            // If in Other
+            if (
+              other.includes(selected_info.channelOrNetwork) &
+              other.includes(d.channel)
+            )
+              return d;
+          });
+
+          createBubble(chosenData);
+          createLegend();
+          return;
+        }
+
+        // First text of the legend
+        if (selected_info.legend_month == true) {
+          console.log("from month");
+          var chosenData = data.filter(function (d) {
+            return (
+              (selected_info.channelOrNetwork == d.channel) &
+              (selected_info.month == d.month)
+            );
+          });
+        }
+        // Second text of the legend
+        else if (selected_info.legend_others) {
+          console.log("from others");
+          var chosenData = data.filter(function (d) {
+            return (
+              (selected_info.channelOrNetwork == d.channel) &
+              (selected_info.month != d.month)
+            );
+          });
+        }
+        // Third text of the legend
+        else {
+          console.log("from network");
+          console.log(selected_info.network);
+          var chosenData = data.filter(function (d) {
+            // All channels of the network excluding
+            // the selected channel by the Stacked
+            if (
+              selected_info.network.includes(d.channel) &
+              (d.channel != selected_info.channel)
+            )
+              return selected_info.network.includes(d.channel);
+          });
+        }
+      }
+
+      // If clicked on the legend before selection on Stacked
+      else if (selected_info.type == "network") {
+        console.log(selected_info);
+        // Reset Bubble because at the beginning
+        if (selected_info.deselected) {
+          createBubble([]);
+          return;
+        }
+
         var chosenData = data.filter(function (d) {
-          return (
-            (selected_info.channel == d.channel) &
-            (selected_info.month == d.month)
-          );
+          return selected_info.channelOrNetwork.includes(d.channel);
         });
-      } else if (selected_info.legend_others) {
-        console.log("from others");
-        var chosenData = data.filter(function (d) {
-          return (
-            (selected_info.channel == d.channel) &
-            (selected_info.month != d.month)
-          );
-        });
-      } else if (selected_info.from_network) {
-        console.log("from network");
-        console.log(selected_info.network);
-        var chosenData = data.filter(function (d) {
-          return selected_info.network.includes(d.channel);
-        });
-      } else {
+      }
+
+      // When brushing on MDS
+      else if (selected_info.type == "brush") {
         var chosenData = data.filter(function (d) {
           return selected_info.selectedIds.includes(d.id);
         });
@@ -224,7 +288,7 @@ function createBubble(chosenData) {
     .append("text")
     .attr("x", -25)
     .attr("y", -6)
-    .text("Duration")
+    .text("Duration (min)")
     .attr("font-size", "15px")
     .attr("fill", "#fff");
 
@@ -268,18 +332,14 @@ function createBubble(chosenData) {
     .attr("r", function (d, id_c) {
       var value = d.rating;
       if (value < breaks_radius[0]) {
-        rad[id_c] = radius_len[0];
         return radius_len[0];
       }
       for (var i = 1; i < breaks_radius.length + 1; i++) {
         if (value >= breaks_radius[i - 1] && value < breaks_radius[i]) {
-          rad[id_c] = radius_len[i];
           return radius_len[i];
         }
       }
       if (value > breaks_radius[breaks_radius.length - 1]) {
-        rad[id_c] = radius_len[radius_len.length];
-
         return radius_len[radius_len.length - 1];
       }
     })
@@ -292,6 +352,9 @@ function createBubble(chosenData) {
     .on("mouseover", function (d) {
       tooltip.html(
         d.title +
+          " (" +
+          d.year +
+          ")" +
           "<br>" +
           d.genres +
           "<br>Rating: " +
