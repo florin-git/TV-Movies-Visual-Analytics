@@ -10,8 +10,8 @@ var margin = { top: 20, right: 0, bottom: 0, left: 30 };
 var width = 850 - margin.left - margin.right;
 var height = 300 - margin.top - margin.bottom;
 
-var breaks_radius = [3.5, 5, 7, 8]; //i nuovi valori da considerare per i raggi in rapporto alla legenda
-var radius_len = [4.5, 8.32, 11.48, 14.2, 16.64]; //raggio dei cerchi della legenda bubble size che e' uguale a quella dello stacked_bubble
+var breaks_radius = [3.5, 5, 7, 8]; // Breaks radius in legend
+var radius_len = [4.5, 8.32, 11.48, 14.2, 16.64]; // New values for radius in legend
 
 var x, y;
 
@@ -211,16 +211,6 @@ function startBubble(selected_info) {
         var chosenData = data.filter(function (d) {
           return selected_info.selectedIds.includes(d.id);
         });
-
-        // filteredData = chosenData;
-
-        // // When the Bubble plot is changing,
-        // // we are re-creating the Chord
-        // var selected_ids = [];
-        // filteredData.forEach(function (d) {
-        //   selected_ids.push(d.id);
-        // });
-        // startChord(selected_ids);
       }
     }
 
@@ -313,7 +303,7 @@ function createBubble(chosenData) {
   var myColor = d3
     .scaleOrdinal()
     .domain(["mattina", "pomeriggio", "sera", "notte"])
-    .range(["#66c2a5", "#fc8d62", "#8da0cb", "#e78ac3"]); //colori presi da Color Brewer
+    .range(["#66c2a5", "#fc8d62", "#8da0cb", "#e78ac3"]); // From Color Brewer
 
   d3.select("#tooltip_bubble").remove();
   var tooltip = d3
@@ -453,7 +443,7 @@ function activateBrushing() {
         .extent([
           [margin.left, margin.top],
           [width - 60, height + 20],
-        ]) // Initialise the brush area: start at 0,0 and finishes at width,height: it means I select the whole graph area
+        ])
         .on("start", startBrushing)
         .on("brush", updateChart);
 
@@ -611,13 +601,12 @@ function createLegend() {
     .attr("y1", 60)
     .attr("y2", 60);
 
-  // The scale you use for bubble size. Il raggio del pallino della legenda
   var size = d3
     .scaleSqrt()
     .domain([1, 100]) // What's in the data
     .range([2, 100]); // Size in pixel
 
-  //variabili che servono per la legenda bubble size
+  // Variables legend bubble size
   var valuesToShow = [4.5];
   var valuesToShow2 = [5.5];
   var valuesToShow3 = [3.5];
@@ -628,8 +617,8 @@ function createLegend() {
   var xLabel = 380;
   var yCircle = 330;
 
-  //per la legenda del raggio del cerchio
-  //secondo cerchio
+  // Legenda del raggio del cerchio
+  // Second circle
   svg
     .selectAll("legend")
     .data(valuesToShow)
@@ -653,7 +642,7 @@ function createLegend() {
     .style("font-size", 10)
     .attr("fill", "#fff");
 
-  //titolo legenda bubble size
+  // Title legend bubble size
   svg
     .append("text")
     .attr("x", xCircle + 572)
@@ -662,7 +651,7 @@ function createLegend() {
     .style("font-size", 12)
     .attr("fill", "#fff");
 
-  //primo cerchio
+  // First circle
   svg
     .selectAll("legend")
     .data(valuesToShow2)
@@ -673,7 +662,7 @@ function createLegend() {
       return yCircle - 206;
     })
     .attr("r", function (d) {
-      //d sarebbe il valore preso da "valuesToShow2"
+      // d is the value of "valuesToShow2"
       return size(d);
     })
     .style("fill", "grey")
@@ -687,7 +676,7 @@ function createLegend() {
     .style("font-size", 10)
     .attr("fill", "#fff");
 
-  //terzo cerchio
+  // Third circle
   svg
     .selectAll("legend")
     .data(valuesToShow3)
@@ -711,7 +700,7 @@ function createLegend() {
     .style("font-size", 10)
     .attr("fill", "#fff");
 
-  //quarto cerchio
+  // Forth circle
   svg
     .selectAll("legend")
     .data(valuesToShow4)
@@ -735,7 +724,7 @@ function createLegend() {
     .style("font-size", 10)
     .attr("fill", "#fff");
 
-  //quinto cerchio
+  // Fifth circle
   svg
     .selectAll("legend")
     .data(valuesToShow5)

@@ -7,11 +7,11 @@ var other = ["Cielo"];
 var breaks = [5, 10, 20, 40];
 var colours = ["#fef0d9", "#fdcc8a", "#fc8d59", "#e34a33", "#b30000"];
 
-//general layout information
+// General layout information
 var cellSize = 10;
-var calY = 30; //offset of calendar in each group
+var calY = 30; // offset of calendar in each group
 var calX = 550;
-var width = 500; //prima con dimensioni normali era window.innerWidth
+
 var height = 400;
 
 var holidaysList = [
@@ -360,8 +360,7 @@ function createCalendar(chosenData, level) {
     monthX.push(calX + d.x + boxCentre);
   });
 
-  //create centred month labels around the bounding box of each month path
-  //create day labels
+  // Create centred month labels around the bounding box of each month path
   var months = [
     "JAN",
     "FEB",
@@ -512,8 +511,8 @@ function updateHoliday() {
       rect
         .attr("shape-rendering", null)
         .attr("stroke", "#ccc")
-        .attr("stroke-width", 1); //.style("opacity", 0.5);
-      rect.attr("stroke", "#ccc").attr("stroke-width", 1); //.style("opacity", 0.5);
+        .attr("stroke-width", 1); 
+      rect.attr("stroke", "#ccc").attr("stroke-width", 1);
     }
   };
 }

@@ -57,7 +57,7 @@ var colors = {
   Crime: "#ffed6f",
 };
 
-//start chord
+// Start chord
 function startChord(brushed_ids) {
   d3.csv(DATASET_PATH, function (data) {
     if (brushed_ids != null) {
@@ -65,7 +65,7 @@ function startChord(brushed_ids) {
         return brushed_ids.includes(d.id);
       });
       genres = [];
-      //Creo la lista dei generi dell'elemento selezionato
+      // List of selected genres
       chosenData.forEach(function (d) {
         var genres_extracted = d.genres.split(",");
         for (var i = 0; i < genres_extracted.length; i++) {
@@ -75,7 +75,7 @@ function startChord(brushed_ids) {
         }
       });
 
-      //Creo dizionario per i generi
+      // Create dictionaries for genres
       dict = {};
       reverse_dict = {};
       for (var i = 0; i < genres.length; i++) {
@@ -218,7 +218,7 @@ function createChord(data, matrix, reverse_dict, genres) {
 
   var k = 0;
 
-  //PATH !!!!
+  //PATH 
   svg
     .datum(res)
     .append("g")
@@ -280,7 +280,6 @@ function createChord(data, matrix, reverse_dict, genres) {
         this["style"]["stroke"] = null;
       }
       return tooltip.style("visibility", "hidden");
-      // tooltip.style("display", "none");
     })
     .on("click", function (d) {
       // If the brushing on MDS is active,
@@ -289,7 +288,6 @@ function createChord(data, matrix, reverse_dict, genres) {
       if (isMDSBRushing === true) return;
 
       tooltip.style("visibility", "visible");
-      // tooltip.style("display", "block");
 
       if (!clicked[d.source.index] & !clicked[d.target.index]) {
         svg.selectAll("path").style("opacity", 0.2);
@@ -297,7 +295,7 @@ function createChord(data, matrix, reverse_dict, genres) {
 
         // false: I've clicked on the path
         updateMDS(false, genres[d.source.index], genres[d.target.index]);
-        //false: i've clicked now
+        // false: i've clicked now
         updateBubble_plot(
           false,
           genres[d.source.index],
@@ -354,7 +352,7 @@ function createChord(data, matrix, reverse_dict, genres) {
 }
 
 startChord();
-//interaction_legend
+
 function interactionLegend(svg, data, genres) {
   var gen = "Comedy";
   for (var g = 0; g < 12; g++) {
@@ -400,7 +398,7 @@ function interactionLegend(svg, data, genres) {
   }
 }
 
-//updateMDS from chord
+// updateMDS from chord
 function updateMDS(deselected, gen1, gen2) {
   var selected_info = {
     name: "chord",
@@ -412,7 +410,7 @@ function updateMDS(deselected, gen1, gen2) {
   startMDS(selected_info);
 }
 
-//normal update from legend
+// Normal update from legend
 function updateMDS_from_legend(deselected, gen1) {
   var selected_info = {
     name: "chord",
@@ -425,7 +423,7 @@ function updateMDS_from_legend(deselected, gen1) {
   startMDS(selected_info);
 }
 
-//normal update from chord
+// Normal update from chord
 function updateBubble_plot(deselected, gen1, gen2) {
   var selected_info = {
     name: "chord",
@@ -435,7 +433,7 @@ function updateBubble_plot(deselected, gen1, gen2) {
   };
   startBubble(selected_info);
 }
-//normal update from legend
+// Normal update from legend
 function updateBubble_plot_from_legend(deselected, gen1) {
   var selected_info = {
     name: "chord",

@@ -27,10 +27,9 @@ var keys = ["1", "2", "3", "4", "5"];
 var colors = ["#fcc5c0", "#fa9fb5", "#f768a1", "#c51b8a", "#7a0177"];
 var breaks = [0.5, 1, 1.5, 3];
 var breaks_radius = [10, 50, 100, 150];
-// var radius_len = [4.5, 8.32, 11.48, 14.2, 16.64];
 var radius_len = [4, 6.5, 9, 11.5, 14.4];
 
-//Read the data
+// Read the data
 d3.csv(DATASET_PATH, function (data) {
   var x = d3
     .scaleBand()
@@ -50,7 +49,6 @@ d3.csv(DATASET_PATH, function (data) {
 
   var xAxis = d3.axisBottom(x);
 
-  // Draw the axis
   svg
     .append("g")
     .attr("transform", "translate(0," + height + ")")
@@ -153,7 +151,6 @@ d3.csv(DATASET_PATH, function (data) {
     })
     .style("opacity", "0.7")
     .style("cursor", "pointer")
-    // .attr("stroke", "black")
     .on("mouseover", function (d) {
       tooltip.html(
         "Number of movies: " +
@@ -200,13 +197,13 @@ d3.csv(DATASET_PATH, function (data) {
             clicked[k] = false;
           }
         }
-        //Gestione bubbleplot
+        // Handle bubbleplot
         updateBubble(d);
-        //Gestione mds
+        // Handle mds
         updateMDS(d);
-        //Gestione calendar
+        // Handle calendar
         updateCalendar(d.channel);
-        //Has been clicked?
+
         clicked[id_c] = true;
         this["style"]["r"] = parseInt(radius_dict[d.id]) * 1.5;
         this["style"]["stroke"] = "#feebe2";
@@ -278,9 +275,9 @@ function updateCalendar(channel) {
 }
 
 function createLegend(svg) {
-  var colorScale = d3.scaleOrdinal().domain(keys).range(colors); //colorare i pallini del grafico
+  var colorScale = d3.scaleOrdinal().domain(keys).range(colors); 
 
-  //per legenda del grafico: quadratini
+  // Squares for legend
   var size = 10;
 
   svg
@@ -299,14 +296,14 @@ function createLegend(svg) {
     .attr("x", 510)
     .attr("y", function (d, i) {
       return 26 + i * (size + 5);
-    }) // 100 is where the first dot appears. 25 is the distance between dots
+    }) 
     .attr("width", size)
     .attr("height", size)
     .attr("fill", function (d) {
       return colorScale(d);
     });
 
-  //scritte per i quadratini della legenda
+  // Text for squares in legend
   svg
     .selectAll("mylabels")
     .data(keys)
@@ -315,7 +312,7 @@ function createLegend(svg) {
     .attr("x", 510 + size * 1.2)
     .attr("y", function (d, i) {
       return 30 + i * (size + 5) + size / 2;
-    }) // 100 is where the first dot appears. 25 is the distance between dots
+    }) 
     .attr("fill", "white")
     .text(function (d, i) {
       if (i < colors.length - 1) {
@@ -331,7 +328,7 @@ function createLegend(svg) {
     .domain([1, 100]) // What's in the data
     .range([2, 100]); // Size in pixel
 
-  //variabili che servono per la legenda bubble size
+  // Legend bubble size
   var valuesToShow = [4.5];
   var valuesToShow2 = [5.5];
   var valuesToShow3 = [3.5];
@@ -342,7 +339,6 @@ function createLegend(svg) {
   var xLabel = 380;
   var yCircle = 330;
 
-  //per la legenda del raggio del cerchio
 
   // Title legend bubble size
   svg
@@ -353,7 +349,7 @@ function createLegend(svg) {
     .style("font-size", 12)
     .attr("fill", "#fff");
 
-  //primo cerchio
+  // First circle
   svg
     .selectAll("legend")
     .data(valuesToShow2)
@@ -364,8 +360,6 @@ function createLegend(svg) {
       return yCircle - 190;
     })
     .attr("r", function (d) {
-      //d sarebbe il valore preso da "valuesToShow2"
-      // return size_bubble(d);
       return radius_len[4];
     })
     .style("fill", "grey")
@@ -379,7 +373,7 @@ function createLegend(svg) {
     .style("font-size", 10)
     .attr("fill", "#fff");
 
-  //secondo cerchio
+  // Second circle
   svg
     .selectAll("legend")
     .data(valuesToShow)
@@ -390,7 +384,6 @@ function createLegend(svg) {
       return yCircle - size_bubble(d) - 130;
     })
     .attr("r", function (d) {
-      // return size_bubble(d);
       return radius_len[3];
     })
     .style("fill", "grey")
@@ -404,7 +397,7 @@ function createLegend(svg) {
     .style("font-size", 10)
     .attr("fill", "#fff");
 
-  //terzo cerchio
+  // Third circle
   svg
     .selectAll("legend")
     .data(valuesToShow3)
@@ -415,7 +408,6 @@ function createLegend(svg) {
       return yCircle - size_bubble(d) - 90;
     })
     .attr("r", function (d) {
-      // return size_bubble(d);
       return radius_len[2];
     })
     .style("fill", "grey")
@@ -429,7 +421,7 @@ function createLegend(svg) {
     .style("font-size", 10)
     .attr("fill", "#fff");
 
-  //quarto cerchio
+  // Forth circle
   svg
     .selectAll("legend")
     .data(valuesToShow4)
@@ -440,7 +432,6 @@ function createLegend(svg) {
       return yCircle - size_bubble(d) - 55;
     })
     .attr("r", function (d) {
-      // return size_bubble(d);
       return radius_len[1];
     })
     .style("fill", "grey")
@@ -454,7 +445,7 @@ function createLegend(svg) {
     .style("font-size", 10)
     .attr("fill", "#fff");
 
-  //quinto cerchio
+  // Fifth circle
   svg
     .selectAll("legend")
     .data(valuesToShow5)
@@ -465,7 +456,6 @@ function createLegend(svg) {
       return yCircle - size_bubble(d) - 25;
     })
     .attr("r", function (d) {
-      // return size_bubble(d);
       return radius_len[0];
     })
     .style("fill", "grey")

@@ -364,7 +364,7 @@ function activateBrushing() {
         .extent([
           [0, 0],
           [width, height],
-        ]) // initialise the brush area: start at 0,0 and finishes at width,height: it means I select the whole graph area
+        ]) // initialise the brush area: start at 0,0 and finishes at width,height
         .on("start", startBrushing)
         .on("brush", updateChart);
 
