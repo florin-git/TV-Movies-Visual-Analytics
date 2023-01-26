@@ -118,26 +118,20 @@ function startMDS(selected_info) {
 
         // If in Other
         if (other.includes(selected_info.channel) & other.includes(d.channel)) {
-          // The other channels in this network are colored with the third color
-          if (d.channel != selected_info.channel) {
-            moviesThirdColor.push(d.id);
-            textLegend[2] = "Network's";
-            monthLegend[2] = "Channels";
+          textLegend[2] = "Network's";
+          monthLegend[2] = "Channels";
+
+          // The movies of the clicked month are colored with the first color
+          if (d.month == selected_info.month) {
+            moviesFirstColor.push(d.id);
+            textLegend[0] = d.channel;
+            monthLegend[0] = "(" + d.month + ")";
           }
-          // This channel
+          // The movies of the others months are colored with the second color
           else {
-            // The movies of the clicked month are colored with the first color
-            if (d.month == selected_info.month) {
-              moviesFirstColor.push(d.id);
-              textLegend[0] = d.channel;
-              monthLegend[0] = "(" + d.month + ")";
-            }
-            // The movies of the others months are colored with the second color
-            else {
-              moviesSecondColor.push(d.id);
-              textLegend[1] = d.channel;
-              monthLegend[1] = "(others)";
-            }
+            moviesSecondColor.push(d.id);
+            textLegend[1] = d.channel;
+            monthLegend[1] = "(others)";
           }
 
           return d;
@@ -272,11 +266,7 @@ function createMDS(chosenData) {
     .style("cursor", "pointer")
     .style("fill", function (d) {
       // The following happens if you click on the Stacked
-      if (
-        (moviesFirstColor.length != 0) &
-        (moviesSecondColor.length != 0) &
-        (moviesThirdColor.length != 0)
-      ) {
+      if ((moviesFirstColor.length != 0) & (moviesSecondColor.length != 0)) {
         // Color of the clicked channel and month
         if (moviesFirstColor.includes(d.id)) {
           return colors[0];
@@ -342,7 +332,6 @@ function handleZoom() {
   newX = d3.event.transform.rescaleX(x);
   newY = d3.event.transform.rescaleY(y);
 
-  // console.log(d3.event.transform);
   d3.select("#area_mds")
     .selectAll(".bubble")
     .attr("cx", function (d) {
@@ -448,29 +437,14 @@ function updateCalendar() {
 function createLegend() {
   var svg = d3.select("#area_mds").select("svg");
 
-  // Cirlces
+  // First
+
   svg
     .append("circle")
     .attr("cx", width - 0.2 * width)
     .attr("cy", 80)
     .attr("r", 6)
     .style("fill", colors[0]);
-  svg
-    .append("circle")
-    .attr("cx", width - 0.2 * width)
-    .attr("cy", 115)
-    .attr("r", 6)
-    .style("fill", colors[1]);
-  svg
-    .append("circle")
-    .attr("cx", width - 0.2 * width)
-    .attr("cy", 150)
-    .attr("r", 6)
-    .style("fill", colors[2]);
-
-  /// Text
-
-  // First
   svg
     .append("rect")
     .attr("id", "firstColor")
@@ -514,6 +488,14 @@ function createLegend() {
     .attr("alignment-baseline", "middle");
 
   // Second
+
+  svg
+    .append("circle")
+    .attr("cx", width - 0.2 * width)
+    .attr("cy", 115)
+    .attr("r", 6)
+    .style("fill", colors[1]);
+
   svg
     .append("rect")
     .attr("id", "secondColor")
@@ -557,6 +539,18 @@ function createLegend() {
     .style("cursor", "default");
 
   // Third
+
+  // If the channel is 'Cielo' we do not have other
+  // network's channels to display
+  if (textLegend[0] == "Cielo") return;
+
+  svg
+    .append("circle")
+    .attr("cx", width - 0.2 * width)
+    .attr("cy", 150)
+    .attr("r", 6)
+    .style("fill", colors[2]);
+
   svg
     .append("rect")
     .attr("id", "thirdColor")
@@ -660,7 +654,6 @@ function updateBubble_plot_legend_others(deselected, channelOrNetwork, month) {
   startBubble(selected_info);
 }
 function updateBubble_plot_legend_networks(deselected, channel) {
-  console.log(channel);
   var type = "channel";
   var network, channelOrNetwork;
 
@@ -672,19 +665,19 @@ function updateBubble_plot_legend_networks(deselected, channel) {
   } else if (other.includes(channel)) {
     network = other;
   }
-
   // At the beginning if no clicked on Stacked
   else {
     type = "network";
     channelOrNetwork = other;
   }
+
   var selected_info = {
     name: "mds",
     type: type,
     deselected: deselected,
     channel: channel,
     network: network,
-    channelOrNetwork: channel,
+    channelOrNetwork: channelOrNetwork,
     legend_month: false,
     legend_others: false,
   };

@@ -2,7 +2,21 @@ import { startBubble } from "./bubbleplot.js";
 import { startMDS } from "./mds.js";
 
 var DATASET_PATH = "./dataset/df_main_info.csv";
-var genres = new Array();
+// var genres = new Array();
+var genres = [
+  "Documentary",
+  "Western",
+  "Adventure",
+  "Fantasy",
+  "Horror",
+  "Sci-Fi",
+  "Comedy",
+  "Drama",
+  "Thriller",
+  "Action",
+  "Romance",
+  "Crime",
+];
 
 var stringhe = new Array();
 var clicked = new Array().fill(false);
@@ -23,20 +37,7 @@ var dict = {
   Romance: 10,
   Crime: 11,
 };
-var genres = [
-  "Documentary",
-  "Western",
-  "Adventure",
-  "Fantasy",
-  "Horror",
-  "Sci-Fi",
-  "Comedy",
-  "Drama",
-  "Thriller",
-  "Action",
-  "Romance",
-  "Crime",
-];
+
 var reverse_dict = {};
 for (var i = 0; i < genres.length; i++) {
   reverse_dict[i] = genres[i];
@@ -59,12 +60,14 @@ var colors = {
 
 // Start chord
 function startChord(brushed_ids) {
+  var chosenData;
   d3.csv(DATASET_PATH, function (data) {
-    if (brushed_ids != null) {
-      var chosenData = data.filter(function (d) {
+    if ((brushed_ids != null) | (brushed_ids != undefined)) {
+      chosenData = data.filter(function (d) {
         return brushed_ids.includes(d.id);
       });
       genres = [];
+
       // List of selected genres
       chosenData.forEach(function (d) {
         var genres_extracted = d.genres.split(",");
@@ -82,7 +85,47 @@ function startChord(brushed_ids) {
         dict[genres[i]] = i;
         reverse_dict[i] = genres[i];
       }
-    } else var chosenData = data;
+    } else {
+
+      // Must be initialized again because of the deselection 
+      // on the Stacked
+      var genres = [
+        "Documentary",
+        "Western",
+        "Adventure",
+        "Fantasy",
+        "Horror",
+        "Sci-Fi",
+        "Comedy",
+        "Drama",
+        "Thriller",
+        "Action",
+        "Romance",
+        "Crime",
+      ];
+
+      var dict = {
+        Documentary: 0,
+        Western: 1,
+        Adventure: 2,
+        Fantasy: 3,
+        Horror: 4,
+        "Sci-Fi": 5,
+        Comedy: 6,
+        Drama: 7,
+        Thriller: 8,
+        Action: 9,
+        Romance: 10,
+        Crime: 11,
+      };
+
+      var reverse_dict = {};
+      for (var i = 0; i < genres.length; i++) {
+        reverse_dict[i] = genres[i];
+      }
+
+      chosenData = data;
+    }
 
     // Create matrix for paths
     var matrix = new Array(genres.length);
@@ -218,7 +261,7 @@ function createChord(data, matrix, reverse_dict, genres) {
 
   var k = 0;
 
-  //PATH 
+  //PATH
   svg
     .datum(res)
     .append("g")
@@ -365,7 +408,7 @@ function interactionLegend(svg, data, genres) {
         // the Chord filtering is disabled
         var isMDSBRushing = document.getElementById("mds_brushing").checked;
         if (isMDSBRushing === true) return;
-        
+
         gen = this.id;
         if (!clicked_legend[dict[gen]]) {
           genres.forEach((gen) => {

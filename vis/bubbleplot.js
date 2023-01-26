@@ -153,12 +153,19 @@ function startBubble(selected_info) {
 
           createBubble(chosenData);
           createLegend();
+
+          // When the Bubble plot is changing,
+          // we are re-creating the Chord
+          var selectedIds = [];
+          chosenData.forEach(function (d) {
+            selectedIds.push(d.id);
+          });
+          startChord(selectedIds);
           return;
         }
 
         // First text of the legend
         if (selected_info.legend_month == true) {
-          console.log("from month");
           var chosenData = data.filter(function (d) {
             return (
               (selected_info.channelOrNetwork == d.channel) &
@@ -168,7 +175,6 @@ function startBubble(selected_info) {
         }
         // Second text of the legend
         else if (selected_info.legend_others) {
-          console.log("from others");
           var chosenData = data.filter(function (d) {
             return (
               (selected_info.channelOrNetwork == d.channel) &
@@ -178,8 +184,6 @@ function startBubble(selected_info) {
         }
         // Third text of the legend
         else {
-          console.log("from network");
-          console.log(selected_info.network);
           var chosenData = data.filter(function (d) {
             // All channels of the network excluding
             // the selected channel by the Stacked
@@ -194,10 +198,10 @@ function startBubble(selected_info) {
 
       // If clicked on the legend before selection on Stacked
       else if (selected_info.type == "network") {
-        console.log(selected_info);
         // Reset Bubble because at the beginning
         if (selected_info.deselected) {
           createBubble([]);
+          startChord();
           return;
         }
 
@@ -212,6 +216,14 @@ function startBubble(selected_info) {
           return selected_info.selectedIds.includes(d.id);
         });
       }
+
+      // When the Bubble plot is changing,
+      // we are re-creating the Chord
+      var selectedIds = [];
+      chosenData.forEach(function (d) {
+        selectedIds.push(d.id);
+      });
+      startChord(selectedIds);
     }
 
     createBubble(chosenData);
