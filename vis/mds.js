@@ -234,20 +234,6 @@ function createMDS(chosenData) {
     .style("position", "absolute")
     .style("right", "1px")
     .style("top", "1px");
-  //   .append("label")
-  //   .attr("x", "50")
-  //   // .attr("transform", "translate(5150,100)")
-  //   .attr("id", "prroro")
-  //   .text("Show/Hide something")
-  //   .style("color", "#fff")
-  // .attr("transform", "translate()")
-  // .insert("input")
-  // .attr("type", "checkbox")
-  // .attr("checked", true)
-  // .style("z-index")
-  // .style("position", "absolute")
-  // .style("top", "10px")
-  // .style("left", "20px");
 
   var svg = d3
     .select("#area_mds")
@@ -445,17 +431,13 @@ function updateCalendar() {
   if (brushed_ids.length != 0) {
     startCalendar(brushed_ids);
 
-    var isBubbleEmpty = d3.select("#area_bubble").selectAll(".bubble");
-
-    if (isBubbleEmpty) {
-      var selected_info = {
-        name: "mds",
-        type: "brush",
-        selectedIds: brushed_ids,
-      };
-      startBubble(selected_info);
-      startChord(brushed_ids);
-    }
+    var selected_info = {
+      name: "mds",
+      type: "brush",
+      selectedIds: brushed_ids,
+    };
+    startBubble(selected_info);
+    startChord(brushed_ids);
   }
   return;
 }
@@ -571,21 +553,6 @@ function createLegend() {
     .style("font-size", "15px")
     .attr("alignment-baseline", "middle")
     .style("cursor", "default");
-  // .on("click", function () {
-  //   if (clicked[1]) {
-  //     // Already clicked
-  //     clicked[1] = false;
-  //     d3.select("#secondColor").style("fill", "black");
-  //     // true: deselected the text legend
-  //     updateBubble_plot_legend_others(true, textLegend[1], monthLegend[0]);
-  //   } else {
-  //     clicked[1] = true;
-  //     d3.select("#firstColor").style("fill", "black");
-  //     d3.select("#thirdColor").style("fill", "black");
-  //     updateBubble_plot_legend_others(false, textLegend[1], monthLegend[0]);
-  //     d3.select("#secondColor").style("fill", "rgb(141, 111, 199)");
-  //   }
-  // });
 
   // Third
   svg
@@ -628,21 +595,8 @@ function createLegend() {
     .text(monthLegend[2])
     .style("fill", "#fff")
     .style("font-size", "15px")
-    .style("cursor", "pointer")
+    .style("cursor", "default")
     .attr("alignment-baseline", "middle");
-  // .on("click", function () {
-  //   if (clicked[2]) {
-  //     // Already clicked
-  //     clicked[2] = false;
-  //     d3.select("#thirdColor").style("fill", "black");
-  //   } else {
-  //     clicked[2] = true;
-  //     d3.select("#firstColor").style("fill", "black");
-  //     d3.select("#secondColor").style("fill", "black");
-  //     updateBubble_plot_legend_networks(false, textLegend[0]);
-  //     d3.select("#thirdColor").style("fill", "rgb(141, 111, 199)");
-  //   }
-  // });
 }
 
 // Clicked on the first text of the legend

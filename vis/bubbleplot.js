@@ -203,6 +203,16 @@ function startBubble(selected_info) {
         var chosenData = data.filter(function (d) {
           return selected_info.selectedIds.includes(d.id);
         });
+
+        // filteredData = chosenData;
+
+        // // When the Bubble plot is changing,
+        // // we are re-creating the Chord
+        // var selected_ids = [];
+        // filteredData.forEach(function (d) {
+        //   selected_ids.push(d.id);
+        // });
+        // startChord(selected_ids);
       }
     }
 
@@ -573,6 +583,24 @@ function createLegend() {
     .style("fill", "#fff")
     .style("font-size", "15px")
     .attr("alignment-baseline", "middle");
+
+  svg
+    .append("text")
+    .attr("x", width - 43)
+    .attr("y", 50)
+    .text("Mean Duration")
+    .style("fill", "#fff")
+    .style("font-size", 12)
+    .attr("alignment-baseline", "middle");
+
+  svg
+    .append("line")
+    .style("stroke", "#a6d854")
+    .style("stroke-width", 2)
+    .attr("x1", width - 35)
+    .attr("x2", width + 20)
+    .attr("y1", 60)
+    .attr("y2", 60);
 
   // The scale you use for bubble size. Il raggio del pallino della legenda
   var size = d3

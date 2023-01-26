@@ -282,6 +282,15 @@ function createLegend(svg) {
 
   //per legenda del grafico: quadratini
   var size = 10;
+
+  svg
+    .append("text")
+    .attr("x", 498)
+    .attr("y", 15)
+    .text("Sharing Percentage")
+    .style("font-size", 12)
+    .attr("fill", "#fff");
+
   svg
     .selectAll("mydots")
     .data(keys)
@@ -289,7 +298,7 @@ function createLegend(svg) {
     .append("rect")
     .attr("x", 510)
     .attr("y", function (d, i) {
-      return 10 + i * (size + 5);
+      return 26 + i * (size + 5);
     }) // 100 is where the first dot appears. 25 is the distance between dots
     .attr("width", size)
     .attr("height", size)
@@ -305,7 +314,7 @@ function createLegend(svg) {
     .append("text")
     .attr("x", 510 + size * 1.2)
     .attr("y", function (d, i) {
-      return 14 + i * (size + 5) + size / 2;
+      return 30 + i * (size + 5) + size / 2;
     }) // 100 is where the first dot appears. 25 is the distance between dots
     .attr("fill", "white")
     .text(function (d, i) {
@@ -335,6 +344,15 @@ function createLegend(svg) {
 
   //per la legenda del raggio del cerchio
 
+  // Title legend bubble size
+  svg
+    .append("text")
+    .attr("x", xCircle + 268)
+    .attr("y", yCircle - 215)
+    .text("Number of movies")
+    .style("font-size", 12)
+    .attr("fill", "#fff");
+
   //primo cerchio
   svg
     .selectAll("legend")
@@ -343,7 +361,7 @@ function createLegend(svg) {
     .append("circle")
     .attr("cx", xCircle + 310)
     .attr("cy", function (d) {
-      return yCircle - 215;
+      return yCircle - 190;
     })
     .attr("r", function (d) {
       //d sarebbe il valore preso da "valuesToShow2"
@@ -353,6 +371,14 @@ function createLegend(svg) {
     .style("fill", "grey")
     .attr("stroke", "white");
 
+  svg
+    .append("text")
+    .attr("x", xCircle + 301)
+    .attr("y", yCircle - 162)
+    .text(">150")
+    .style("font-size", 10)
+    .attr("fill", "#fff");
+
   //secondo cerchio
   svg
     .selectAll("legend")
@@ -361,7 +387,7 @@ function createLegend(svg) {
     .append("circle")
     .attr("cx", xCircle + 310)
     .attr("cy", function (d) {
-      return yCircle - size_bubble(d) - 150;
+      return yCircle - size_bubble(d) - 130;
     })
     .attr("r", function (d) {
       // return size_bubble(d);
@@ -373,24 +399,8 @@ function createLegend(svg) {
   svg
     .append("text")
     .attr("x", xCircle + 291)
-    .attr("y", yCircle - 140)
+    .attr("y", yCircle - 120)
     .text("[100,150]")
-    .style("font-size", 10)
-    .attr("fill", "#fff");
-  //titolo legenda bubble size
-  svg
-    .append("text")
-    .attr("x", xCircle + 268)
-    .attr("y", yCircle - 235)
-    .text("Number of movies")
-    .style("font-size", 12)
-    .attr("fill", "#fff");
-
-  svg
-    .append("text")
-    .attr("x", xCircle + 301)
-    .attr("y", yCircle - 185)
-    .text(">150")
     .style("font-size", 10)
     .attr("fill", "#fff");
 
@@ -402,7 +412,7 @@ function createLegend(svg) {
     .append("circle")
     .attr("cx", xCircle + 310)
     .attr("cy", function (d) {
-      return yCircle - size_bubble(d) - 110;
+      return yCircle - size_bubble(d) - 90;
     })
     .attr("r", function (d) {
       // return size_bubble(d);
@@ -414,7 +424,7 @@ function createLegend(svg) {
   svg
     .append("text")
     .attr("x", xCircle + 294)
-    .attr("y", yCircle - 98)
+    .attr("y", yCircle - 80)
     .text("[50,100]")
     .style("font-size", 10)
     .attr("fill", "#fff");
@@ -427,7 +437,7 @@ function createLegend(svg) {
     .append("circle")
     .attr("cx", xCircle + 310)
     .attr("cy", function (d) {
-      return yCircle - size_bubble(d) - 75;
+      return yCircle - size_bubble(d) - 55;
     })
     .attr("r", function (d) {
       // return size_bubble(d);
@@ -439,7 +449,7 @@ function createLegend(svg) {
   svg
     .append("text")
     .attr("x", xCircle + 294)
-    .attr("y", yCircle - 64)
+    .attr("y", yCircle - 42)
     .text("[10,50]")
     .style("font-size", 10)
     .attr("fill", "#fff");
@@ -452,7 +462,7 @@ function createLegend(svg) {
     .append("circle")
     .attr("cx", xCircle + 310)
     .attr("cy", function (d) {
-      return yCircle - size_bubble(d) - 45;
+      return yCircle - size_bubble(d) - 25;
     })
     .attr("r", function (d) {
       // return size_bubble(d);
@@ -464,7 +474,7 @@ function createLegend(svg) {
   svg
     .append("text")
     .attr("x", xCircle + 301)
-    .attr("y", yCircle - 35)
+    .attr("y", yCircle - 15)
     .text("<10")
     .style("font-size", 10)
     .attr("fill", "#fff");

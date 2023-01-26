@@ -9,7 +9,7 @@ var colours = ["#fef0d9", "#fdcc8a", "#fc8d59", "#e34a33", "#b30000"];
 
 //general layout information
 var cellSize = 10;
-var calY = 40; //offset of calendar in each group
+var calY = 30; //offset of calendar in each group
 var calX = 550;
 var width = 500; //prima con dimensioni normali era window.innerWidth
 var height = 400;
@@ -399,12 +399,19 @@ function createLegend() {
     .attr("id", "legend")
     .attr("width", "100%");
 
+  svg
+    .append("text")
+    .attr("x", 215)
+    .attr("y", 10)
+    .text("Advertising Percentage")
+    .attr("fill", "#fff");
+
   var key = svg
     .append("g")
     .attr("id", "key")
     .attr("class", "key")
     .attr("transform", function (d) {
-      return "translate(35, 25)";
+      return "translate(35, 30)";
     });
 
   key
@@ -430,7 +437,7 @@ function createLegend() {
     .attr("x", function (d, i) {
       return cellSize + 10 + i * 105;
     })
-    .attr("y", "1rem")
+    .attr("y", "0.5em")
     .text(function (d, i) {
       if (i < colours.length - 1) {
         return "up to " + breaks[i] + "%";
@@ -439,6 +446,21 @@ function createLegend() {
       }
     })
     .style("fill", "#fff");
+
+  svg
+    .append("rect")
+    .attr("width", cellSize)
+    .attr("height", cellSize)
+    .attr("x", 245)
+    .attr("y", 55)
+    .attr("fill", "#b3e2cd");
+
+  svg
+    .append("text")
+    .attr("x", 265)
+    .attr("y", 64)
+    .text("missing value")
+    .attr("fill", "#fff");
 }
 
 function updateHoliday() {
@@ -484,25 +506,6 @@ function updateHoliday() {
             return 1;
           }
         });
-
-      // rect
-      //   .attr("stroke", (d) => {
-      //     var date = new Date(d.key);
-      //     if (holidaysList.includes(String(date.toLocaleDateString("it-IT")))) {
-      //       return "black";
-      //     } else {
-      //       return "#ccc";
-      //     }
-      //   })
-      //   .attr("stroke-width", (d) => {
-      //     var date = new Date(d.key);
-
-      //     if (holidaysList.includes(String(date.toLocaleDateString("it-IT")))) {
-      //       return 3;
-      //     } else {
-      //       return 1;
-      //     }
-      //   });
     } else {
       rect
         .attr("shape-rendering", null)
