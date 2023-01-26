@@ -71,6 +71,14 @@ function startBubble(selected_info) {
         else chosenData = data;
         createBubble(chosenData);
         createLegend();
+
+        // When the Bubble plot is changing,
+        // we are re-creating the Chord
+        var selectedIds = [];
+        chosenData.forEach(function (d) {
+          selectedIds.push(d.id);
+        });
+        startChord(selectedIds);
         return;
       }
       // Already filtered from Stacked
@@ -307,10 +315,11 @@ function createBubble(chosenData) {
     .domain(["mattina", "pomeriggio", "sera", "notte"])
     .range(["#66c2a5", "#fc8d62", "#8da0cb", "#e78ac3"]); //colori presi da Color Brewer
 
+  d3.select("#tooltip_bubble").remove();
   var tooltip = d3
     .select("body")
     .append("div")
-    .attr("id", "tooltip2")
+    .attr("id", "tooltip_bubble")
     .style("background-color", "#636363")
     .style("color", "white")
     .style("position", "absolute")

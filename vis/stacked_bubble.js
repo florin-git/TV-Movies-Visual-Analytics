@@ -91,7 +91,7 @@ d3.csv(DATASET_PATH, function (data) {
   var tooltip = d3
     .select("body")
     .append("div")
-    .attr("id", "tooltip3")
+    .attr("id", "tooltip_stacked")
     .style("background-color", "#636363")
     .style("color", "white")
     .style("position", "absolute")

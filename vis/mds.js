@@ -216,11 +216,13 @@ function createMDS(chosenData) {
   // Reset MDS
   d3.select("#svg_mds").remove();
 
+  d3.select("#tooltip_mds").remove();
+
   //tooltip and zoom
   var tooltip = d3
     .select("body")
     .append("div")
-    .attr("id", "tooltip1")
+    .attr("id", "tooltip_mds")
     .style("background-color", "#636363")
     .style("color", "white")
     .style("position", "absolute")

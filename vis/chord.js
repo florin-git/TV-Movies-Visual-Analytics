@@ -4,8 +4,7 @@ import { startMDS } from "./mds.js";
 var DATASET_PATH = "./dataset/df_main_info.csv";
 var genres = new Array();
 
-var p,
-  stringhe = new Array();
+var stringhe = new Array();
 var clicked = new Array().fill(false);
 var clicked_legend;
 var clicked_legend = new Array(genres.length).fill(false);
@@ -112,21 +111,25 @@ function createChord(data, matrix, reverse_dict, genres) {
   const svg = d3
     .select("#area_chord")
     .append("svg")
+    .attr("id", "svg_chord")
     .attr("width", "100%")
     .attr("height", "100%")
     .append("g")
     .attr("transform", "translate(180,173)");
 
+  d3.select("#tooltip_chord").remove();
+
   //tooltip
   var tooltip = d3
     .select("body")
     .append("div")
-    .attr("id", "tooltip5")
+    .attr("id", "tooltip_chord")
     .style("background-color", "#636363")
     .style("color", "white")
     .style("position", "absolute")
     .style("z-index", "10")
     .style("visibility", "hidden")
+    // .style("display", "none")
     .style("font-size", "20px")
     .text("");
   //end tooltip
@@ -242,7 +245,6 @@ function createChord(data, matrix, reverse_dict, genres) {
     .on("mouseover", function (d) {
       this["style"]["stroke"] = "#000";
       if (genres[d.source.index] == genres[d.target.index]) {
-        // console.log(matrix[d.source.index][d.source.index])
         tooltip.html(
           genres[d.source.index] +
             "<br> Number of broadcast movies: <br>" +
@@ -261,7 +263,12 @@ function createChord(data, matrix, reverse_dict, genres) {
             data.length
         );
       }
-      return tooltip.style("visibility", "visible");
+
+      tooltip
+        .style("top", d3.event.pageY - 10 + "px")
+        .style("left", d3.event.pageX + 10 + "px");
+      tooltip.style("visibility", "visible");
+      // tooltip.style("display", "none")
     })
     .on("mousemove", function () {
       return tooltip
@@ -273,8 +280,17 @@ function createChord(data, matrix, reverse_dict, genres) {
         this["style"]["stroke"] = null;
       }
       return tooltip.style("visibility", "hidden");
+      // tooltip.style("display", "none");
     })
     .on("click", function (d) {
+      // If the brushing on MDS is active,
+      // the Chord filtering is disabled
+      var isMDSBRushing = document.getElementById("mds_brushing").checked;
+      if (isMDSBRushing === true) return;
+
+      tooltip.style("visibility", "visible");
+      // tooltip.style("display", "block");
+
       if (!clicked[d.source.index] & !clicked[d.target.index]) {
         svg.selectAll("path").style("opacity", 0.2);
         d3.select(this).style("opacity", 1);
@@ -347,6 +363,11 @@ function interactionLegend(svg, data, genres) {
       .select("#" + gen)
       .style("cursor", "pointer")
       .on("click", function () {
+        // If the brushing on MDS is active,
+        // the Chord filtering is disabled
+        var isMDSBRushing = document.getElementById("mds_brushing").checked;
+        if (isMDSBRushing === true) return;
+        
         gen = this.id;
         if (!clicked_legend[dict[gen]]) {
           genres.forEach((gen) => {
@@ -378,6 +399,7 @@ function interactionLegend(svg, data, genres) {
       });
   }
 }
+
 //updateMDS from chord
 function updateMDS(deselected, gen1, gen2) {
   var selected_info = {
