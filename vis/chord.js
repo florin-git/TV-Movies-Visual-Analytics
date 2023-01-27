@@ -86,8 +86,7 @@ function startChord(brushed_ids) {
         reverse_dict[i] = genres[i];
       }
     } else {
-
-      // Must be initialized again because of the deselection 
+      // Must be initialized again because of the deselection
       // on the Stacked
       var genres = [
         "Documentary",
@@ -325,10 +324,11 @@ function createChord(data, matrix, reverse_dict, genres) {
       return tooltip.style("visibility", "hidden");
     })
     .on("click", function (d) {
-      // If the brushing on MDS is active,
+      // If the brushing is active,
       // the Chord filtering is disabled
-      var isMDSBRushing = document.getElementById("mds_brushing").checked;
-      if (isMDSBRushing === true) return;
+      var isMDSBrushing = document.getElementById("mds_brushing").checked;
+      var isBubbleBrushing = document.getElementById("bubble_brushing").checked;
+      if ((isMDSBrushing === true) | (isBubbleBrushing === true)) return;
 
       tooltip.style("visibility", "visible");
 
@@ -404,10 +404,12 @@ function interactionLegend(svg, data, genres) {
       .select("#" + gen)
       .style("cursor", "pointer")
       .on("click", function () {
-        // If the brushing on MDS is active,
+        // If the brushing is active,
         // the Chord filtering is disabled
-        var isMDSBRushing = document.getElementById("mds_brushing").checked;
-        if (isMDSBRushing === true) return;
+        var isMDSBrushing = document.getElementById("mds_brushing").checked;
+        var isBubbleBrushing =
+          document.getElementById("bubble_brushing").checked;
+        if ((isMDSBrushing === true) | (isBubbleBrushing === true)) return;
 
         gen = this.id;
         if (!clicked_legend[dict[gen]]) {
