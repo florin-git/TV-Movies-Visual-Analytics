@@ -184,8 +184,7 @@ function createCalendar(chosenData, level) {
     })
     .entries(chosenData);
 
-
-    d3.select("#tooltip_calendar").remove()
+  d3.select("#tooltip_calendar").remove();
   var tooltip = d3
     .select("body")
     .append("div")
@@ -510,9 +509,10 @@ function updateHoliday() {
     } else {
       rect
         .attr("shape-rendering", null)
+        .attr("rx", null)
+        .attr("ry", null)
         .attr("stroke", "#ccc")
-        .attr("stroke-width", 1); 
-      rect.attr("stroke", "#ccc").attr("stroke-width", 1);
+        .attr("stroke-width", 1);
     }
   };
 }

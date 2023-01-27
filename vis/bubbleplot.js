@@ -128,24 +128,33 @@ function startBubble(selected_info) {
       if (selected_info.type == "channel") {
         // Reset Bubble to the channels' movies
         if (selected_info.deselected) {
+          console.log(selected_info)
           var chosenData = data.filter(function (d) {
+
+            var selectedChannel = selected_info.channelOrNetwork
+
+            // We disclicked from "Network's Channels"
+            if (!selected_info.legend_others & !selected_info.legend_month) {
+              selectedChannel = selected_info.channel
+            }
+
             // If in Mediaset
             if (
-              mediaset.includes(selected_info.channelOrNetwork) &
+              mediaset.includes(selectedChannel) &
               mediaset.includes(d.channel)
             )
               return d;
 
             // If in Sky
             if (
-              sky.includes(selected_info.channelOrNetwork) &
+              sky.includes(selectedChannel) &
               sky.includes(d.channel)
             )
               return d;
 
             // If in Other
             if (
-              other.includes(selected_info.channelOrNetwork) &
+              other.includes(selectedChannel) &
               other.includes(d.channel)
             )
               return d;
