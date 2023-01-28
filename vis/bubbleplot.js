@@ -19,6 +19,7 @@ var filteredData;
 
 var meanDurationBefore;
 var meanDurationAfter;
+var meanRating;
 
 function startBubble(selected_info) {
   d3.csv(DATASET_PATH, function (data) {
@@ -129,33 +130,25 @@ function startBubble(selected_info) {
         // Reset Bubble to the channels' movies
         if (selected_info.deselected) {
           var chosenData = data.filter(function (d) {
-
-            var selectedChannel = selected_info.channelOrNetwork
+            var selectedChannel = selected_info.channelOrNetwork;
 
             // We disclicked from "Network's Channels"
             if (!selected_info.legend_others & !selected_info.legend_month) {
-              selectedChannel = selected_info.channel
+              selectedChannel = selected_info.channel;
             }
 
             // If in Mediaset
             if (
-              mediaset.includes(selectedChannel) &
-              mediaset.includes(d.channel)
+              mediaset.includes(selectedChannel) & mediaset.includes(d.channel)
             )
               return d;
 
             // If in Sky
-            if (
-              sky.includes(selectedChannel) &
-              sky.includes(d.channel)
-            )
+            if (sky.includes(selectedChannel) & sky.includes(d.channel))
               return d;
 
             // If in Other
-            if (
-              other.includes(selectedChannel) &
-              other.includes(d.channel)
-            )
+            if (other.includes(selectedChannel) & other.includes(d.channel))
               return d;
           });
 
@@ -258,6 +251,10 @@ function createBubble(chosenData) {
     .attr("height", height + margin.top + margin.bottom + 50)
     .append("g")
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+  meanRating = d3.mean(data, function (d) {
+    return d.rating;
+  });
 
   if (data.length == 0) {
     y = d3.scaleLinear().domain([40, 200]).range([height, 0]);
@@ -388,6 +385,8 @@ function createBubble(chosenData) {
           d.genres +
           "<br>Rating: " +
           d.rating +
+          "(: " +
+          ")" +
           "<br>Channel: " +
           d.channel +
           "<br>Month: " +
@@ -430,6 +429,16 @@ function createBubble(chosenData) {
     .select("#area_bubble")
     .append("div")
     .attr("id", "div_bubble_brushing");
+
+  if ((data != undefined) & (data.length != 0)) {
+    div
+      .append("label")
+      .text("Mean Rating: " + meanRating.toFixed(2))
+      .style("color", "#fff")
+      .style("position", "absolute")
+      .style("left", "320px")
+      .style("top", "0");
+  }
 
   var label = div
     .append("label")
