@@ -385,8 +385,6 @@ function createBubble(chosenData) {
           d.genres +
           "<br>Rating: " +
           d.rating +
-          "(: " +
-          ")" +
           "<br>Channel: " +
           d.channel +
           "<br>Month: " +
