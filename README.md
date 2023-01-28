@@ -1,8 +1,8 @@
-# TV-Movies-Analysis: A visualization interactive  tool to analyze how Italian Tv programming is managed.
+# TV-Movies-Analysis: A Visualization Interactive Tool
 
 Project for the exam of Visual Analytics 2022-2023
 
-You can find a complete report of the application [here]() or the presentation slides [here]().
+You can find a complete report of the application [here](https://github.com/florin-git/TV-Movies-Visual-Analytics/blob/main/docs/VA_report.pdf) or the presentation slides [here](https://github.com/florin-git/TV-Movies-Visual-Analytics/blob/main/docs/VA_slides.pdf).
 
 # How to launch
 
@@ -13,7 +13,11 @@ Then at "localhost:8000" you can find the application.
 
 # Overview
 
-Image
+## Dashbord snapshot 
+![alt text](https://github.com/florin-git/TV-Movies-Visual-Analytics/blob/main/images/default.png)
+
+## Dashboard Sky snapshot
+![sky](https://github.com/florin-git/TV-Movies-Visual-Analytics/blob/main/images/sky_default.png)
 
 # Authors
 
