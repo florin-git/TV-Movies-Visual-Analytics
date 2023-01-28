@@ -8,7 +8,7 @@ You can find a complete report of the application [here](https://github.com/flor
 
 The application can be tried at this [link](https://florin-git.github.io/TV-Movies-Visual-Analytics/).
 
-Or you can run locally cloning the repository and executing the following command "python -m http.server".
+Or you can run it locally, by cloning the repository and executing the following command "python -m http.server".
 Then at "localhost:8000" you can find the application.
 
 # Overview
