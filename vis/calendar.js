@@ -184,11 +184,11 @@ function createCalendar(chosenData, level) {
     })
     .entries(chosenData);
 
-  d3.select("#tooltip_calendar").remove();
+  d3.select("#tooltip_calendar_" + level).remove();
   var tooltip = d3
     .select("body")
     .append("div")
-    .attr("id", "tooltip_calendar")
+    .attr("id", "tooltip_calendar_" + level)
     .style("background-color", "#636363")
     .style("color", "white")
     .style("position", "absolute")

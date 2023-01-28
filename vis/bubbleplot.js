@@ -128,7 +128,6 @@ function startBubble(selected_info) {
       if (selected_info.type == "channel") {
         // Reset Bubble to the channels' movies
         if (selected_info.deselected) {
-          console.log(selected_info)
           var chosenData = data.filter(function (d) {
 
             var selectedChannel = selected_info.channelOrNetwork
