@@ -25,6 +25,7 @@ function startBubble(selected_info) {
   d3.csv(DATASET_PATH, function (data) {
     // At the beginning you do not display anything
     if (selected_info == null) {
+      filteredData = null;
       createBubble([]);
       return;
     }
@@ -79,7 +80,9 @@ function startBubble(selected_info) {
         chosenData.forEach(function (d) {
           selectedIds.push(d.id);
         });
-        startChord(selectedIds);
+
+        if (filteredData != null) startChord(selectedIds);
+
         return;
       }
       // Already filtered from Stacked

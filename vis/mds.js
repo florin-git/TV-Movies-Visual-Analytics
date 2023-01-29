@@ -37,9 +37,16 @@ function startMDS(selected_info) {
   d3.csv(DATASET_PATH, function (data) {
     // If the array is empty, we are not filtering data
     if (selected_info == null) {
-      createMDS(data);
+      filteredData = null;
       textLegend = ["Mediaset", "Sky", "Other"];
       monthLegend = ["", "", ""];
+
+      // Reset colors arrays
+      moviesFirstColor = [];
+      moviesSecondColor = [];
+      moviesThirdColor = [];
+      
+      createMDS(data);
       createLegend();
       return;
     }
@@ -283,13 +290,10 @@ function createMDS(chosenData) {
 
       // At the beginning
       if (mediaset.includes(d.channel)) {
-        // return "#7fc97f";
         return colors[0];
       } else if (sky.includes(d.channel)) {
-        // return "#beaed4";
         return colors[1];
       } else {
-        // return "#fdc086";
         return colors[2];
       }
     })

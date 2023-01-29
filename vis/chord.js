@@ -20,7 +20,7 @@ var genres = [
 
 var stringhe = new Array();
 var clicked = new Array().fill(false);
-var clicked_legend;
+// var clicked_legend;
 var clicked_legend = new Array(genres.length).fill(false);
 
 var dict = {
